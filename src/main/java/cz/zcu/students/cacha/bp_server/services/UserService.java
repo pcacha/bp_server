@@ -58,13 +58,12 @@ public class UserService {
         return TOKEN_PREFIX + tokenProvider.generateToken(SecurityContextHolder.getContext().getAuthentication());
     }
 
-    public void updateName(User user, String username) {
+    public void updateUsername(User user, String username) {
         user.setUsername(username);
         userRepository.save(user);
     }
 
-    public void updateName(User user, String username, String password) {
-        user.setUsername(username);
+    public void updatePassword(User user, String password) {
         user.setPassword(bCryptPasswordEncoder.encode(password));
         userRepository.save(user);
     }

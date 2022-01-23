@@ -5,7 +5,6 @@ import cz.zcu.students.cacha.bp_server.shared.RolesConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -41,12 +40,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 // TODO
-                .antMatchers("/api/articlemanager/**", "/api/usermanager/**").hasAuthority(RolesConstants.ROLE_ADMIN)
-                .antMatchers(HttpMethod.GET, "/api/articles").permitAll()
-                .antMatchers("/api/articles/**").hasAuthority(RolesConstants.ROLE_AUTHOR)
-                .antMatchers("/api/reviews/**").hasAuthority(RolesConstants.ROLE_REVIEWER)
-                .antMatchers("/api/users/register", "/api/users/login").permitAll()
-                .antMatchers("/api/users/**").hasAnyAuthority(RolesConstants.ROLE_AUTHOR, RolesConstants.ROLE_REVIEWER, RolesConstants.ROLE_ADMIN);
+                // .antMatchers("/articlemanager/**", "/usermanager/**").hasAuthority(RolesConstants.ROLE_ADMIN)
+                // .antMatchers("/articles/**").hasAuthority(RolesConstants.ROLE_AUTHOR)
+                // .antMatchers("/reviews/**").hasAuthority(RolesConstants.ROLE_REVIEWER)
+                .antMatchers("/users/register", "/users/login").permitAll()
+                .antMatchers("/users/**").hasAnyAuthority(RolesConstants.ROLE_TRANSLATOR, RolesConstants.ROLE_INSTITUTION_OWNER, RolesConstants.ROLE_ADMIN);
 
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

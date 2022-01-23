@@ -5,8 +5,9 @@ import cz.zcu.students.cacha.bp_server.responses.GenericResponse;
 import cz.zcu.students.cacha.bp_server.responses.JWTLoginSuccessResponse;
 import cz.zcu.students.cacha.bp_server.services.UserService;
 import cz.zcu.students.cacha.bp_server.shared.CurrentUser;
-import cz.zcu.students.cacha.bp_server.view_models.UsernamePasswordUpdateVM;
+import cz.zcu.students.cacha.bp_server.view_models.PasswordUpdateVM;
 import cz.zcu.students.cacha.bp_server.view_models.UsernamePasswordVM;
+import cz.zcu.students.cacha.bp_server.view_models.UsernameUpdateVM;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public GenericResponse register(@Valid @RequestBody User user) {
         userService.save(user);
-        return new GenericResponse("Uživatel zaregistrován");
+        return new GenericResponse("User registered");
     }
 
     @PostMapping("/login")
@@ -39,11 +40,16 @@ public class UserController {
         return new JWTLoginSuccessResponse(true, jwt);
     }
 
-    @PostMapping("/updateName")
-    public GenericResponse updateName(@Valid @RequestBody UsernamePasswordUpdateVM updateNameVM, @CurrentUser User user) {
-        userService.updateName(user, updateNameVM.getUsername());
-        return new GenericResponse("Jméno bylo aktualizováno");
+    @PostMapping("/updateUsername")
+    public GenericResponse updateUsername(@Valid @RequestBody UsernameUpdateVM usernameUpdateVM, @CurrentUser User user) {
+        userService.updateUsername(user, usernameUpdateVM.getUsername());
+        return new GenericResponse("Username updated");
     }
 
+    @PostMapping("/updatePassword")
+    public GenericResponse updatePassword(@Valid @RequestBody PasswordUpdateVM passwordUpdateVM, @CurrentUser User user) {
+        userService.updatePassword(user, passwordUpdateVM.getPassword());
+        return new GenericResponse("Password updated");
+    }
 }
 
