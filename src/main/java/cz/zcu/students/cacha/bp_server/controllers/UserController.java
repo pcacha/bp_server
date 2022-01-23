@@ -36,8 +36,8 @@ public class UserController {
 
     @GetMapping("/token")
     public JWTLoginSuccessResponse token() {
-        String jwt = userService.getFreshToken();
-        return new JWTLoginSuccessResponse(true, jwt);
+        JWTLoginSuccessResponse response = userService.getFreshToken();
+        return response;
     }
 
     @PostMapping("/updateUsername")

@@ -6,4 +6,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/exhibits")
 public class ExhibitsController {
+    // TODO
 }

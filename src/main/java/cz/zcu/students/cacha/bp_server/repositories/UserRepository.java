@@ -20,4 +20,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
                     "where ur.user_id = u.id);",
             nativeQuery = true)
     Set<User> getNonAdminUsers();
+
+    // TODO
 }

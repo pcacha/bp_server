@@ -6,4 +6,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/translations")
 public class TranslationsControllers {
+    // TODO
 }

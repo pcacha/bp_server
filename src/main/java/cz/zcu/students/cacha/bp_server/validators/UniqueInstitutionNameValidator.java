@@ -1,7 +1,6 @@
 package cz.zcu.students.cacha.bp_server.validators;
 
 import cz.zcu.students.cacha.bp_server.domain.Institution;
-import cz.zcu.students.cacha.bp_server.domain.User;
 import cz.zcu.students.cacha.bp_server.repositories.InstitutionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 

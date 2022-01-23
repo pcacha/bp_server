@@ -16,8 +16,8 @@ public class WebConfiguration implements WebMvcConfigurer {
     public static final String INSTITUTIONS_IMAGES_FOLDER = "institutions_images";
     public static final String EXHIBITS_IMAGES_FOLDER = "exhibits_images";
 
-    public static final String DEFAULT_INSTITUTION_IMAGE = "default_institution.jpeg";
-    public static final String DEFAULT_EXHIBIT_IMAGE = "default_exhibit.jpeg";
+    public static final String DEFAULT_INSTITUTION_IMAGE = "default_institution.jpg";
+    public static final String DEFAULT_EXHIBIT_IMAGE = "default_exhibit.jpg";
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

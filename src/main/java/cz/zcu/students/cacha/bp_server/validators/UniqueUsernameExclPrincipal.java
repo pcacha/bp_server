@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface UniqueUsernameExclPrincipal {
-    String message() default "Name is already taken";
+    String message() default "Username is already taken";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }
