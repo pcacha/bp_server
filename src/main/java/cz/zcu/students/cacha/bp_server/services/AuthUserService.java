@@ -17,12 +17,12 @@ public class AuthUserService implements UserDetailsService {
     UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(s);
-        if(user == null) {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        if(userOptional.isEmpty()) {
             throw new UsernameNotFoundException("User not found");
         }
-        return user;
+        return userOptional.get();
     }
 
     public User loadUserById(Long id){

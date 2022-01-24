@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.util.Optional;
 
 public class UniqueUsernameValidator implements ConstraintValidator<UniqueUsername, String> {
 
@@ -19,8 +20,8 @@ public class UniqueUsernameValidator implements ConstraintValidator<UniqueUserna
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-        User inDB = userRepository.findByUsername(value);
-        if(inDB == null) {
+        Optional<User> inDBOptional = userRepository.findByUsername(value);
+        if(inDBOptional.isEmpty()) {
             return true;
         }
         return false;

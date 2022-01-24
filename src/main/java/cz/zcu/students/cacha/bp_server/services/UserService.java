@@ -58,8 +58,9 @@ public class UserService {
         return new JWTLoginSuccessResponse(true, TOKEN_PREFIX + tokenProvider.generateToken(SecurityContextHolder.getContext().getAuthentication()));
     }
 
-    public void updateUsername(User user, String username) {
+    public void updateUser(User user, String username, String email) {
         user.setUsername(username);
+        user.setEmail(email);
         userRepository.save(user);
     }
 

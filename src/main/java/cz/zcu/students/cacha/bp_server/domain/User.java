@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -36,6 +37,11 @@ public class User implements UserDetails {
     @Size(min = 8, max = 255, message = "Password must be between 8 to 255 letters long")
     @Pattern(regexp="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$", message="Password must contain a lowercase and an uppercase letter and a number")
     private String password;
+
+    @NotNull(message = "E-mail can not be blank")
+    @Email(message = "Bad e-mail format")
+    @Size(min = 1, max = 255, message = "E-mail must be maximally 255 letters long")
+    private String email;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;

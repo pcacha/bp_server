@@ -42,7 +42,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 // TODO
                 // .antMatchers("/articlemanager/**", "/usermanager/**").hasAuthority(RolesConstants.ROLE_ADMIN)
                 // .antMatchers("/articles/**").hasAuthority(RolesConstants.ROLE_AUTHOR)
-                // .antMatchers("/reviews/**").hasAuthority(RolesConstants.ROLE_REVIEWER)
+                .antMatchers("/translations/**").hasAuthority(RolesConstants.ROLE_TRANSLATOR)
                 .antMatchers("/users/register", "/users/login").permitAll()
                 .antMatchers("/users/**").hasAnyAuthority(RolesConstants.ROLE_TRANSLATOR, RolesConstants.ROLE_INSTITUTION_OWNER, RolesConstants.ROLE_ADMIN);
 

@@ -7,7 +7,7 @@ import cz.zcu.students.cacha.bp_server.services.UserService;
 import cz.zcu.students.cacha.bp_server.shared.CurrentUser;
 import cz.zcu.students.cacha.bp_server.view_models.PasswordUpdateVM;
 import cz.zcu.students.cacha.bp_server.view_models.UsernamePasswordVM;
-import cz.zcu.students.cacha.bp_server.view_models.UsernameUpdateVM;
+import cz.zcu.students.cacha.bp_server.view_models.UserUpdateVM;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -40,10 +40,10 @@ public class UserController {
         return response;
     }
 
-    @PostMapping("/updateUsername")
-    public GenericResponse updateUsername(@Valid @RequestBody UsernameUpdateVM usernameUpdateVM, @CurrentUser User user) {
-        userService.updateUsername(user, usernameUpdateVM.getUsername());
-        return new GenericResponse("Username updated");
+    @PostMapping("/updateUser")
+    public GenericResponse updateUser(@Valid @RequestBody UserUpdateVM userUpdateVM, @CurrentUser User user) {
+        userService.updateUser(user, userUpdateVM.getUsername(), userUpdateVM.getEmail());
+        return new GenericResponse("User updated");
     }
 
     @PostMapping("/updatePassword")

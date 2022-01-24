@@ -3,13 +3,19 @@ package cz.zcu.students.cacha.bp_server.view_models;
 import cz.zcu.students.cacha.bp_server.validators.UniqueUsernameExclPrincipal;
 import lombok.Data;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Data
-public class UsernameUpdateVM {
+public class UserUpdateVM {
     @NotNull(message = "Username can not be blank")
     @Size(min = 3, max = 255, message = "Username must be between 3 to 255 letters long")
     @UniqueUsernameExclPrincipal
     private String username;
+
+    @NotNull(message = "E-mail can not be blank")
+    @Email(message = "Bad e-mail format")
+    @Size(min = 1, max = 255, message = "E-mail must be maximally 255 letters long")
+    private String email;
 }

@@ -7,6 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.util.Optional;
 
 public class UniqueUsernameExclPrincipalValidator implements ConstraintValidator<UniqueUsernameExclPrincipal, String> {
 
@@ -20,14 +21,14 @@ public class UniqueUsernameExclPrincipalValidator implements ConstraintValidator
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-        User inDB = userRepository.findByUsername(value);
+        Optional<User> inDBOptional = userRepository.findByUsername(value);
 
-        if(inDB == null) {
+        if(inDBOptional.isEmpty()) {
             return true;
         }
 
         User auth = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(inDB.getId().equals(auth.getId())) {
+        if(inDBOptional.get().getId().equals(auth.getId())) {
             return true;
         }
         return false;

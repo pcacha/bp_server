@@ -10,14 +10,14 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 public class UserVM {
-    private Long id;
+    private Long userId;
     private String username;
     @JsonFormat(pattern = "dd.M. yyyy")
     private Date createdAt;
     private Boolean isBanned;
 
     public UserVM(User user) {
-        this.id = user.getId();
+        this.userId = user.getId();
         this.username = user.getUsername();
         this.createdAt = user.getCreatedAt();
         this.isBanned = user.getBanned();
