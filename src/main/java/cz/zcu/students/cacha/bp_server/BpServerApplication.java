@@ -5,6 +5,7 @@ import cz.zcu.students.cacha.bp_server.domain.Role;
 import cz.zcu.students.cacha.bp_server.repositories.LanguageRepository;
 import cz.zcu.students.cacha.bp_server.repositories.RoleRepository;
 import cz.zcu.students.cacha.bp_server.security.JwtAuthenticationFilter;
+import org.apache.tika.Tika;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -32,6 +33,11 @@ public class BpServerApplication {
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
         return new JwtAuthenticationFilter();
+    }
+
+    @Bean
+    public Tika tika() {
+        return new Tika();
     }
 
     @Bean

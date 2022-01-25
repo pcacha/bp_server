@@ -7,11 +7,13 @@ import cz.zcu.students.cacha.bp_server.services.TranslationService;
 import cz.zcu.students.cacha.bp_server.shared.CurrentUser;
 import cz.zcu.students.cacha.bp_server.view_models.NewTranslationVM;
 import cz.zcu.students.cacha.bp_server.view_models.TranslationSequenceVM;
+import cz.zcu.students.cacha.bp_server.view_models.TranslationTextVM;
 import cz.zcu.students.cacha.bp_server.view_models.TranslationVM;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Set;
 
 @RestController
@@ -39,9 +41,9 @@ public class TranslationController {
         return translations;
     }
 
-    @DeleteMapping("/sequence/{id}")
-    public GenericResponse rollback(@PathVariable Long id, @CurrentUser User user) {
-        translationService.rollback(id, user);
+    @DeleteMapping("/sequence/{translationId}")
+    public GenericResponse rollback(@PathVariable Long translationId, @CurrentUser User user) {
+        translationService.rollback(translationId, user);
         return new GenericResponse("Rollback processed");
     }
 
@@ -52,8 +54,15 @@ public class TranslationController {
     }
 
     @PostMapping("/new/{exhibitId}/{languageId}")
-    public GenericResponse saveNewTranslation(@PathVariable Long exhibitId, @PathVariable Long languageId, @RequestBody Translation newTranslation, @CurrentUser User user) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public GenericResponse saveNewTranslation(@PathVariable Long exhibitId, @PathVariable Long languageId, @Valid @RequestBody Translation newTranslation, @CurrentUser User user) {
         translationService.saveNewTranslation(exhibitId, languageId, newTranslation, user);
         return new GenericResponse("Translation saved");
+    }
+
+    @GetMapping("/latest/{exhibitId}/{languageId}")
+    public TranslationTextVM getLatestTranslationText(@PathVariable Long exhibitId, @PathVariable Long languageId, @CurrentUser User user) {
+        TranslationTextVM translationText = translationService.getLatestTranslationText(exhibitId, languageId, user);
+        return translationText;
     }
 }

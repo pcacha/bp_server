@@ -39,12 +39,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                // TODO
-                // .antMatchers("/articlemanager/**", "/usermanager/**").hasAuthority(RolesConstants.ROLE_ADMIN)
-                // .antMatchers("/articles/**").hasAuthority(RolesConstants.ROLE_AUTHOR)
-                .antMatchers("/translations/**").hasAuthority(RolesConstants.ROLE_TRANSLATOR)
-                .antMatchers("/users/register", "/users/login").permitAll()
-                .antMatchers("/users/**").hasAnyAuthority(RolesConstants.ROLE_TRANSLATOR, RolesConstants.ROLE_INSTITUTION_OWNER, RolesConstants.ROLE_ADMIN);
+                // TODO !!! - projít všechny endpointy
+                .antMatchers("/users/register", "/users/login", "/institutions",
+                        "/exhibits/all/**").permitAll()
+                .antMatchers("/users/**").hasAnyAuthority(RolesConstants.ROLE_TRANSLATOR, RolesConstants.ROLE_INSTITUTION_OWNER,
+                        RolesConstants.ROLE_ADMIN)
+                .antMatchers("/translations/**").hasAuthority(RolesConstants.ROLE_TRANSLATOR);
 
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

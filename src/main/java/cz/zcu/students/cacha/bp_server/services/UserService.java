@@ -36,7 +36,7 @@ public class UserService {
 
     public void save(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        user.getRoles().add(roleRepository.findByName(ROLE_TRANSLATOR));
+        user.getRoles().add(roleRepository.findByName(ROLE_TRANSLATOR).get());
         userRepository.save(user);
     }
 

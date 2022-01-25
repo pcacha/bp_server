@@ -11,6 +11,7 @@ import cz.zcu.students.cacha.bp_server.repositories.LanguageRepository;
 import cz.zcu.students.cacha.bp_server.repositories.TranslationRepository;
 import cz.zcu.students.cacha.bp_server.view_models.NewTranslationVM;
 import cz.zcu.students.cacha.bp_server.view_models.TranslationSequenceVM;
+import cz.zcu.students.cacha.bp_server.view_models.TranslationTextVM;
 import cz.zcu.students.cacha.bp_server.view_models.TranslationVM;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -103,5 +104,14 @@ public class TranslationService {
         newTranslation.setExhibit(exhibitOptional.get());
         newTranslation.setLanguage(languageOptional.get());
         translationRepository.save(newTranslation);
+    }
+
+    public TranslationTextVM getLatestTranslationText(Long exhibitId, Long languageId, User user) {
+        Optional<Translation> translationOptional = translationRepository.getLatestTranslation(user.getId(), exhibitId, languageId);
+        if(translationOptional.isEmpty()) {
+            return new TranslationTextVM("");
+        }
+
+        return new TranslationTextVM(translationOptional.get().getText());
     }
 }

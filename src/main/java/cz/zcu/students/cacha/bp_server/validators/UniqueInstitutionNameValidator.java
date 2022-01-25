@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.util.Optional;
 
 public class UniqueInstitutionNameValidator implements ConstraintValidator<UniqueInstitutionName, String> {
 
@@ -19,8 +20,8 @@ public class UniqueInstitutionNameValidator implements ConstraintValidator<Uniqu
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-        Institution inDB = institutionRepository.findByName(value);
-        if(inDB == null) {
+        Optional<Institution> inDBOptional = institutionRepository.findByName(value);
+        if(inDBOptional.isEmpty()) {
             return true;
         }
         return false;
