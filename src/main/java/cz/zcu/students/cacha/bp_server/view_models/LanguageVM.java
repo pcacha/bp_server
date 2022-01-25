@@ -9,9 +9,11 @@ import lombok.NoArgsConstructor;
 public class LanguageVM {
     private Long languageId;
     private String name;
+    private String code;
 
     public LanguageVM(Language language) {
         languageId = language.getId();
         name = language.getName();
+        code = language.getCode();
     }
 }

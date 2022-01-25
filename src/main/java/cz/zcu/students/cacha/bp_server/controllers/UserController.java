@@ -40,13 +40,13 @@ public class UserController {
         return response;
     }
 
-    @PostMapping("/updateUser")
+    @PutMapping("/updateUser")
     public GenericResponse updateUser(@Valid @RequestBody UserUpdateVM userUpdateVM, @CurrentUser User user) {
         userService.updateUser(user, userUpdateVM.getUsername(), userUpdateVM.getEmail());
         return new GenericResponse("User updated");
     }
 
-    @PostMapping("/updatePassword")
+    @PutMapping("/updatePassword")
     public GenericResponse updatePassword(@Valid @RequestBody PasswordUpdateVM passwordUpdateVM, @CurrentUser User user) {
         userService.updatePassword(user, passwordUpdateVM.getPassword());
         return new GenericResponse("Password updated");

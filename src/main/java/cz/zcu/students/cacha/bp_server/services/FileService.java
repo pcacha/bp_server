@@ -7,7 +7,10 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Base64;
+import java.util.Date;
 import java.util.UUID;
 
 import static cz.zcu.students.cacha.bp_server.assets_store_config.WebConfiguration.INSTITUTIONS_IMAGES_FOLDER;
@@ -30,7 +33,15 @@ public class FileService {
         return imageName;
     }
 
+    public void deleteInstitutionImage(String image) {
+        try {
+            Files.deleteIfExists(Paths.get(INSTITUTIONS_IMAGES_FOLDER + "/" + image));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private String getRandomName() {
-        return UUID.randomUUID().toString().replace("-", "");
+        return (new Date().getTime()) + "_" +  UUID.randomUUID().toString().replace("-", "");
     }
 }

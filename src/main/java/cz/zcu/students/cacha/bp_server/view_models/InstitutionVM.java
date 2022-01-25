@@ -11,11 +11,15 @@ public class InstitutionVM {
     private String name;
     private String address;
     private String image;
+    private String latitude;
+    private String longitude;
 
     public InstitutionVM(Institution institution) {
         institutionId = institution.getId();
         name = institution.getName();
         address = institution.getAddress();
         image = institution.getImage();
+        latitude = institution.getLatitude();
+        longitude = institution.getLongitude();
     }
 }
