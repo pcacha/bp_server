@@ -19,8 +19,8 @@ public class Translation {
     private Long id;
 
     @NotNull(message = "Translation can not be empty")
-    @Size(min = 10, max = 20000, message = "Translation must be between 10 to 20000 letters long")
-    @Column(length = 20000)
+    @Size(min = 10, max = 15000, message = "Translation must be between 10 to 15000 letters long")
+    @Column(length = 15000)
     private String text;
 
     private Boolean isOfficial;

@@ -49,8 +49,7 @@ public class BpServerApplication {
             }
 
             if(languageRepository.count() == 0) {
-                ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-                try(InputStream is = classloader.getResourceAsStream("language_codes.csv")) {
+                try(InputStream is =  getClass().getClassLoader().getResourceAsStream("static/language_codes.csv")) {
                     try(BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
                         while(reader.ready()) {
                             String line = reader.readLine();
