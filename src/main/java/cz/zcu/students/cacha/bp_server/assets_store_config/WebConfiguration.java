@@ -15,6 +15,7 @@ public class WebConfiguration implements WebMvcConfigurer {
 
     public static final String INSTITUTIONS_IMAGES_FOLDER = "institutions_images";
     public static final String EXHIBITS_IMAGES_FOLDER = "exhibits_images";
+    public static final String INFO_LABELS_IMAGES_FOLDER = "info_labels_images";
 
     public static final String DEFAULT_INSTITUTION_IMAGE = "default_institution.jpg";
     public static final String DEFAULT_EXHIBIT_IMAGE = "default_exhibit.jpg";
@@ -28,6 +29,10 @@ public class WebConfiguration implements WebMvcConfigurer {
         registry.addResourceHandler("/" + EXHIBITS_IMAGES_FOLDER + "/**")
                 .addResourceLocations("file:" + EXHIBITS_IMAGES_FOLDER + "/")
                 .setCacheControl(CacheControl.maxAge(365, TimeUnit.DAYS));
+
+        registry.addResourceHandler("/" + INFO_LABELS_IMAGES_FOLDER + "/**")
+                .addResourceLocations("file:" + INFO_LABELS_IMAGES_FOLDER + "/")
+                .setCacheControl(CacheControl.maxAge(365, TimeUnit.DAYS));
     }
 
     @Bean
@@ -35,6 +40,7 @@ public class WebConfiguration implements WebMvcConfigurer {
         return (args) -> {
             createNonExistingFolder(INSTITUTIONS_IMAGES_FOLDER);
             createNonExistingFolder(EXHIBITS_IMAGES_FOLDER);
+            createNonExistingFolder(INFO_LABELS_IMAGES_FOLDER);
         };
     }
 

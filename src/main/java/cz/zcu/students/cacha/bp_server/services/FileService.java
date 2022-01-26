@@ -13,7 +13,7 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.UUID;
 
-import static cz.zcu.students.cacha.bp_server.assets_store_config.WebConfiguration.INSTITUTIONS_IMAGES_FOLDER;
+import static cz.zcu.students.cacha.bp_server.assets_store_config.WebConfiguration.*;
 
 @Service
 public class FileService {
@@ -26,16 +26,40 @@ public class FileService {
     }
 
     public String saveInstitutionImage(String encodedImage) throws IOException {
+        return saveImage(INSTITUTIONS_IMAGES_FOLDER, encodedImage);
+    }
+
+    public void deleteInstitutionImage(String image) {
+        deleteImage(INSTITUTIONS_IMAGES_FOLDER, image);
+    }
+
+    public String saveExhibitImage(String encodedImage) throws IOException {
+        return saveImage(EXHIBITS_IMAGES_FOLDER, encodedImage);
+    }
+
+    public void deleteExhibitImage(String image) {
+        deleteImage(EXHIBITS_IMAGES_FOLDER, image);
+    }
+
+    public String saveInfoLabelImage(String encodedInfoLabel) throws IOException {
+        return saveImage(INFO_LABELS_IMAGES_FOLDER, encodedInfoLabel);
+    }
+
+    public void deleteInfoLabelImage(String image) {
+        deleteImage(INFO_LABELS_IMAGES_FOLDER, image);
+    }
+
+    private String saveImage(String directory, String encodedImage) throws IOException {
         String imageName = getRandomName();
         byte[] decodedBytes = Base64.getDecoder().decode(encodedImage);
-        File target = new File(INSTITUTIONS_IMAGES_FOLDER + "/" + imageName);
+        File target = new File(directory + "/" + imageName);
         FileUtils.writeByteArrayToFile(target, decodedBytes);
         return imageName;
     }
 
-    public void deleteInstitutionImage(String image) {
+    private void deleteImage(String directory, String name) {
         try {
-            Files.deleteIfExists(Paths.get(INSTITUTIONS_IMAGES_FOLDER + "/" + image));
+            Files.deleteIfExists(Paths.get(directory + "/" + name));
         } catch (IOException e) {
             e.printStackTrace();
         }
