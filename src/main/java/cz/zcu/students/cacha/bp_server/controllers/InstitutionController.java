@@ -6,6 +6,7 @@ import cz.zcu.students.cacha.bp_server.responses.GenericResponse;
 import cz.zcu.students.cacha.bp_server.services.InstitutionService;
 import cz.zcu.students.cacha.bp_server.shared.CurrentUser;
 import cz.zcu.students.cacha.bp_server.view_models.AllowedLanguagesVM;
+import cz.zcu.students.cacha.bp_server.view_models.EmailVM;
 import cz.zcu.students.cacha.bp_server.view_models.ImageVM;
 import cz.zcu.students.cacha.bp_server.view_models.InstitutionVM;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,5 +64,11 @@ public class InstitutionController {
     public InstitutionVM getMyInstitution(@CurrentUser User user) {
         InstitutionVM institution = institutionService.getMyInstitution(user);
         return institution;
+    }
+
+    @PostMapping("/myInstitution/addManager")
+    public GenericResponse addInstitutionManager(@Valid @RequestBody EmailVM emailVM, @CurrentUser User user) {
+        institutionService.addInstitutionManager(emailVM, user);
+        return new GenericResponse("Email with credentials to a new institution manager account sent");
     }
 }

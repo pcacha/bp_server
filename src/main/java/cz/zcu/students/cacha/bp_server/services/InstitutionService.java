@@ -11,14 +11,18 @@ import cz.zcu.students.cacha.bp_server.repositories.LanguageRepository;
 import cz.zcu.students.cacha.bp_server.repositories.RoleRepository;
 import cz.zcu.students.cacha.bp_server.repositories.UserRepository;
 import cz.zcu.students.cacha.bp_server.view_models.AllowedLanguagesVM;
+import cz.zcu.students.cacha.bp_server.view_models.EmailVM;
 import cz.zcu.students.cacha.bp_server.view_models.ImageVM;
 import cz.zcu.students.cacha.bp_server.view_models.InstitutionVM;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static cz.zcu.students.cacha.bp_server.assets_store_config.WebConfiguration.DEFAULT_INSTITUTION_IMAGE;
@@ -41,7 +45,13 @@ public class InstitutionService {
     private LanguageRepository languageRepository;
 
     @Autowired
+    private EmailService emailService;
+
+    @Autowired
     private FileService fileService;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public Set<InstitutionVM> getInstitutions() {
         Set<InstitutionVM> institutions = institutionRepository.findAll().stream().map(InstitutionVM::new).collect(Collectors.toSet());
@@ -135,5 +145,33 @@ public class InstitutionService {
         }
 
         return new InstitutionVM(user.getInstitution());
+    }
+
+    public void addInstitutionManager(EmailVM emailVM, User user) {
+        if(!user.isInstitutionOwner()) {
+            throw new CannotPerformActionException("User does not own institution");
+        }
+        Institution institution = user.getInstitution();
+
+        String username = Long.toString(new Date().getTime());
+        while(userRepository.findByUsername(username).isPresent()) {
+            username = Long.toString(new Date().getTime());
+        }
+
+        String password = UUID.randomUUID().toString();
+
+        User newManager = new User();
+        newManager.setUsername(username);
+        newManager.setPassword(bCryptPasswordEncoder.encode(password));
+        newManager.setEmail(emailVM.getEmail());
+        newManager.setInstitution(institution);
+        newManager.getRoles().add(roleRepository.findByName(ROLE_TRANSLATOR).get());
+        newManager.getRoles().add(roleRepository.findByName(ROLE_INSTITUTION_OWNER).get());
+        userRepository.save(newManager);
+
+        emailService.sendSimpleMessage(emailVM.getEmail(), "Institution manager credentials",
+                "You have been granted managerial rights to a cultural institution registered in the system for community translation of information texts - "
+                        + institution.getName() + ". The credentials are as follows:\n\nusername: " + username + "\n" + "password: " + password +
+                        "\n\nYou can change the credentials in profile settings after logging in to the system.");
     }
 }
