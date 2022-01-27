@@ -71,4 +71,10 @@ public class InstitutionController {
         institutionService.addInstitutionManager(emailVM, user);
         return new GenericResponse("Email with credentials to a new institution manager account sent");
     }
+
+    @DeleteMapping("/myInstitution")
+    public GenericResponse deleteMyInstitution(@CurrentUser User user) {
+        institutionService.deleteMyInstitution(user);
+        return new GenericResponse("Institution deleted");
+    }
 }

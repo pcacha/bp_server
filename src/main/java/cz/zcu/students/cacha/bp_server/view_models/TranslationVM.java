@@ -12,13 +12,17 @@ import java.util.Date;
 public class TranslationVM {
 
     private Long translationId;
+    private String authorUsername;
     private String translatedText;
-    @JsonFormat(pattern = "dd.M. yyyy")
+    private Boolean isOfficial;
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date createdAt;
 
     public TranslationVM(Translation translation) {
         translationId = translation.getId();
+        authorUsername = translation.getAuthor().getUsername();
         translatedText = translation.getText();
+        isOfficial = translation.getIsOfficial();
         createdAt = translation.getCreatedAt();
     }
 }

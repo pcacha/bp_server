@@ -12,7 +12,7 @@ import java.util.Date;
 public class UserVM {
     private Long userId;
     private String username;
-    @JsonFormat(pattern = "dd.M. yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date createdAt;
     private Boolean isBanned;
 

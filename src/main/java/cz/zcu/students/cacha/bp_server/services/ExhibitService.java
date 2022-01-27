@@ -1,31 +1,33 @@
 package cz.zcu.students.cacha.bp_server.services;
 
 import cz.zcu.students.cacha.bp_server.domain.Exhibit;
+import cz.zcu.students.cacha.bp_server.domain.Translation;
 import cz.zcu.students.cacha.bp_server.domain.User;
 import cz.zcu.students.cacha.bp_server.exceptions.CannotPerformActionException;
 import cz.zcu.students.cacha.bp_server.exceptions.CannotSaveImageException;
 import cz.zcu.students.cacha.bp_server.exceptions.NotFoundException;
 import cz.zcu.students.cacha.bp_server.repositories.ExhibitRepository;
-import cz.zcu.students.cacha.bp_server.view_models.ExhibitTranslateVM;
-import cz.zcu.students.cacha.bp_server.view_models.ExhibitVM;
-import cz.zcu.students.cacha.bp_server.view_models.ImageVM;
-import cz.zcu.students.cacha.bp_server.view_models.UpdateExhibitVM;
+import cz.zcu.students.cacha.bp_server.repositories.TranslationRepository;
+import cz.zcu.students.cacha.bp_server.view_models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import static cz.zcu.students.cacha.bp_server.assets_store_config.WebConfiguration.DEFAULT_EXHIBIT_IMAGE;
-import static cz.zcu.students.cacha.bp_server.assets_store_config.WebConfiguration.DEFAULT_INSTITUTION_IMAGE;
 
 @Service
 public class ExhibitService {
 
     @Autowired
     private ExhibitRepository exhibitsRepository;
+
+    @Autowired
+    private TranslationRepository translationRepository;
 
     @Autowired
     private FileService fileService;
@@ -46,12 +48,18 @@ public class ExhibitService {
 
     public void deleteExhibit(Long exhibitId, User user) {
         Exhibit exhibit = verifyUserManagesExhibit(exhibitId, user);
+        deleteExhibit(exhibit);
+    }
 
+    public void deleteExhibit(Exhibit exhibit) {
         if(!exhibit.getImage().equals(DEFAULT_EXHIBIT_IMAGE)) {
             fileService.deleteExhibitImage(exhibit.getImage());
         }
-
         fileService.deleteInfoLabelImage(exhibit.getInfoLabel());
+
+        Iterator<Translation> translationIterator = exhibit.getTranslations().iterator();
+        translationIterator.forEachRemaining(t -> translationRepository.delete(t));
+
         exhibitsRepository.delete(exhibit);
     }
 
@@ -132,21 +140,26 @@ public class ExhibitService {
 
     public void updateExhibit(Long exhibitId, UpdateExhibitVM updateExhibitVM, User user) {
         Exhibit exhibit = verifyUserManagesExhibit(exhibitId, user);
-
-        if(updateExhibitVM.getBuilding().equals("")) {
-            updateExhibitVM.setBuilding(null);
-        }
-        if(updateExhibitVM.getRoom().equals("")) {
-            updateExhibitVM.setRoom(null);
-        }
-        if(updateExhibitVM.getShowcase().equals("")) {
-            updateExhibitVM.setShowcase(null);
-        }
-
         exhibit.setName(updateExhibitVM.getName());
         exhibit.setBuilding(updateExhibitVM.getBuilding());
         exhibit.setRoom(updateExhibitVM.getRoom());
         exhibit.setShowcase(updateExhibitVM.getShowcase());
         exhibitsRepository.save(exhibit);
+    }
+
+    public Set<ExhibitVM> getAllExhibitsOfUsersInstitution(User user) {
+        if(!user.isInstitutionOwner()) {
+            throw new CannotPerformActionException("User does not own institution");
+        }
+
+        return user.getInstitution().getExhibits().stream().map(ExhibitVM::new).collect(Collectors.toSet());
+    }
+
+    public OfficialTranslationsOverviewVM getOfficialTranslationsOverview(User user) {
+        if(!user.isInstitutionOwner()) {
+            throw new CannotPerformActionException("User does not own institution");
+        }
+
+        return new OfficialTranslationsOverviewVM(user.getInstitution().getLanguages(), user.getInstitution().getExhibits());
     }
 }

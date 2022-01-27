@@ -1,8 +1,6 @@
 package cz.zcu.students.cacha.bp_server.services;
 
-import cz.zcu.students.cacha.bp_server.domain.Institution;
-import cz.zcu.students.cacha.bp_server.domain.Language;
-import cz.zcu.students.cacha.bp_server.domain.User;
+import cz.zcu.students.cacha.bp_server.domain.*;
 import cz.zcu.students.cacha.bp_server.exceptions.CannotPerformActionException;
 import cz.zcu.students.cacha.bp_server.exceptions.CannotSaveImageException;
 import cz.zcu.students.cacha.bp_server.exceptions.NotFoundException;
@@ -19,12 +17,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import static cz.zcu.students.cacha.bp_server.assets_store_config.WebConfiguration.DEFAULT_EXHIBIT_IMAGE;
 import static cz.zcu.students.cacha.bp_server.assets_store_config.WebConfiguration.DEFAULT_INSTITUTION_IMAGE;
 import static cz.zcu.students.cacha.bp_server.shared.RolesConstants.ROLE_INSTITUTION_OWNER;
 import static cz.zcu.students.cacha.bp_server.shared.RolesConstants.ROLE_TRANSLATOR;
@@ -49,6 +45,9 @@ public class InstitutionService {
 
     @Autowired
     private FileService fileService;
+
+    @Autowired
+    private ExhibitService exhibitService;
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -173,5 +172,33 @@ public class InstitutionService {
                 "You have been granted managerial rights to a cultural institution registered in the system for community translation of information texts - "
                         + institution.getName() + ". The credentials are as follows:\n\nusername: " + username + "\n" + "password: " + password +
                         "\n\nYou can change the credentials in profile settings after logging in to the system.");
+    }
+
+    public void deleteMyInstitution(User user) {
+        if(!user.isInstitutionOwner()) {
+            throw new CannotPerformActionException("User does not own institution");
+        }
+        Institution institution = user.getInstitution();
+
+        if(!institution.getImage().equals(DEFAULT_INSTITUTION_IMAGE)) {
+            fileService.deleteInstitutionImage(institution.getImage());
+        }
+
+        Iterator<Exhibit> exhibitIterator = institution.getExhibits().iterator();
+        exhibitIterator.forEachRemaining(e -> exhibitService.deleteExhibit(e));
+        institution.getExhibits().clear();
+
+        institution.getLanguages().clear();
+
+        Iterator<User> userIterator = institution.getOwners().iterator();
+        userIterator.forEachRemaining(u -> {
+            if(u.isInstitutionOwner()) {
+                u.getRoles().remove(roleRepository.findByName(ROLE_INSTITUTION_OWNER).get());
+            }
+            u.setInstitution(null);
+        });
+        institution.getOwners().clear();
+
+        institutionRepository.delete(institution);
     }
 }

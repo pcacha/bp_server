@@ -4,15 +4,13 @@ import cz.zcu.students.cacha.bp_server.domain.Exhibit;
 import cz.zcu.students.cacha.bp_server.domain.Language;
 import cz.zcu.students.cacha.bp_server.domain.Translation;
 import cz.zcu.students.cacha.bp_server.domain.User;
+import cz.zcu.students.cacha.bp_server.exceptions.CannotPerformActionException;
 import cz.zcu.students.cacha.bp_server.exceptions.NotFoundException;
 import cz.zcu.students.cacha.bp_server.exceptions.UnauthorizedException;
 import cz.zcu.students.cacha.bp_server.repositories.ExhibitRepository;
 import cz.zcu.students.cacha.bp_server.repositories.LanguageRepository;
 import cz.zcu.students.cacha.bp_server.repositories.TranslationRepository;
-import cz.zcu.students.cacha.bp_server.view_models.NewTranslationVM;
-import cz.zcu.students.cacha.bp_server.view_models.TranslationSequenceVM;
-import cz.zcu.students.cacha.bp_server.view_models.TranslationTextVM;
-import cz.zcu.students.cacha.bp_server.view_models.TranslationVM;
+import cz.zcu.students.cacha.bp_server.view_models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -113,5 +111,65 @@ public class TranslationService {
         }
 
         return new TranslationTextVM(translationOptional.get().getText());
+    }
+
+    public OfficialTranslationsVM getOfficialTranslations(Long exhibitId, Long languageId, User user) {
+        Optional<Exhibit> exhibitOptional = exhibitRepository.findById(exhibitId);
+        if(exhibitOptional.isEmpty()) {
+            throw new NotFoundException("Exhibit not found");
+        }
+        Exhibit exhibit = exhibitOptional.get();
+
+        if(!user.isInstitutionOwner()) {
+            throw new CannotPerformActionException("User does not own institution");
+        }
+
+        if(!exhibit.getInstitution().equals(user.getInstitution())) {
+            throw new CannotPerformActionException("User does not manage this exhibit");
+        }
+
+        Optional<Language> languageOptional = languageRepository.findById(languageId);
+        if(languageOptional.isEmpty()) {
+            throw new NotFoundException("Language not found");
+        }
+
+        Set<Translation> latestTranslations = translationRepository.getLatestTranslations(exhibitId, languageId);
+        Optional<Translation> officialOptional = translationRepository.getOfficialTranslation(exhibitId, languageId);
+
+        if(officialOptional.isPresent() && !latestTranslations.contains(officialOptional.get())) {
+            latestTranslations.add(officialOptional.get());
+        }
+
+        return new OfficialTranslationsVM(latestTranslations, exhibit);
+    }
+
+    public void makeTranslationOfficial(Long translationId, User user) {
+        Optional<Translation> translationOptional = translationRepository.findById(translationId);
+        if(translationOptional.isEmpty()) {
+            throw new NotFoundException("Translation not found");
+        }
+        Translation translation = translationOptional.get();
+
+        if(!user.isInstitutionOwner()) {
+            throw new CannotPerformActionException("User does not own institution");
+        }
+
+        if(!translation.getExhibit().getInstitution().equals(user.getInstitution())) {
+            throw new CannotPerformActionException("User does not manage this exhibit");
+        }
+
+        if(translation.getIsOfficial()) {
+            return;
+        }
+
+        Optional<Translation> officialOptional = translationRepository.getOfficialTranslation(translation.getExhibit().getId(), translation.getLanguage().getId());
+
+        if(officialOptional.isPresent()) {
+            officialOptional.get().setIsOfficial(false);
+            translationRepository.save(officialOptional.get());
+        }
+
+        translation.setIsOfficial(true);
+        translationRepository.save(translation);
     }
 }

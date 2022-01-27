@@ -5,10 +5,7 @@ import cz.zcu.students.cacha.bp_server.domain.User;
 import cz.zcu.students.cacha.bp_server.responses.GenericResponse;
 import cz.zcu.students.cacha.bp_server.services.TranslationService;
 import cz.zcu.students.cacha.bp_server.shared.CurrentUser;
-import cz.zcu.students.cacha.bp_server.view_models.NewTranslationVM;
-import cz.zcu.students.cacha.bp_server.view_models.TranslationSequenceVM;
-import cz.zcu.students.cacha.bp_server.view_models.TranslationTextVM;
-import cz.zcu.students.cacha.bp_server.view_models.TranslationVM;
+import cz.zcu.students.cacha.bp_server.view_models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -64,5 +61,17 @@ public class TranslationController {
     public TranslationTextVM getLatestTranslationText(@PathVariable Long exhibitId, @PathVariable Long languageId, @CurrentUser User user) {
         TranslationTextVM translationText = translationService.getLatestTranslationText(exhibitId, languageId, user);
         return translationText;
+    }
+
+    @GetMapping("/officialOverview/{exhibitId}/{languageId}")
+    public OfficialTranslationsVM getOfficialTranslations(@PathVariable Long exhibitId, @PathVariable Long languageId, @CurrentUser User user) {
+        OfficialTranslationsVM officialTranslations = translationService.getOfficialTranslations(exhibitId, languageId, user);
+        return officialTranslations;
+    }
+
+    @PostMapping("/official/{translationId}")
+    public GenericResponse makeTranslationOfficial(@PathVariable Long translationId, @CurrentUser User user) {
+        translationService.makeTranslationOfficial(translationId, user);
+        return new GenericResponse("Translation made official");
     }
 }

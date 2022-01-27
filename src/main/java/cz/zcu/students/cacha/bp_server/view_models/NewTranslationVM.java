@@ -8,11 +8,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class NewTranslationVM {
     private String exhibitName;
+    private String infoLabelText;
     private String infoLabel;
     private String translatedText;
 
     public NewTranslationVM(Exhibit exhibit, String translatedText) {
         exhibitName = exhibit.getName();
+        infoLabelText = exhibit.getInfoLabelText();
         infoLabel = exhibit.getInfoLabel();
         this.translatedText = translatedText;
     }

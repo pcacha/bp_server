@@ -23,7 +23,7 @@ public class Exhibit {
     private Long id;
 
     @NotNull(message = "Name can not be blank")
-    @Size(min = 3, max = 255, message = "Name must be between 3 to 255 letters long")
+    @Size(min = 1, max = 255, message = "Name must be between 1 to 255 letters long")
     private String name;
 
     private String image = DEFAULT_EXHIBIT_IMAGE;
@@ -32,6 +32,11 @@ public class Exhibit {
     @PngJpgFile
     private String encodedImage;
 
+    @NotNull(message = "Info label text can not be blank")
+    @Size(max = 15000, message = "The text of an information label must be maximally 15000 letters long")
+    @Column(length = 15000)
+    private String infoLabelText;
+
     private String infoLabel;
 
     @Transient
@@ -39,13 +44,16 @@ public class Exhibit {
     @NotNull(message = "Informational label of an exhibit can not be blank")
     private String encodedInfoLabel;
 
-    @Size(min = 1, max = 255, message = "Building must be between 1 to 255 letters long")
+    @NotNull(message = "Building can not be blank")
+    @Size(max = 255, message = "Building must be maximally 255 letters long")
     private String building;
 
-    @Size(min = 1, max = 255, message = "Room must be between 1 to 255 letters long")
+    @NotNull(message = "Room can not be blank")
+    @Size(max = 255, message = "Room must be maximally 255 letters long")
     private String room;
 
-    @Size(min = 1, max = 255, message = "Show-case must be between 1 to 255 letters long")
+    @NotNull(message = "Show-case can not be blank")
+    @Size(max = 255, message = "Show-case must be maximally 255 letters long")
     private String showcase;
 
     @OneToMany(mappedBy = "exhibit", fetch = FetchType.LAZY)

@@ -6,10 +6,7 @@ import cz.zcu.students.cacha.bp_server.responses.GenericResponse;
 import cz.zcu.students.cacha.bp_server.services.ExhibitService;
 import cz.zcu.students.cacha.bp_server.services.InstitutionService;
 import cz.zcu.students.cacha.bp_server.shared.CurrentUser;
-import cz.zcu.students.cacha.bp_server.view_models.ExhibitTranslateVM;
-import cz.zcu.students.cacha.bp_server.view_models.ExhibitVM;
-import cz.zcu.students.cacha.bp_server.view_models.ImageVM;
-import cz.zcu.students.cacha.bp_server.view_models.UpdateExhibitVM;
+import cz.zcu.students.cacha.bp_server.view_models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -34,9 +31,8 @@ public class ExhibitController {
     }
 
     @GetMapping("/all/myInstitution")
-    public Set<ExhibitVM> getAllExhibitsOfInstitution(@CurrentUser User user) {
-        Long institutionId = institutionService.getMyInstitution(user).getInstitutionId();
-        Set<ExhibitVM> exhibits = exhibitService.getExhibitsOfInstitution(institutionId);
+    public Set<ExhibitVM> getAllExhibitsOfUsersInstitution(@CurrentUser User user) {
+        Set<ExhibitVM> exhibits = exhibitService.getAllExhibitsOfUsersInstitution(user);
         return exhibits;
     }
 
@@ -75,5 +71,11 @@ public class ExhibitController {
     public GenericResponse updateExhibit(@PathVariable Long exhibitId, @Valid @RequestBody UpdateExhibitVM updateExhibitVM, @CurrentUser User user) {
         exhibitService.updateExhibit(exhibitId, updateExhibitVM, user);
         return new GenericResponse("Exhibit updated");
+    }
+
+    @GetMapping("/approveTranslations/myInstitution")
+    public OfficialTranslationsOverviewVM getOfficialTranslationsOverview(@CurrentUser User user) {
+        OfficialTranslationsOverviewVM officialTranslationsOverviewVM = exhibitService.getOfficialTranslationsOverview(user);
+        return officialTranslationsOverviewVM;
     }
 }

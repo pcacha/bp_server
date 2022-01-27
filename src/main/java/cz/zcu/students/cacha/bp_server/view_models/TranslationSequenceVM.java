@@ -19,7 +19,7 @@ public class TranslationSequenceVM {
     private String exhibitName;
     private String language;
     private String exhibitImage;
-    @JsonFormat(pattern = "dd.M. yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date latestTranslationCreatedAt;
 
     public TranslationSequenceVM(Translation translation) {
