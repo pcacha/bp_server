@@ -74,4 +74,10 @@ public class TranslationController {
         translationService.makeTranslationOfficial(translationId, user);
         return new GenericResponse("Translation made official");
     }
+
+    @GetMapping("/official/{exhibitId}/{languageCode}")
+    public TranslationVM getOfficialTranslation(@PathVariable Long exhibitId, @PathVariable String languageCode) {
+        TranslationVM translation = translationService.getOfficialTranslation(exhibitId, languageCode);
+        return translation;
+    }
 }

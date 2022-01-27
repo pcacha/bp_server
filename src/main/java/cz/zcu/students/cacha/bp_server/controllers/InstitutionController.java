@@ -5,10 +5,7 @@ import cz.zcu.students.cacha.bp_server.domain.User;
 import cz.zcu.students.cacha.bp_server.responses.GenericResponse;
 import cz.zcu.students.cacha.bp_server.services.InstitutionService;
 import cz.zcu.students.cacha.bp_server.shared.CurrentUser;
-import cz.zcu.students.cacha.bp_server.view_models.AllowedLanguagesVM;
-import cz.zcu.students.cacha.bp_server.view_models.EmailVM;
-import cz.zcu.students.cacha.bp_server.view_models.ImageVM;
-import cz.zcu.students.cacha.bp_server.view_models.InstitutionVM;
+import cz.zcu.students.cacha.bp_server.view_models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +23,12 @@ public class InstitutionController {
     @GetMapping
     public Set<InstitutionVM> getInstitutions() {
         Set<InstitutionVM> institutions = institutionService.getInstitutions();
+        return institutions;
+    }
+
+    @GetMapping("/ordered")
+    public Set<InstitutionVM> getInstitutions(@Valid @RequestBody CoordinatesVM coordinates) {
+        Set<InstitutionVM> institutions = institutionService.getInstitutionsOrdered(coordinates);
         return institutions;
     }
 

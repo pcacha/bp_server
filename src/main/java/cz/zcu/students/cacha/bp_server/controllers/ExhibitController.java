@@ -55,6 +55,13 @@ public class ExhibitController {
         return new GenericResponse("Exhibit saved");
     }
 
+    @PostMapping("/{institutionId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public GenericResponse saveExhibit(@PathVariable Long institutionId, @Valid @RequestBody Exhibit exhibit) {
+        exhibitService.saveExhibit(exhibit, institutionId);
+        return new GenericResponse("Exhibit saved");
+    }
+
     @PutMapping("/{exhibitId}/updateImage")
     public GenericResponse updateExhibitImage(@PathVariable Long exhibitId, @Valid @RequestBody ImageVM imageVM, @CurrentUser User user) {
         exhibitService.updateExhibitImage(exhibitId, imageVM, user);

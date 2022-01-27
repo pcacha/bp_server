@@ -1,12 +1,14 @@
 package cz.zcu.students.cacha.bp_server.services;
 
 import cz.zcu.students.cacha.bp_server.domain.Exhibit;
+import cz.zcu.students.cacha.bp_server.domain.Institution;
 import cz.zcu.students.cacha.bp_server.domain.Translation;
 import cz.zcu.students.cacha.bp_server.domain.User;
 import cz.zcu.students.cacha.bp_server.exceptions.CannotPerformActionException;
 import cz.zcu.students.cacha.bp_server.exceptions.CannotSaveImageException;
 import cz.zcu.students.cacha.bp_server.exceptions.NotFoundException;
 import cz.zcu.students.cacha.bp_server.repositories.ExhibitRepository;
+import cz.zcu.students.cacha.bp_server.repositories.InstitutionRepository;
 import cz.zcu.students.cacha.bp_server.repositories.TranslationRepository;
 import cz.zcu.students.cacha.bp_server.view_models.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,9 @@ public class ExhibitService {
 
     @Autowired
     private TranslationRepository translationRepository;
+
+    @Autowired
+    private InstitutionRepository institutionRepository;
 
     @Autowired
     private FileService fileService;
@@ -83,6 +88,19 @@ public class ExhibitService {
             throw new CannotPerformActionException("User does not own an institution");
         }
 
+        saveExhibitToInstitution(exhibit, user.getInstitution());
+    }
+
+    public void saveExhibit(Exhibit exhibit, Long institutionId) {
+        Optional<Institution> institutionOptional = institutionRepository.findById(institutionId);
+        if(institutionOptional.isEmpty()) {
+            throw new NotFoundException("Institution not found");
+        }
+
+        saveExhibitToInstitution(exhibit, institutionOptional.get());
+    }
+
+    private void saveExhibitToInstitution(Exhibit exhibit, Institution institution) {
         if(exhibit.getEncodedImage() != null) {
             String imageName;
 
@@ -102,7 +120,7 @@ public class ExhibitService {
             throw new CannotSaveImageException("Info label could not be saved");
         }
 
-        exhibit.setInstitution(user.getInstitution());
+        exhibit.setInstitution(institution);
         exhibitsRepository.save(exhibit);
     }
 

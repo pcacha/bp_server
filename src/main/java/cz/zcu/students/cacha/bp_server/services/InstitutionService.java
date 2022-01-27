@@ -8,10 +8,7 @@ import cz.zcu.students.cacha.bp_server.repositories.InstitutionRepository;
 import cz.zcu.students.cacha.bp_server.repositories.LanguageRepository;
 import cz.zcu.students.cacha.bp_server.repositories.RoleRepository;
 import cz.zcu.students.cacha.bp_server.repositories.UserRepository;
-import cz.zcu.students.cacha.bp_server.view_models.AllowedLanguagesVM;
-import cz.zcu.students.cacha.bp_server.view_models.EmailVM;
-import cz.zcu.students.cacha.bp_server.view_models.ImageVM;
-import cz.zcu.students.cacha.bp_server.view_models.InstitutionVM;
+import cz.zcu.students.cacha.bp_server.view_models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -200,5 +197,33 @@ public class InstitutionService {
         institution.getOwners().clear();
 
         institutionRepository.delete(institution);
+    }
+
+    public Set<InstitutionVM> getInstitutionsOrdered(CoordinatesVM coordinates) {
+        List<Institution> institutionsList = institutionRepository.findAll();
+
+        institutionsList.forEach(i -> i.setDistance(distance(i.getLatitude(), coordinates.getLatitude(), i.getLongitude(), coordinates.getLongitude(), 0, 0)));
+        institutionsList.sort(Comparator.comparingDouble(Institution::getDistance));
+
+        return institutionsList.stream().map(InstitutionVM::new).collect(Collectors.toSet());
+    }
+
+    private double distance(double lat1, double lat2, double lon1, double lon2, double el1, double el2) {
+
+        final int R = 6371; // Radius of the earth
+
+        double latDistance = Math.toRadians(lat2 - lat1);
+        double lonDistance = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double distance = R * c * 1000; // convert to meters
+
+        double height = el1 - el2;
+
+        distance = Math.pow(distance, 2) + Math.pow(height, 2);
+
+        return Math.sqrt(distance);
     }
 }

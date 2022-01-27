@@ -172,4 +172,23 @@ public class TranslationService {
         translation.setIsOfficial(true);
         translationRepository.save(translation);
     }
+
+    public TranslationVM getOfficialTranslation(Long exhibitId, String languageCode) {
+        Optional<Exhibit> exhibitOptional = exhibitRepository.findById(exhibitId);
+        if(exhibitOptional.isEmpty()) {
+            throw new NotFoundException("Exhibit not found");
+        }
+
+        Optional<Language> languageOptional = languageRepository.findByCode(languageCode);
+        if(languageOptional.isEmpty()) {
+            throw new NotFoundException("Language not found");
+        }
+
+        Optional<Translation> officialOptional = translationRepository.getOfficialTranslation(exhibitId, languageOptional.get().getId());
+        if(officialOptional.isEmpty()) {
+            throw new NotFoundException("Official translation not found");
+        }
+
+        return new TranslationVM(officialOptional.get());
+    }
 }

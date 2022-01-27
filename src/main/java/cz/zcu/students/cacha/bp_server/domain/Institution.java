@@ -45,11 +45,11 @@ public class Institution {
 
     @NotNull(message = "Latitude can not be empty")
     @Pattern(regexp="^(\\+|-)?(?:90(?:(?:\\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\\.[0-9]{1,6})?))$", message="Latitude format is incorrect, example: +90.0")
-    private String latitude;
+    private Double latitude;
 
     @NotNull(message = "Longitude can not be empty")
     @Pattern(regexp="^(\\+|-)?(?:180(?:(?:\\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\\.[0-9]{1,6})?))$", message="Longitude format is incorrect, example: -127.55")
-    private String longitude;
+    private Double longitude;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @Fetch(FetchMode.SUBSELECT)
@@ -67,6 +67,9 @@ public class Institution {
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
+
+    @Transient
+    private Double distance;
 
     @PrePersist
     protected void onCreate() {

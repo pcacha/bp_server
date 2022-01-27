@@ -11,8 +11,8 @@ public class InstitutionVM {
     private String name;
     private String address;
     private String image;
-    private String latitude;
-    private String longitude;
+    private Double latitude;
+    private Double longitude;
 
     public InstitutionVM(Institution institution) {
         institutionId = institution.getId();
