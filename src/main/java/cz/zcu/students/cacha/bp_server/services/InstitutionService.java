@@ -166,7 +166,7 @@ public class InstitutionService {
         userRepository.save(newManager);
 
         emailService.sendSimpleMessage(emailVM.getEmail(), "Institution manager credentials",
-                "You have been granted managerial rights to a cultural institution registered in the system for community translation of information texts - "
+                "You have been granted managerial rights to a cultural institution registered in the system for community translations of information texts - "
                         + institution.getName() + ". The credentials are as follows:\n\nusername: " + username + "\n" + "password: " + password +
                         "\n\nYou can change the credentials in profile settings after logging in to the system.");
     }
@@ -177,6 +177,10 @@ public class InstitutionService {
         }
         Institution institution = user.getInstitution();
 
+        deleteInstitution(institution);
+    }
+
+    public void deleteInstitution(Institution institution) {
         if(!institution.getImage().equals(DEFAULT_INSTITUTION_IMAGE)) {
             fileService.deleteInstitutionImage(institution.getImage());
         }
@@ -189,10 +193,9 @@ public class InstitutionService {
 
         Iterator<User> userIterator = institution.getOwners().iterator();
         userIterator.forEachRemaining(u -> {
-            if(u.isInstitutionOwner()) {
-                u.getRoles().remove(roleRepository.findByName(ROLE_INSTITUTION_OWNER).get());
-            }
+            u.getRoles().remove(roleRepository.findByName(ROLE_INSTITUTION_OWNER).get());
             u.setInstitution(null);
+            userRepository.save(u);
         });
         institution.getOwners().clear();
 

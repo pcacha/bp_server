@@ -14,8 +14,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query(
             value = "select * from user u " +
-                    "where u.deleted = 0 and " +
-                    "'ROLE_ADMIN' not in (" +
+                    "where 'ROLE_ADMIN' not in (" +
                     "select r.name from role r " +
                     "join users_roles ur on r.id = ur.role_id " +
                     "where ur.user_id = u.id);",
