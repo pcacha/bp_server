@@ -13,5 +13,4 @@ public class ImageVM {
     @PngJpgFile
     @NotNull(message = "Image can not be null")
     private String encodedImage;
-
 }

@@ -1,0 +1,31 @@
+package cz.zcu.students.cacha.bp_server.view_models;
+
+import cz.zcu.students.cacha.bp_server.validators.UniqueInstitutionNameExclUpdated;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+@Data
+@NoArgsConstructor
+public class UpdateInstitutionVM {
+
+    @NotNull(message = "Name can not be blank")
+    @Size(min = 3, max = 100, message = "Name must be between 3 to 100 letters long")
+    @UniqueInstitutionNameExclUpdated
+    private String name;
+
+    @NotNull(message = "Address can not be blank")
+    @Size(min = 3, max = 100, message = "Address must be between 3 to 100 letters long")
+    private String address;
+
+    @NotNull(message = "Latitude can not be empty")
+    @Pattern(regexp="^(\\+|-)?(?:90(?:(?:\\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\\.[0-9]{1,6})?))$", message="Latitude format is incorrect, example: +90.0")
+    private Double latitude;
+
+    @NotNull(message = "Longitude can not be empty")
+    @Pattern(regexp="^(\\+|-)?(?:180(?:(?:\\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\\.[0-9]{1,6})?))$", message="Longitude format is incorrect, example: -127.55")
+    private Double longitude;
+}

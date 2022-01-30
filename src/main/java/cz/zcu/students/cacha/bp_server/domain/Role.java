@@ -16,6 +16,7 @@ public class Role {
     @GeneratedValue
     private Long id;
 
+    @Column(length = 40)
     private String name;
 
     @ManyToMany(mappedBy = "roles", fetch= FetchType.LAZY)

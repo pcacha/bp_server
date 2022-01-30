@@ -58,8 +58,8 @@ public class InstitutionController {
     }
 
     @PutMapping("/myInstitution")
-    public GenericResponse updateInstitution(@Valid @RequestBody Institution institution, @CurrentUser User user) {
-        institutionService.updateInstitution(institution, user);
+    public GenericResponse updateInstitution(@Valid @RequestBody UpdateInstitutionVM updateInstitutionVM, @CurrentUser User user) {
+        institutionService.updateInstitution(updateInstitutionVM, user);
         return new GenericResponse("Institution updated");
     }
 

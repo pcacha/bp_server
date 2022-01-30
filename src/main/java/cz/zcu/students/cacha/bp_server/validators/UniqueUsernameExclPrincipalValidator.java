@@ -28,7 +28,7 @@ public class UniqueUsernameExclPrincipalValidator implements ConstraintValidator
         }
 
         User auth = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(inDBOptional.get().getId().equals(auth.getId())) {
+        if(inDBOptional.get().equals(auth)) {
             return true;
         }
         return false;

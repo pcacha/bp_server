@@ -23,9 +23,11 @@ public class Exhibit {
     private Long id;
 
     @NotNull(message = "Name can not be blank")
-    @Size(min = 1, max = 255, message = "Name must be between 1 to 255 letters long")
+    @Size(min = 1, max = 100, message = "Name must be between 1 to 100 letters long")
+    @Column(length = 100)
     private String name;
 
+    @Column(length = 100)
     private String image = DEFAULT_EXHIBIT_IMAGE;
 
     @Transient
@@ -33,10 +35,11 @@ public class Exhibit {
     private String encodedImage;
 
     @NotNull(message = "Info label text can not be blank")
-    @Size(max = 15000, message = "The text of an information label must be maximally 15000 letters long")
-    @Column(length = 15000)
+    @Size(max = 25000, message = "The text of an information label must be maximally 25000 letters long")
+    @Column(length = 25000, columnDefinition="TEXT")
     private String infoLabelText;
 
+    @Column(length = 100)
     private String infoLabel;
 
     @Transient
@@ -45,15 +48,18 @@ public class Exhibit {
     private String encodedInfoLabel;
 
     @NotNull(message = "Building can not be blank")
-    @Size(max = 255, message = "Building must be maximally 255 letters long")
+    @Size(max = 50, message = "Building must be maximally 50 letters long")
+    @Column(length = 50)
     private String building;
 
     @NotNull(message = "Room can not be blank")
-    @Size(max = 255, message = "Room must be maximally 255 letters long")
+    @Size(max = 50, message = "Room must be maximally 50 letters long")
+    @Column(length = 50)
     private String room;
 
     @NotNull(message = "Show-case can not be blank")
-    @Size(max = 255, message = "Show-case must be maximally 255 letters long")
+    @Size(max = 50, message = "Show-case must be maximally 50 letters long")
+    @Column(length = 50)
     private String showcase;
 
     @OneToMany(mappedBy = "exhibit", fetch = FetchType.LAZY)

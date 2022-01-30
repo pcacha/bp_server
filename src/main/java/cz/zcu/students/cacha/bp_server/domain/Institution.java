@@ -29,14 +29,17 @@ public class Institution {
     private Long id;
 
     @NotNull(message = "Name can not be blank")
-    @Size(min = 3, max = 255, message = "Name must be between 3 to 255 letters long")
+    @Size(min = 3, max = 100, message = "Name must be between 3 to 100 letters long")
     @UniqueInstitutionName
+    @Column(length = 100)
     private String name;
 
     @NotNull(message = "Address can not be blank")
-    @Size(min = 3, max = 255, message = "Address must be between 3 to 255 letters long")
+    @Size(min = 3, max = 100, message = "Address must be between 3 to 100 letters long")
+    @Column(length = 100)
     private String address;
 
+    @Column(length = 100)
     private String image = DEFAULT_INSTITUTION_IMAGE;
 
     @Transient

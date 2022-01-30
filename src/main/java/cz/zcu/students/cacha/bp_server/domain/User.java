@@ -31,6 +31,7 @@ public class User implements UserDetails {
     @NotNull(message = "Username can not be blank")
     @Size(min = 3, max = 30, message = "Username must be between 3 to 30 letters long")
     @UniqueUsername
+    @Column(length = 30)
     private String username;
 
     @NotNull(message = "Password can not be blank")
@@ -41,6 +42,7 @@ public class User implements UserDetails {
     @NotNull(message = "E-mail can not be blank")
     @Email(message = "Bad e-mail format")
     @Size(min = 1, max = 50, message = "E-mail must be maximally 50 letters long")
+    @Column(length = 50)
     private String email;
 
     @Temporal(TemporalType.TIMESTAMP)

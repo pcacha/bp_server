@@ -8,6 +8,6 @@ import javax.validation.constraints.NotNull;
 @Data
 @NoArgsConstructor
 public class BooleanValVM {
-    @NotNull
+    @NotNull(message = "Value can not be empty")
     private Boolean value;
 }

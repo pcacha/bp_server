@@ -25,6 +25,7 @@ public class JwtTokenProvider {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", userId);
         claims.put("username", user.getUsername());
+        claims.put("email", user.getEmail());
         claims.put("createdAt", createdAt);
         claims.put("isTranslator", user.isTranslator());
         claims.put("isInstitutionOwner", user.isInstitutionOwner());

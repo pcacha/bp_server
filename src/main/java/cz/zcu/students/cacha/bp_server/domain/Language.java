@@ -16,8 +16,10 @@ public class Language {
     @GeneratedValue
     private Long id;
 
+    @Column(length = 100)
     private String name;
 
+    @Column(length = 2)
     private String code;
 
     @ManyToMany(mappedBy = "languages", fetch= FetchType.LAZY)

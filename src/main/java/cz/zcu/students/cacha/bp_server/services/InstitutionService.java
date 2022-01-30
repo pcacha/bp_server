@@ -13,11 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static cz.zcu.students.cacha.bp_server.assets_store_config.WebConfiguration.DEFAULT_EXHIBIT_IMAGE;
 import static cz.zcu.students.cacha.bp_server.assets_store_config.WebConfiguration.DEFAULT_INSTITUTION_IMAGE;
 import static cz.zcu.students.cacha.bp_server.shared.RolesConstants.ROLE_INSTITUTION_OWNER;
 import static cz.zcu.students.cacha.bp_server.shared.RolesConstants.ROLE_TRANSLATOR;
@@ -123,7 +123,7 @@ public class InstitutionService {
         institutionRepository.save(institution);
     }
 
-    public void updateInstitution(Institution institution, User user) {
+    public void updateInstitution(UpdateInstitutionVM institution, User user) {
         if(!user.isInstitutionOwner()) {
             throw new CannotPerformActionException("User does not own institution");
         }
