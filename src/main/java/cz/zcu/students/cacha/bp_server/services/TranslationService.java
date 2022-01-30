@@ -140,7 +140,7 @@ public class TranslationService {
             latestTranslations.add(officialOptional.get());
         }
 
-        return new OfficialTranslationsVM(latestTranslations, exhibit);
+        return new OfficialTranslationsVM(latestTranslations, exhibit, user);
     }
 
     public void makeTranslationOfficial(Long translationId, User user) {
@@ -190,5 +190,27 @@ public class TranslationService {
         }
 
         return new TranslationVM(officialOptional.get());
+    }
+
+    public void setLike(BooleanValVM booleanValVM, Long translationId, User user) {
+        Optional<Translation> translationOptional = translationRepository.findById(translationId);
+        if(translationOptional.isEmpty()) {
+            throw new NotFoundException("Translation not found");
+        }
+        Translation translation = translationOptional.get();
+
+        boolean userLikes = translation.getLikers().stream().anyMatch(u -> u.equals(user));
+        boolean value = booleanValVM.getValue();
+        if((userLikes && value) || (!userLikes && !value)) {
+            return;
+        }
+
+        if(value) {
+            translation.getLikers().add(user);
+        }
+        else {
+            translation.getLikers().remove(user);
+        }
+        translationRepository.save(translation);
     }
 }

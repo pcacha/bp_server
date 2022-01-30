@@ -2,6 +2,7 @@ package cz.zcu.students.cacha.bp_server.view_models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import cz.zcu.students.cacha.bp_server.domain.Translation;
+import cz.zcu.students.cacha.bp_server.domain.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,7 +10,7 @@ import java.util.Date;
 
 @Data
 @NoArgsConstructor
-public class TranslationVM {
+public class OfficialTranslationVM {
 
     private Long translationId;
     private String authorUsername;
@@ -18,13 +19,15 @@ public class TranslationVM {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date createdAt;
     private Integer likesCount;
+    private Boolean liked;
 
-    public TranslationVM(Translation translation) {
+    public OfficialTranslationVM(Translation translation, User user) {
         translationId = translation.getId();
         authorUsername = translation.getAuthor().getUsername();
         translatedText = translation.getText();
         isOfficial = translation.getIsOfficial();
         createdAt = translation.getCreatedAt();
         likesCount = translation.getLikers().size();
+        liked = translation.getLikers().stream().anyMatch(u -> u.equals(user));
     }
 }

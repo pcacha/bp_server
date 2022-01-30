@@ -64,6 +64,14 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Set<Role> roles = new HashSet<>();
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SUBSELECT)
+    @JoinTable(
+            name = "translations_likes",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "translation_id", referencedColumnName = "id"))
+    private Set<Translation> likedTranslations = new HashSet<>();
+
     @PrePersist
     protected void onCreate() {
         createdAt = new Date();

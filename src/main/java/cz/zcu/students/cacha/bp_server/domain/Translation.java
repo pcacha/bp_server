@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Data
@@ -33,6 +34,9 @@ public class Translation {
 
     @ManyToOne(fetch=FetchType.LAZY)
     private Exhibit exhibit;
+
+    @ManyToMany(mappedBy = "likedTranslations", fetch= FetchType.LAZY)
+    private Set<User> likers;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;

@@ -80,4 +80,10 @@ public class TranslationController {
         TranslationVM translation = translationService.getOfficialTranslation(exhibitId, languageCode);
         return translation;
     }
+
+    @PutMapping("/like/{translationId}")
+    public GenericResponse setLike(@Valid @RequestBody BooleanValVM booleanValVM, @PathVariable Long translationId, @CurrentUser User user) {
+        translationService.setLike(booleanValVM, translationId, user);
+        return new GenericResponse("Like set");
+    }
 }
