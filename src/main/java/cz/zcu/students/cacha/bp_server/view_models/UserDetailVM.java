@@ -13,7 +13,7 @@ public class UserDetailVM {
     private Long userId;
     private String username;
     private String email;
-    @JsonFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "MM/dd/yyyy")
     private Date createdAt;
     private Boolean isBanned;
     private Boolean isTranslator;

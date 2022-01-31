@@ -31,8 +31,6 @@ public class JwtTokenProvider {
         claims.put("isInstitutionOwner", user.isInstitutionOwner());
         claims.put("isAdmin", user.isAdmin());
 
-        System.out.println("Expire: " + expireDate.getTime());
-
         return Jwts.builder()
                 .setSubject(userId)
                 .setClaims(claims)

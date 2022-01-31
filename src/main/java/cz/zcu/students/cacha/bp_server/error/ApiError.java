@@ -12,13 +12,9 @@ import java.util.Map;
 @JsonInclude(value= JsonInclude.Include.NON_NULL)
 public class ApiError {
     private long timestamp;
-
     private int status;
-
     private String message;
-
     private String url;
-
     private Map<String, String> validationErrors;
 
     public ApiError(int status, String message, String url) {

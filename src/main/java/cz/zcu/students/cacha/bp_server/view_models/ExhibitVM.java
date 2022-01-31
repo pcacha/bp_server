@@ -16,7 +16,7 @@ public class ExhibitVM {
     private String building;
     private String room;
     private String showcase;
-    @JsonFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "MM/dd/yyyy")
     private Date createdAt;
 
     public ExhibitVM(Exhibit exhibit) {

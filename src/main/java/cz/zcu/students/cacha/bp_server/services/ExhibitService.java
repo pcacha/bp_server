@@ -107,7 +107,7 @@ public class ExhibitService {
             try {
                 imageName = fileService.saveExhibitImage(exhibit.getEncodedImage());
                 exhibit.setImage(imageName);
-            } catch (IOException exception) {
+            } catch (Exception exception) {
                 throw new CannotSaveImageException("Image could not be saved");
             }
         }
@@ -116,7 +116,7 @@ public class ExhibitService {
         try {
             infoLabelName = fileService.saveInfoLabelImage(exhibit.getEncodedInfoLabel());
             exhibit.setInfoLabel(infoLabelName);
-        } catch (IOException exception) {
+        } catch (Exception exception) {
             throw new CannotSaveImageException("Info label could not be saved");
         }
 
@@ -133,7 +133,7 @@ public class ExhibitService {
         String imageName;
         try {
             imageName = fileService.saveExhibitImage(imageVM.getEncodedImage());
-        } catch (IOException exception) {
+        } catch (Exception exception) {
             throw new CannotSaveImageException("Image could not be saved");
         }
 
@@ -148,7 +148,7 @@ public class ExhibitService {
         String infoLabelName;
         try {
             infoLabelName = fileService.saveInfoLabelImage(imageVM.getEncodedImage());
-        } catch (IOException exception) {
+        } catch (Exception exception) {
             throw new CannotSaveImageException("Info label could not be saved");
         }
 

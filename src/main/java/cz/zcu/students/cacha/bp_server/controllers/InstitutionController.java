@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Set;
 
+/**
+ * Class represents rest controller which is responsible for institution operations
+ */
 @RestController
 @RequestMapping("/institutions")
 public class InstitutionController {
@@ -32,6 +35,12 @@ public class InstitutionController {
         return institutions;
     }
 
+    /**
+     * Saves new institution with logged in user as a manager
+     * @param institution new institution
+     * @param user logged in user
+     * @return message containing whether operation was processed
+     */
     @PostMapping("/myInstitution")
     @ResponseStatus(HttpStatus.CREATED)
     public GenericResponse saveInstitution(@Valid @RequestBody Institution institution, @CurrentUser User user) {
@@ -63,6 +72,11 @@ public class InstitutionController {
         return new GenericResponse("Institution updated");
     }
 
+    /**
+     * Gets an institution of current user
+     * @param user logged in user
+     * @return user's institution
+     */
     @GetMapping("/myInstitution")
     public InstitutionVM getMyInstitution(@CurrentUser User user) {
         InstitutionVM institution = institutionService.getMyInstitution(user);

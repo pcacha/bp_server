@@ -16,7 +16,7 @@ public class OfficialTranslationVM {
     private String authorUsername;
     private String translatedText;
     private Boolean isOfficial;
-    @JsonFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "MM/dd/yyyy")
     private Date createdAt;
     private Integer likesCount;
     private Boolean liked;

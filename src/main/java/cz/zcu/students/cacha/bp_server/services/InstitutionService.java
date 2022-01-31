@@ -22,6 +22,9 @@ import static cz.zcu.students.cacha.bp_server.assets_store_config.WebConfigurati
 import static cz.zcu.students.cacha.bp_server.shared.RolesConstants.ROLE_INSTITUTION_OWNER;
 import static cz.zcu.students.cacha.bp_server.shared.RolesConstants.ROLE_TRANSLATOR;
 
+/**
+ * Class represent service which is responsible for institution operations
+ */
 @Service
 public class InstitutionService {
 
@@ -54,23 +57,37 @@ public class InstitutionService {
         return institutions;
     }
 
+    /**
+     * Saves institution with given user as a manager
+     * @param institution new institution
+     * @param user institution manager
+     */
     public void saveInstitution(Institution institution, User user) {
+        // check if the user already have an institution
         if(user.isInstitutionOwner()) {
             throw new CannotPerformActionException("User already owns an institution");
         }
 
+        // convert string coordinates to double
+        institution.setLatitude(Double.parseDouble(institution.getLatitudeString()));
+        institution.setLongitude(Double.parseDouble(institution.getLongitudeString()));
+
+        // if institution image is not null, save it in the file system
         if(institution.getEncodedImage() != null) {
             String imageName;
 
             try {
                 imageName = fileService.saveInstitutionImage(institution.getEncodedImage());
                 institution.setImage(imageName);
-            } catch (IOException exception) {
+            } catch (Exception exception) {
                 throw new CannotSaveImageException("Image could not be saved");
             }
         }
 
+        // save institution
         institutionRepository.save(institution);
+
+        // set user as institution manager and give him appropriate role
         user.setInstitution(institution);
         user.getRoles().add(roleRepository.findByName(ROLE_INSTITUTION_OWNER).get());
         userRepository.save(user);
@@ -115,7 +132,7 @@ public class InstitutionService {
         String imageName;
         try {
             imageName = fileService.saveInstitutionImage(imageVM.getEncodedImage());
-        } catch (IOException exception) {
+        } catch (Exception exception) {
             throw new CannotSaveImageException("Image could not be saved");
         }
 
@@ -135,9 +152,15 @@ public class InstitutionService {
         institutionRepository.save(user.getInstitution());
     }
 
+    /**
+     * Gets user's institution
+     * @param user owner
+     * @return user's institution
+     */
     public InstitutionVM getMyInstitution(User user) {
+        // check if user manages an institution
         if(!user.isInstitutionOwner()) {
-            throw new CannotPerformActionException("User does not own institution");
+            throw new CannotPerformActionException("User does not own an institution");
         }
 
         return new InstitutionVM(user.getInstitution());

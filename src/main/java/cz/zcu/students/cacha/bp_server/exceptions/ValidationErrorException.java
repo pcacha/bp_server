@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.HashMap;
 
-@ResponseStatus(HttpStatus.UNAUTHORIZED)
+@ResponseStatus(HttpStatus.BAD_REQUEST)
 @Data
 public class ValidationErrorException extends RuntimeException {
     private HashMap<String, String> errors;

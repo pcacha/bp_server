@@ -5,6 +5,7 @@ import cz.zcu.students.cacha.bp_server.shared.RolesConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -39,13 +40,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                // TODO !!! - projít všechny endpointy
-                .antMatchers("/users/register", "/users/login", "/institutions",
-                        "/exhibits/all/**").permitAll()
-                .antMatchers("/users/**").hasAnyAuthority(RolesConstants.ROLE_TRANSLATOR, RolesConstants.ROLE_INSTITUTION_OWNER,
-                        RolesConstants.ROLE_ADMIN)
-                .antMatchers("/translations/**").hasAuthority(RolesConstants.ROLE_TRANSLATOR);
-
+                .antMatchers("/users/register", "/users/login").permitAll()
+                .antMatchers("/users/**").authenticated()
+                .antMatchers(HttpMethod.GET, "/institutions/myInstitution").authenticated()
+                .antMatchers(HttpMethod.POST, "/institutions/myInstitution").authenticated()
+                .anyRequest().authenticated();
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
