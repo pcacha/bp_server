@@ -27,6 +27,11 @@ public class FileService {
 
     public static final String separator = ",";
 
+    /**
+     * Detects the type of file
+     * @param fileArr bytes of file
+     * @return detected type
+     */
     public String detectType(byte[] fileArr) {
         return tika.detect(fileArr);
     }
@@ -41,6 +46,10 @@ public class FileService {
         return saveImage(INSTITUTIONS_IMAGES_FOLDER, encodedImage);
     }
 
+    /**
+     * Deletes institution image
+     * @param image name
+     */
     public void deleteInstitutionImage(String image) {
         deleteImage(INSTITUTIONS_IMAGES_FOLDER, image);
     }
@@ -91,6 +100,11 @@ public class FileService {
         return imageName;
     }
 
+    /**
+     * Deletes image from given directory
+     * @param directory directory to delete from
+     * @param name image name
+     */
     private void deleteImage(String directory, String name) {
         try {
             Files.deleteIfExists(Paths.get(directory + "/" + name));
@@ -99,6 +113,10 @@ public class FileService {
         }
     }
 
+    /**
+     * Gets random name by generating UUID
+     * @return unique name
+     */
     private String getRandomName() {
         return UUID.randomUUID().toString().replace("-", "");
     }

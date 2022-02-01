@@ -23,9 +23,9 @@ public class UpdateInstitutionVM {
 
     @NotNull(message = "Latitude can not be empty")
     @Pattern(regexp="^(\\+|-)?(?:90(?:(?:\\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\\.[0-9]{1,6})?))$", message="Latitude format is incorrect, example: +90.0")
-    private Double latitude;
+    private String latitudeString;
 
     @NotNull(message = "Longitude can not be empty")
     @Pattern(regexp="^(\\+|-)?(?:180(?:(?:\\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\\.[0-9]{1,6})?))$", message="Longitude format is incorrect, example: -127.55")
-    private Double longitude;
+    private String longitudeString;
 }

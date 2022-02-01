@@ -119,37 +119,47 @@ public class InstitutionService {
         institutionRepository.save(user.getInstitution());
     }
 
-    public void updateImage(ImageVM imageVM, User user) {
-        if(!user.isInstitutionOwner()) {
-            throw new CannotPerformActionException("User does not own institution");
-        }
-
+    /**
+     * Updates institution image
+     * @param imageVM encoded image
+     * @param user logged in user
+     * @return new image name
+     */
+    public String updateImage(ImageVM imageVM, User user) {
         Institution institution = user.getInstitution();
         if(!institution.getImage().equals(DEFAULT_INSTITUTION_IMAGE)) {
+            // delete old image
             fileService.deleteInstitutionImage(institution.getImage());
         }
 
         String imageName;
         try {
+            // save new image
             imageName = fileService.saveInstitutionImage(imageVM.getEncodedImage());
         } catch (Exception exception) {
             throw new CannotSaveImageException("Image could not be saved");
         }
 
+        // set new image name and save institution
         institution.setImage(imageName);
         institutionRepository.save(institution);
+        return imageName;
     }
 
+    /**
+     * Updates institution information
+     * @param institution updated institution
+     * @param user logged in user
+     */
     public void updateInstitution(UpdateInstitutionVM institution, User user) {
-        if(!user.isInstitutionOwner()) {
-            throw new CannotPerformActionException("User does not own institution");
-        }
-
-        user.getInstitution().setName(institution.getName());
-        user.getInstitution().setAddress(institution.getAddress());
-        user.getInstitution().setLatitude(institution.getLatitude());
-        user.getInstitution().setLongitude(institution.getLongitude());
-        institutionRepository.save(user.getInstitution());
+        // set updated information
+        Institution userInstitution = user.getInstitution();
+        userInstitution.setName(institution.getName());
+        userInstitution.setAddress(institution.getAddress());
+        userInstitution.setLatitude(Double.parseDouble(institution.getLatitudeString()));
+        userInstitution.setLongitude(Double.parseDouble(institution.getLongitudeString()));
+        // save institution
+        institutionRepository.save(userInstitution);
     }
 
     /**

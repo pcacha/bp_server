@@ -40,10 +40,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers("/users/register", "/users/login").permitAll()
+                .antMatchers("/users/register", "/users/login", "/institutions_images/**", "/exhibits_images/**", "/info_labels_images/**").permitAll()
                 .antMatchers("/users/**").authenticated()
                 .antMatchers(HttpMethod.GET, "/institutions/myInstitution").authenticated()
                 .antMatchers(HttpMethod.POST, "/institutions/myInstitution").authenticated()
+                .antMatchers("/institutions/**").hasAuthority(RolesConstants.ROLE_INSTITUTION_OWNER)
                 .anyRequest().authenticated();
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

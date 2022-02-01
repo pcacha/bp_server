@@ -60,12 +60,24 @@ public class InstitutionController {
         return new GenericResponse("Language added");
     }
 
+    /**
+     * Updates institution image
+     * @param imageVM Encoded image
+     * @param user logged in user
+     * @return new image name
+     */
     @PutMapping("/myInstitution/updateImage")
     public GenericResponse updateImage(@Valid @RequestBody ImageVM imageVM, @CurrentUser User user) {
-        institutionService.updateImage(imageVM, user);
-        return new GenericResponse("Image updated");
+        String imageName = institutionService.updateImage(imageVM, user);
+        return new GenericResponse(imageName);
     }
 
+    /**
+     * Updates institution information
+     * @param updateInstitutionVM updated institution
+     * @param user logged in user
+     * @return message containing whether operation was processed
+     */
     @PutMapping("/myInstitution")
     public GenericResponse updateInstitution(@Valid @RequestBody UpdateInstitutionVM updateInstitutionVM, @CurrentUser User user) {
         institutionService.updateInstitution(updateInstitutionVM, user);
