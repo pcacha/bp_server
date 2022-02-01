@@ -93,30 +93,40 @@ public class InstitutionService {
         userRepository.save(user);
     }
 
+    /**
+     * Gets the chosen and possible languages of institution
+     * @param user institution owner
+     * @return chosen and possible languages
+     */
     public AllowedLanguagesVM getAllowedLanguages(User user) {
-        if(!user.isInstitutionOwner()) {
-            throw new CannotPerformActionException("User does not own institution");
-        }
-
         Set<Language> possibleLanguages = languageRepository.findAllByOrderByName();
         Set<Language> chosenLanguages = user.getInstitution().getLanguages();
+        // remove chosen languages from all languages in db
         possibleLanguages.removeAll(chosenLanguages);
-
         return new AllowedLanguagesVM(possibleLanguages, chosenLanguages);
     }
 
+    /**
+     * Adds language to institution
+     * @param languageId language id to add
+     * @param user institution owner
+     */
     public void addLanguage(Long languageId, User user) {
-        if(!user.isInstitutionOwner()) {
-            throw new CannotPerformActionException("User does not own institution");
-        }
-
+        // find language by id
         Optional<Language> languageOptional = languageRepository.findById(languageId);
         if(languageOptional.isEmpty()) {
             throw new NotFoundException("Language not found");
         }
 
-        user.getInstitution().getLanguages().add(languageOptional.get());
-        institutionRepository.save(user.getInstitution());
+        // return if institution already contains this language
+        Institution institution = user.getInstitution();
+        if(institution.getLanguages().contains(languageOptional.get())) {
+            return;
+        }
+
+        // add language to institution and save it
+        institution.getLanguages().add(languageOptional.get());
+        institutionRepository.save(institution);
     }
 
     /**

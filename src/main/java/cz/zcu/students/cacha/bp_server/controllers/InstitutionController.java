@@ -48,12 +48,23 @@ public class InstitutionController {
         return new GenericResponse("Institution saved");
     }
 
+    /**
+     * Gets the chosen and possible languages of logged in user's institution
+     * @param user logged in user
+     * @return chosen and possible languages
+     */
     @GetMapping("/myInstitution/languages")
     public AllowedLanguagesVM getAllowedLanguages(@CurrentUser User user) {
         AllowedLanguagesVM allowedLanguages = institutionService.getAllowedLanguages(user);
         return allowedLanguages;
     }
 
+    /**
+     * Adds language to logged in user's institution
+     * @param languageId id of language to add
+     * @param user logged in user
+     * @return message containing whether operation was processed
+     */
     @PostMapping("/myInstitution/languages/{languageId}")
     public GenericResponse addLanguage(@PathVariable Long languageId, @CurrentUser User user) {
         institutionService.addLanguage(languageId, user);
