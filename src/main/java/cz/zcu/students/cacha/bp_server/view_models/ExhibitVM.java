@@ -12,7 +12,9 @@ import java.util.Date;
 public class ExhibitVM {
     private Long exhibitId;
     private String name;
+    private String infoLabelText;
     private String image;
+    private String infoLabel;
     private String building;
     private String room;
     private String showcase;
@@ -22,6 +24,8 @@ public class ExhibitVM {
     public ExhibitVM(Exhibit exhibit) {
         exhibitId = exhibit.getId();
         name = exhibit.getName();
+        infoLabelText = exhibit.getInfoLabelText();
+        infoLabel = exhibit.getInfoLabel();
         image = exhibit.getImage();
         building = exhibit.getBuilding();
         room = exhibit.getRoom();

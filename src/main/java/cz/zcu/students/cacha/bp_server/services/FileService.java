@@ -25,6 +25,9 @@ public class FileService {
     @Autowired
     Tika tika;
 
+    /**
+     * Separator that can occur at the beginning of base64 string
+     */
     public static final String separator = ",";
 
     /**
@@ -37,10 +40,10 @@ public class FileService {
     }
 
     /**
-     * Saves given image and returns its name
+     * Saves given institution image and returns its name
      * @param encodedImage base64 encoded image
      * @return saved image name
-     * @throws IOException
+     * @throws Exception
      */
     public String saveInstitutionImage(String encodedImage) throws Exception {
         return saveImage(INSTITUTIONS_IMAGES_FOLDER, encodedImage);
@@ -54,18 +57,38 @@ public class FileService {
         deleteImage(INSTITUTIONS_IMAGES_FOLDER, image);
     }
 
+    /**
+     * Saves given exhibit image and returns its name
+     * @param encodedImage base64 encoded image
+     * @return saved image name
+     * @throws Exception
+     */
     public String saveExhibitImage(String encodedImage) throws Exception {
         return saveImage(EXHIBITS_IMAGES_FOLDER, encodedImage);
     }
 
+    /**
+     * Delete exhibit image
+     * @param image name
+     */
     public void deleteExhibitImage(String image) {
         deleteImage(EXHIBITS_IMAGES_FOLDER, image);
     }
 
+    /**
+     * Saves given info label image and returns its name
+     * @param encodedInfoLabel base64 encoded image
+     * @return saved image name
+     * @throws Exception
+     */
     public String saveInfoLabelImage(String encodedInfoLabel) throws Exception {
         return saveImage(INFO_LABELS_IMAGES_FOLDER, encodedInfoLabel);
     }
 
+    /**
+     * Delete info label image
+     * @param image name
+     */
     public void deleteInfoLabelImage(String image) {
         deleteImage(INFO_LABELS_IMAGES_FOLDER, image);
     }

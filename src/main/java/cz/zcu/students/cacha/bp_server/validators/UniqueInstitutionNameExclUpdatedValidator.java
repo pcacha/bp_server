@@ -29,7 +29,7 @@ public class UniqueInstitutionNameExclUpdatedValidator implements ConstraintVali
             return true;
         }
 
-        if(auth.getInstitution() != null && auth.getInstitution().equals(institutionOptional.get())) {
+        if(auth.getInstitution() != null && auth.getInstitution().getId().equals(institutionOptional.get().getId())) {
             return true;
         }
         return false;

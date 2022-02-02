@@ -63,7 +63,7 @@ public class TranslationService {
         }
 
         Translation translation = translationOptional.get();
-        if(!Objects.equals(translation.getAuthor().getId(), user.getId())) {
+        if(!translation.getAuthor().getId().equals(user.getId())) {
             throw new UnauthorizedException("Translation is not owned by current user");
         }
 
@@ -124,7 +124,7 @@ public class TranslationService {
             throw new CannotPerformActionException("User does not own institution");
         }
 
-        if(!exhibit.getInstitution().equals(user.getInstitution())) {
+        if(!exhibit.getInstitution().getId().equals(user.getInstitution().getId())) {
             throw new CannotPerformActionException("User does not manage this exhibit");
         }
 
@@ -154,7 +154,7 @@ public class TranslationService {
             throw new CannotPerformActionException("User does not own institution");
         }
 
-        if(!translation.getExhibit().getInstitution().equals(user.getInstitution())) {
+        if(!translation.getExhibit().getInstitution().getId().equals(user.getInstitution().getId())) {
             throw new CannotPerformActionException("User does not manage this exhibit");
         }
 
@@ -199,7 +199,7 @@ public class TranslationService {
         }
         Translation translation = translationOptional.get();
 
-        boolean userLikes = translation.getLikers().stream().anyMatch(u -> u.equals(user));
+        boolean userLikes = translation.getLikers().stream().anyMatch(u -> u.getId().equals(user.getId()));
         boolean value = booleanValVM.getValue();
         if((userLikes && value) || (!userLikes && !value)) {
             return;

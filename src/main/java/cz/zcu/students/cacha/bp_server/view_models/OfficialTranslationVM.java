@@ -28,6 +28,6 @@ public class OfficialTranslationVM {
         isOfficial = translation.getIsOfficial();
         createdAt = translation.getCreatedAt();
         likesCount = translation.getLikers().size();
-        liked = translation.getLikers().stream().anyMatch(u -> u.equals(user));
+        liked = translation.getLikers().stream().anyMatch(u -> u.getId().equals(user.getId()));
     }
 }

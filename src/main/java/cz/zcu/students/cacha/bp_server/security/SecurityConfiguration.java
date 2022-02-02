@@ -41,10 +41,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .antMatchers("/users/register", "/users/login", "/institutions_images/**", "/exhibits_images/**", "/info_labels_images/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/exhibits/{institutionId}").permitAll()
                 .antMatchers("/users/**").authenticated()
                 .antMatchers(HttpMethod.GET, "/institutions/myInstitution").authenticated()
                 .antMatchers(HttpMethod.POST, "/institutions/myInstitution").authenticated()
-                .antMatchers("/institutions/**").hasAuthority(RolesConstants.ROLE_INSTITUTION_OWNER)
+                .antMatchers("/institutions/**", "/exhibits/**").hasAuthority(RolesConstants.ROLE_INSTITUTION_OWNER)
                 .anyRequest().authenticated();
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -54,7 +55,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(authUserService).passwordEncoder(bCryptPasswordEncoder);
     }
-
 
     @Override
     @Bean(BeanIds.AUTHENTICATION_MANAGER)
