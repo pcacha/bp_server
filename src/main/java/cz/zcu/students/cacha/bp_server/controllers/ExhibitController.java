@@ -24,6 +24,11 @@ public class ExhibitController {
     @Autowired
     private ExhibitService exhibitService;
 
+    /**
+     * Gets all exhibits of given institution
+     * @param institutionId institution id
+     * @return all exhibits of given institution
+     */
     @GetMapping("/all/{institutionId}")
     public Set<ExhibitVM> getAllExhibitsOfInstitution(@PathVariable Long institutionId) {
         Set<ExhibitVM> exhibits = exhibitService.getExhibitsOfInstitution(institutionId);
@@ -31,11 +36,11 @@ public class ExhibitController {
     }
 
     /**
-     * Gets all exhibits of logged in user
+     * Gets all exhibits of logged in user's institution
      * @param user logged in user
      * @return all exhibits of logged in user's institution
      */
-    @GetMapping("/all/myInstitution")
+    @GetMapping("/all")
     public Set<ExhibitVM> getAllExhibitsOfUsersInstitution(@CurrentUser User user) {
         Set<ExhibitVM> exhibits = exhibitService.getAllExhibitsOfUsersInstitution(user);
         return exhibits;

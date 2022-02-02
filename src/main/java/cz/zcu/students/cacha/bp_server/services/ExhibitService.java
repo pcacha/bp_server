@@ -29,16 +29,25 @@ public class ExhibitService {
     private ExhibitRepository exhibitsRepository;
 
     @Autowired
-    private TranslationRepository translationRepository;
-
-    @Autowired
     private InstitutionRepository institutionRepository;
 
     @Autowired
     private FileService fileService;
 
+    /**
+     * Gets all exhibits of given institution
+     * @param institutionId institution id
+     * @return all exhibits of given institution
+     */
     public Set<ExhibitVM> getExhibitsOfInstitution(Long institutionId) {
-        Set<ExhibitVM> exhibits = exhibitsRepository.findByInstitutionId(institutionId).stream().map(ExhibitVM::new).collect(Collectors.toSet());
+        // check if institution with this id exists
+        Optional<Institution> institutionOptional = institutionRepository.findById(institutionId);
+        if(institutionOptional.isEmpty()) {
+            throw new NotFoundException("Institution not found");
+        }
+
+        // get all exhibits and return them
+        Set<ExhibitVM> exhibits = institutionOptional.get().getExhibits().stream().map(ExhibitVM::new).collect(Collectors.toSet());
         return exhibits;
     }
 

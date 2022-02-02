@@ -23,6 +23,10 @@ public class InstitutionController {
     @Autowired
     private InstitutionService institutionService;
 
+    /**
+     * Gets all registered institutions
+     * @return all institutions
+     */
     @GetMapping
     public Set<InstitutionVM> getInstitutions() {
         Set<InstitutionVM> institutions = institutionService.getInstitutions();

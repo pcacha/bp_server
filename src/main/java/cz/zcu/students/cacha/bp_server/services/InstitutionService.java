@@ -52,6 +52,10 @@ public class InstitutionService {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    /**
+     * Gets all institutions
+     * @return all institutions
+     */
     public Set<InstitutionVM> getInstitutions() {
         Set<InstitutionVM> institutions = institutionRepository.findAll().stream().map(InstitutionVM::new).collect(Collectors.toSet());
         return institutions;
