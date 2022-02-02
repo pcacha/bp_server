@@ -8,7 +8,6 @@ import cz.zcu.students.cacha.bp_server.exceptions.CannotSaveImageException;
 import cz.zcu.students.cacha.bp_server.exceptions.NotFoundException;
 import cz.zcu.students.cacha.bp_server.repositories.ExhibitRepository;
 import cz.zcu.students.cacha.bp_server.repositories.InstitutionRepository;
-import cz.zcu.students.cacha.bp_server.repositories.TranslationRepository;
 import cz.zcu.students.cacha.bp_server.view_models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,15 +48,6 @@ public class ExhibitService {
         // get all exhibits and return them
         Set<ExhibitVM> exhibits = institutionOptional.get().getExhibits().stream().map(ExhibitVM::new).collect(Collectors.toSet());
         return exhibits;
-    }
-
-    public ExhibitTranslateVM getExhibitTranslate(Long exhibitId) {
-        Optional<Exhibit> exhibit = exhibitsRepository.findById(exhibitId);
-        if (exhibit.isEmpty()) {
-            throw new NotFoundException("Exhibit not found");
-        }
-
-        return new ExhibitTranslateVM(exhibit.get());
     }
 
     /**
@@ -253,12 +243,8 @@ public class ExhibitService {
         return user.getInstitution().getExhibits().stream().map(ExhibitVM::new).collect(Collectors.toSet());
     }
 
-    public OfficialTranslationsOverviewVM getOfficialTranslationsOverview(User user) {
-        if(!user.isInstitutionOwner()) {
-            throw new CannotPerformActionException("User does not own institution");
-        }
-
-        return new OfficialTranslationsOverviewVM(user.getInstitution().getLanguages(), user.getInstitution().getExhibits());
+    public ExhibitsLanguagesVM getExhibitsApproveTranslations(User user) {
+        return new ExhibitsLanguagesVM(user.getInstitution().getLanguages(), user.getInstitution().getExhibits());
     }
 
     /**
@@ -270,5 +256,20 @@ public class ExhibitService {
     public ExhibitVM getExhibit(Long exhibitId, User user) {
         Exhibit exhibit = verifyUserManagesExhibit(exhibitId, user);
         return new ExhibitVM(exhibit);
+    }
+
+    /**
+     * Gets exhibits and allowed languages of an institution defined by its id
+     * @param institutionId institution id
+     * @return exhibits and allowed language
+     */
+    public ExhibitsLanguagesVM getExhibitsTranslate(Long institutionId) {
+        // check if institution exists
+        Optional<Institution> institutionOptional = institutionRepository.findById(institutionId);
+        if(institutionOptional.isEmpty()) {
+            throw new NotFoundException("Institution not found");
+        }
+
+        return new ExhibitsLanguagesVM(institutionOptional.get().getLanguages(), institutionOptional.get().getExhibits());
     }
 }

@@ -10,11 +10,11 @@ import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
-public class OfficialTranslationsOverviewVM {
+public class ExhibitsLanguagesVM {
     private Set<LanguageVM> languages;
     private Set<ExhibitVM> exhibits;
 
-    public OfficialTranslationsOverviewVM(Set<Language> languages, Set<Exhibit> exhibits) {
+    public ExhibitsLanguagesVM(Set<Language> languages, Set<Exhibit> exhibits) {
         this.languages = languages.stream().map(LanguageVM::new).collect(Collectors.toSet());
         this.exhibits = exhibits.stream().map(ExhibitVM::new).collect(Collectors.toSet());
     }

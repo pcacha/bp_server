@@ -4,7 +4,6 @@ import cz.zcu.students.cacha.bp_server.domain.Exhibit;
 import cz.zcu.students.cacha.bp_server.domain.User;
 import cz.zcu.students.cacha.bp_server.responses.GenericResponse;
 import cz.zcu.students.cacha.bp_server.services.ExhibitService;
-import cz.zcu.students.cacha.bp_server.services.InstitutionService;
 import cz.zcu.students.cacha.bp_server.shared.CurrentUser;
 import cz.zcu.students.cacha.bp_server.view_models.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,12 +43,6 @@ public class ExhibitController {
     public Set<ExhibitVM> getAllExhibitsOfUsersInstitution(@CurrentUser User user) {
         Set<ExhibitVM> exhibits = exhibitService.getAllExhibitsOfUsersInstitution(user);
         return exhibits;
-    }
-
-    @GetMapping("/temp/{exhibitId}")
-    public ExhibitTranslateVM getExhibitTranslate(@PathVariable Long exhibitId) {
-        ExhibitTranslateVM exhibitTranslate = exhibitService.getExhibitTranslate(exhibitId);
-        return exhibitTranslate;
     }
 
     /**
@@ -141,9 +134,20 @@ public class ExhibitController {
         return new GenericResponse("Exhibit updated");
     }
 
-    @GetMapping("/approveTranslations/myInstitution")
-    public OfficialTranslationsOverviewVM getOfficialTranslationsOverview(@CurrentUser User user) {
-        OfficialTranslationsOverviewVM officialTranslationsOverviewVM = exhibitService.getOfficialTranslationsOverview(user);
-        return officialTranslationsOverviewVM;
+    @GetMapping("/approveTranslations")
+    public ExhibitsLanguagesVM getExhibitsApproveTranslations(@CurrentUser User user) {
+        ExhibitsLanguagesVM exhibitsLanguagesVM = exhibitService.getExhibitsApproveTranslations(user);
+        return exhibitsLanguagesVM;
+    }
+
+    /**
+     * Gets exhibits and allowed languages of an institution defined by its id
+     * @param institutionId institution id
+     * @return exhibits and allowed language
+     */
+    @GetMapping("/translate/{institutionId}")
+    public ExhibitsLanguagesVM getExhibitsTranslate(@PathVariable Long institutionId) {
+        ExhibitsLanguagesVM exhibitsLanguagesVM = exhibitService.getExhibitsTranslate(institutionId);
+        return exhibitsLanguagesVM;
     }
 }
