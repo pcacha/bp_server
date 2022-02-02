@@ -71,7 +71,7 @@ public class Institution {
     @OneToMany(mappedBy = "institution", fetch = FetchType.LAZY)
     private Set<User> owners;
 
-    @OneToMany(mappedBy = "institution", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "institution", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private Set<Exhibit> exhibits;
 
     @Temporal(TemporalType.TIMESTAMP)

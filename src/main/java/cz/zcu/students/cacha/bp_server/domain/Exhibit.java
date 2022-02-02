@@ -62,7 +62,7 @@ public class Exhibit {
     @Column(length = 50)
     private String showcase;
 
-    @OneToMany(mappedBy = "exhibit", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "exhibit", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private Set<Translation> translations;
 
     @ManyToOne(fetch=FetchType.LAZY)

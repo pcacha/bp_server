@@ -75,9 +75,6 @@ public class ExhibitService {
         // delete info label from fs
         fileService.deleteInfoLabelImage(exhibit.getInfoLabel());
 
-        // delete all translations to exhibit
-        translationRepository.deleteAll(exhibit.getTranslations());
-
         // delete exhibit from db
         exhibitsRepository.delete(exhibit);
     }

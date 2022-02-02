@@ -106,12 +106,23 @@ public class InstitutionController {
         return institution;
     }
 
+    /**
+     * Adds new institution manager by sending credentials of a new manager account to given email
+     * @param emailVM email of a new manager
+     * @param user logged in user
+     * @return message containing whether operation was processed
+     */
     @PostMapping("/myInstitution/addManager")
     public GenericResponse addInstitutionManager(@Valid @RequestBody EmailVM emailVM, @CurrentUser User user) {
         institutionService.addInstitutionManager(emailVM, user);
         return new GenericResponse("Email with credentials to a new institution manager account sent");
     }
 
+    /**
+     * Deletes institution of logged in user
+     * @param user logged in user
+     * @return message containing whether operation was processed
+     */
     @DeleteMapping("/myInstitution")
     public GenericResponse deleteMyInstitution(@CurrentUser User user) {
         institutionService.deleteMyInstitution(user);

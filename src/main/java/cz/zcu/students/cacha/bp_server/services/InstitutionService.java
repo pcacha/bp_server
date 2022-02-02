@@ -1,6 +1,9 @@
 package cz.zcu.students.cacha.bp_server.services;
 
-import cz.zcu.students.cacha.bp_server.domain.*;
+import cz.zcu.students.cacha.bp_server.domain.Exhibit;
+import cz.zcu.students.cacha.bp_server.domain.Institution;
+import cz.zcu.students.cacha.bp_server.domain.Language;
+import cz.zcu.students.cacha.bp_server.domain.User;
 import cz.zcu.students.cacha.bp_server.exceptions.CannotPerformActionException;
 import cz.zcu.students.cacha.bp_server.exceptions.CannotSaveImageException;
 import cz.zcu.students.cacha.bp_server.exceptions.NotFoundException;
@@ -9,15 +12,15 @@ import cz.zcu.students.cacha.bp_server.repositories.LanguageRepository;
 import cz.zcu.students.cacha.bp_server.repositories.RoleRepository;
 import cz.zcu.students.cacha.bp_server.repositories.UserRepository;
 import cz.zcu.students.cacha.bp_server.view_models.*;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.validation.Valid;
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static cz.zcu.students.cacha.bp_server.assets_store_config.WebConfiguration.DEFAULT_EXHIBIT_IMAGE;
 import static cz.zcu.students.cacha.bp_server.assets_store_config.WebConfiguration.DEFAULT_INSTITUTION_IMAGE;
 import static cz.zcu.students.cacha.bp_server.shared.RolesConstants.ROLE_INSTITUTION_OWNER;
 import static cz.zcu.students.cacha.bp_server.shared.RolesConstants.ROLE_TRANSLATOR;
@@ -45,9 +48,6 @@ public class InstitutionService {
 
     @Autowired
     private FileService fileService;
-
-    @Autowired
-    private ExhibitService exhibitService;
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -186,62 +186,90 @@ public class InstitutionService {
         return new InstitutionVM(user.getInstitution());
     }
 
+    /**
+     * Adds new institution manager by sending credentials of a new manager account to given email
+     * @param emailVM email of a new institution manager
+     * @param user institution manager
+     */
     public void addInstitutionManager(EmailVM emailVM, User user) {
-        if(!user.isInstitutionOwner()) {
-            throw new CannotPerformActionException("User does not own institution");
-        }
         Institution institution = user.getInstitution();
 
+        // generate unique username
         String username = Long.toString(new Date().getTime());
         while(userRepository.findByUsername(username).isPresent()) {
             username = Long.toString(new Date().getTime());
         }
 
-        String password = UUID.randomUUID().toString();
+        // generate strong password
+        String password = RandomStringUtils.randomAlphabetic(64);
 
+        // create a new user and set his properties accordingly
         User newManager = new User();
         newManager.setUsername(username);
         newManager.setPassword(bCryptPasswordEncoder.encode(password));
         newManager.setEmail(emailVM.getEmail());
+
+        // let new user manage given institution
         newManager.setInstitution(institution);
+
+        // add translator and institution owner roles
         newManager.getRoles().add(roleRepository.findByName(ROLE_TRANSLATOR).get());
         newManager.getRoles().add(roleRepository.findByName(ROLE_INSTITUTION_OWNER).get());
-        userRepository.save(newManager);
 
-        emailService.sendSimpleMessage(emailVM.getEmail(), "Institution manager credentials",
-                "You have been granted managerial rights to a cultural institution registered in the system for community translations of information texts - "
-                        + institution.getName() + ". The credentials are as follows:\n\nusername: " + username + "\n" + "password: " + password +
-                        "\n\nYou can change the credentials in profile settings after logging in to the system.");
+        try {
+            // send mail with new account information
+            emailService.sendSimpleMessage(emailVM.getEmail(), "Institution manager credentials",
+                    "You have been granted managerial rights to a cultural institution registered in the system for community translations of information texts - "
+                            + institution.getName() + ". The credentials are as follows:\n\nusername: " + username + "\n" + "password: " + password +
+                            "\n\nYou can change the credentials in profile settings after logging in to the system.");
+        }
+        catch (Exception e) {
+            throw new CannotPerformActionException("Failed to send email with new account");
+        }
+
+        // after sending mail save new manager to db
+        userRepository.save(newManager);
     }
 
+    /**
+     * Deletes user's institution
+     * @param user institution manager
+     */
     public void deleteMyInstitution(User user) {
-        if(!user.isInstitutionOwner()) {
-            throw new CannotPerformActionException("User does not own institution");
-        }
         Institution institution = user.getInstitution();
-
         deleteInstitution(institution);
     }
 
+    /**
+     * Deletes given institution
+     * @param institution institution to delete
+     */
     public void deleteInstitution(Institution institution) {
+        // delete institution image if exits
         if(!institution.getImage().equals(DEFAULT_INSTITUTION_IMAGE)) {
             fileService.deleteInstitutionImage(institution.getImage());
         }
 
-        Iterator<Exhibit> exhibitIterator = institution.getExhibits().iterator();
-        exhibitIterator.forEachRemaining(e -> exhibitService.deleteExhibit(e));
-        institution.getExhibits().clear();
+        // delete images and info labels of all exhibits
+        for(Exhibit exhibit : institution.getExhibits()) {
+            // if exhibit image is not default delete it
+            if(!exhibit.getImage().equals(DEFAULT_EXHIBIT_IMAGE)) {
+                fileService.deleteExhibitImage(exhibit.getImage());
+            }
+            // delete info label from fs
+            fileService.deleteInfoLabelImage(exhibit.getInfoLabel());
+        }
 
-        institution.getLanguages().clear();
-
-        Iterator<User> userIterator = institution.getOwners().iterator();
-        userIterator.forEachRemaining(u -> {
+        // remove institution managers
+        for(User u : institution.getOwners()) {
+            // remove institution owner role
             u.getRoles().remove(roleRepository.findByName(ROLE_INSTITUTION_OWNER).get());
+            // remove institution link
             u.setInstitution(null);
             userRepository.save(u);
-        });
-        institution.getOwners().clear();
+        }
 
+        // delete institution
         institutionRepository.delete(institution);
     }
 
