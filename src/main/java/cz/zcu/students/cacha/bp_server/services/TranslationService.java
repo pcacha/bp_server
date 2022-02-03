@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -35,13 +36,15 @@ public class TranslationService {
     @Autowired
     private LanguageRepository languageRepository;
 
-    @Autowired
-    private UserRepository userRepository;
-
-    public Set<TranslationSequenceVM> getSequences(User user) {
-        Set<Translation> translations =  translationRepository.getSequences(user.getId());
-        Set<TranslationSequenceVM> sequenceVMS = translations.stream().map(TranslationSequenceVM::new).collect(Collectors.toSet());
-        return sequenceVMS;
+    /**
+     * Gets the translation sequences of given user
+     * @param user translator
+     * @return translation sequences
+     */
+    public List<TranslationSequenceVM> getSequences(User user) {
+        // get user sequences and map it to view model
+        List<Translation> translations =  translationRepository.getSequences(user.getId());
+        return translations.stream().map(TranslationSequenceVM::new).collect(Collectors.toList());
     }
 
     public void deleteSequence(Long exhibitId, Long languageId, User user) {

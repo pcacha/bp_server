@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -23,9 +24,14 @@ public class TranslationController {
     @Autowired
     private TranslationService translationService;
 
+    /**
+     * Gets the translation sequences of logged in user
+     * @param user logged in user
+     * @return translation sequences
+     */
     @GetMapping("/sequences")
-    public Set<TranslationSequenceVM> getSequences(@CurrentUser User user) {
-        Set<TranslationSequenceVM> sequences = translationService.getSequences(user);
+    public List<TranslationSequenceVM> getSequences(@CurrentUser User user) {
+        List<TranslationSequenceVM> sequences = translationService.getSequences(user);
         return sequences;
     }
 

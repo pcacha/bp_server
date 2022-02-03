@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -16,14 +17,21 @@ import java.util.Set;
 @Repository
 public interface TranslationRepository extends JpaRepository<Translation, Long> {
 
+    /**
+     * Gets all latest translations for every pair exhibit-languge for given translator
+     * @param user_id translator id
+     * @return latest translation for every pair exhibit-languge
+     */
     @Query(
-            value = "select distinct on (exhibit_id, language_id) " +
-                    "* from translation " +
-                    "where user_id = :user_id " +
+            value = "select * from translation " +
+                    "where id in ( " +
+                    "select max(id) from translation " +
+                    "where author_id = :user_id " +
+                    "group by exhibit_id, language_id) " +
                     "order by created_at desc",
             nativeQuery = true
     )
-    Set<Translation> getSequences(@Param("user_id") Long user_id);
+    List<Translation> getSequences(@Param("user_id") Long user_id);
 
     @Query(
             value = "delete from translation " +
