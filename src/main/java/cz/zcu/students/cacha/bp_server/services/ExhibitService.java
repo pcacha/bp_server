@@ -243,6 +243,11 @@ public class ExhibitService {
         return user.getInstitution().getExhibits().stream().map(ExhibitVM::new).collect(Collectors.toSet());
     }
 
+    /**
+     * Gets exhibits and allowed languages of user's institution
+     * @param user owner of institution
+     * @return exhibits and allowed language
+     */
     public ExhibitsLanguagesVM getExhibitsApproveTranslations(User user) {
         return new ExhibitsLanguagesVM(user.getInstitution().getLanguages(), user.getInstitution().getExhibits());
     }

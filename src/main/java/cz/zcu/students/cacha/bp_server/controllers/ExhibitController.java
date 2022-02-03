@@ -134,6 +134,11 @@ public class ExhibitController {
         return new GenericResponse("Exhibit updated");
     }
 
+    /**
+     * Gets exhibits and allowed languages of logged in user insitution
+     * @param user logged in user
+     * @return exhibits and allowed language
+     */
     @GetMapping("/approveTranslations")
     public ExhibitsLanguagesVM getExhibitsApproveTranslations(@CurrentUser User user) {
         ExhibitsLanguagesVM exhibitsLanguagesVM = exhibitService.getExhibitsApproveTranslations(user);

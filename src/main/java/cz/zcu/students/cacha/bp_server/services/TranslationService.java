@@ -15,6 +15,7 @@ import cz.zcu.students.cacha.bp_server.view_models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -187,33 +188,39 @@ public class TranslationService {
         return new RateTranslationsVM(latestTranslations, exhibit, user, language);
     }
 
-    public void makeTranslationOfficial(Long translationId, User user) {
-        Optional<Translation> translationOptional = translationRepository.findById(translationId);
-        if(translationOptional.isEmpty()) {
-            throw new NotFoundException("Translation not found");
-        }
-        Translation translation = translationOptional.get();
+    /**
+     * Set translation official or unofficial based on given value
+     * @param booleanValVM value if is official
+     * @param translationId translation id
+     * @param user institution owner
+     */
+    public void setTranslationOfficial(BooleanValVM booleanValVM, Long translationId, User user) {
+        // check if translation exists
+        Translation translation = verifyTranslationExists(translationId);
 
-        if(!user.isInstitutionOwner()) {
-            throw new CannotPerformActionException("User does not own institution");
-        }
-
+        // check if user manages this translation
         if(!translation.getExhibit().getInstitution().getId().equals(user.getInstitution().getId())) {
             throw new CannotPerformActionException("User does not manage this exhibit");
         }
 
-        if(translation.getIsOfficial()) {
+        // if value matches the value in db it is ok
+        boolean value = booleanValVM.getValue();
+        if((value && translation.getIsOfficial()) || (!value && !translation.getIsOfficial())) {
             return;
         }
 
-        Optional<Translation> officialOptional = translationRepository.getOfficialTranslation(translation.getExhibit().getId(), translation.getLanguage().getId());
-
-        if(officialOptional.isPresent()) {
-            officialOptional.get().setIsOfficial(false);
-            translationRepository.save(officialOptional.get());
+        if(value) {
+            // if there already is an official translation it must be set as unofficial
+            Optional<Translation> officialOptional = translationRepository.getOfficialTranslation(translation.getExhibit().getId(), translation.getLanguage().getId());
+            if(officialOptional.isPresent()) {
+                // if it exists, set official to false and save to db
+                officialOptional.get().setIsOfficial(false);
+                translationRepository.save(officialOptional.get());
+            }
         }
 
-        translation.setIsOfficial(true);
+        // set official value and save it to db
+        translation.setIsOfficial(value);
         translationRepository.save(translation);
     }
 
@@ -258,15 +265,12 @@ public class TranslationService {
         if(value) {
             // add user to likers collection
             translation.getLikers().add(user);
-            user.getLikedTranslations().add(translation);
         }
         else {
             // remove user from likers collection
             translation.getLikers().remove(user);
-            user.getLikedTranslations().remove(translation);
         }
         // save translation
-        userRepository.save(user);
         translationRepository.save(translation);
     }
 }

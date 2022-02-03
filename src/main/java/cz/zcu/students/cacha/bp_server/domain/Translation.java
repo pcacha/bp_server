@@ -2,6 +2,8 @@ package cz.zcu.students.cacha.bp_server.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -35,7 +37,12 @@ public class Translation {
     @ManyToOne(fetch=FetchType.LAZY)
     private Exhibit exhibit;
 
-    @ManyToMany(mappedBy = "likedTranslations", fetch= FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SUBSELECT)
+    @JoinTable(
+            name = "translations_likes",
+            joinColumns = @JoinColumn(name = "translation_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
     private Set<User> likers;
 
     @Temporal(TemporalType.TIMESTAMP)

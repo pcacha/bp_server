@@ -88,10 +88,17 @@ public class TranslationController {
         return rateTranslationsVM;
     }
 
-    @PostMapping("/official/{translationId}")
-    public GenericResponse makeTranslationOfficial(@PathVariable Long translationId, @CurrentUser User user) {
-        translationService.makeTranslationOfficial(translationId, user);
-        return new GenericResponse("Translation made official");
+    /**
+     * Set translation official or unofficial based on given value
+     * @param booleanValVM value if is official
+     * @param translationId translation id
+     * @param user logged in user
+     * @return message containing whether operation was processed
+     */
+    @PutMapping("/official/{translationId}")
+    public GenericResponse setTranslationOfficial(@Valid @RequestBody BooleanValVM booleanValVM, @PathVariable Long translationId, @CurrentUser User user) {
+        translationService.setTranslationOfficial(booleanValVM, translationId, user);
+        return new GenericResponse("Official translation set");
     }
 
     @GetMapping("/official/{exhibitId}/{languageCode}")
