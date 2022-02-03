@@ -19,6 +19,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Class represent service which is responsible for translations operations
+ */
 @Service
 public class TranslationService {
 
@@ -70,47 +73,76 @@ public class TranslationService {
         return translation;
     }
 
+    /**
+     * Gets the information for translation to given language and for given exhibit
+     * @param exhibitId exhibit id
+     * @param languageId language id
+     * @param user translator
+     * @return new translation VM
+     */
     public NewTranslationVM getNewTranslation(Long exhibitId, Long languageId, User user) {
-        Optional<Exhibit> exhibitOptional = exhibitRepository.findById(exhibitId);
-        if(exhibitOptional.isEmpty()) {
-            throw new NotFoundException("Exhibit not found");
-        }
+        // check if params exists
+        Exhibit exhibit = verifyExhibitExists(exhibitId);
+        Language language = verifyLanguageExists(languageId);
 
-        Exhibit exhibit = exhibitOptional.get();
-
+        // get latest translated text if exists
         Optional<Translation> translationOptional = translationRepository.getLatestTranslation(user.getId(), exhibitId, languageId);
 
         if(translationOptional.isEmpty()) {
-            return new NewTranslationVM(exhibit, "");
+            // if no translation exists - text is empty
+            return new NewTranslationVM(exhibit, "", language.getName());
         }
 
-        return new NewTranslationVM(exhibit, translationOptional.get().getText());
+        // if translation exists return its text too
+        return new NewTranslationVM(exhibit, translationOptional.get().getText(), language.getName());
     }
 
-    public void saveNewTranslation(Long exhibitId, Long languageId, Translation newTranslation, User user) {
+    /**
+     * Checks if exhibit with given id exists and returns it
+     * @param exhibitId exhibit id
+     * @return found exhibit
+     */
+    private Exhibit verifyExhibitExists(Long exhibitId) {
         Optional<Exhibit> exhibitOptional = exhibitRepository.findById(exhibitId);
+        // if exhibit is empty throw exception
         if(exhibitOptional.isEmpty()) {
             throw new NotFoundException("Exhibit not found");
         }
+        return exhibitOptional.get();
+    }
 
+    /**
+     * Checks if language with given id exists and returns it
+     * @param languageId language id
+     * @return found langugae
+     */
+    private Language verifyLanguageExists(Long languageId) {
         Optional<Language> languageOptional = languageRepository.findById(languageId);
+        // if language is empty throw exception
         if(languageOptional.isEmpty()) {
             throw new NotFoundException("Language not found");
         }
-
-        newTranslation.setAuthor(user);
-        newTranslation.setExhibit(exhibitOptional.get());
-        newTranslation.setLanguage(languageOptional.get());
-        translationRepository.save(newTranslation);
+        return languageOptional.get();
     }
 
-    public TranslationTextVM getLatestTranslationText(Long exhibitId, Long languageId, User user) {
-        Optional<Translation> translationOptional = translationRepository.getLatestTranslation(user.getId(), exhibitId, languageId);
-        if(translationOptional.isEmpty()) {
-            return new TranslationTextVM("");
-        }
+    /**
+     * Saves new translation
+     * @param exhibitId exhibit id
+     * @param languageId language id
+     * @param newTranslation new translation
+     * @param user translation author
+     */
+    public void saveNewTranslation(Long exhibitId, Long languageId, Translation newTranslation, User user) {
+        // check that parameters exists
+        Exhibit exhibit = verifyExhibitExists(exhibitId);
+        Language language = verifyLanguageExists(languageId);
 
-        return new TranslationTextVM(translationOptional.get().getText());
+        // set translation parameters
+        newTranslation.setAuthor(user);
+        newTranslation.setExhibit(exhibit);
+        newTranslation.setLanguage(language);
+        // save new translation
+        translationRepository.save(newTranslation);
     }
 
     public OfficialTranslationsVM getOfficialTranslations(Long exhibitId, Long languageId, User user) {

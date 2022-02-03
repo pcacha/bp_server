@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Set;
 
+/**
+ * Class represents rest controller which is responsible for translations operations
+ */
 @RestController
 @RequestMapping("/translations")
 public class TranslationController {
@@ -44,23 +47,32 @@ public class TranslationController {
         return new GenericResponse("Rollback processed");
     }
 
+    /**
+     * Gets the information for translation to given language and for given exhibit
+     * @param exhibitId translated exhibit id
+     * @param languageId translation language id
+     * @param user logged in user
+     * @return new translation VM
+     */
     @GetMapping("/new/{exhibitId}/{languageId}")
     public NewTranslationVM getNewTranslation(@PathVariable Long exhibitId, @PathVariable Long languageId, @CurrentUser User user) {
         NewTranslationVM newTranslationVM = translationService.getNewTranslation(exhibitId, languageId, user);
         return newTranslationVM;
     }
 
+    /**
+     * Saves new translation
+     * @param exhibitId exhibit id
+     * @param languageId language id
+     * @param newTranslation translation to save
+     * @param user logged in user
+     * @return message containing whether operation was processed
+     */
     @PostMapping("/new/{exhibitId}/{languageId}")
     @ResponseStatus(HttpStatus.CREATED)
     public GenericResponse saveNewTranslation(@PathVariable Long exhibitId, @PathVariable Long languageId, @Valid @RequestBody Translation newTranslation, @CurrentUser User user) {
         translationService.saveNewTranslation(exhibitId, languageId, newTranslation, user);
         return new GenericResponse("Translation saved");
-    }
-
-    @GetMapping("/latest/{exhibitId}/{languageId}")
-    public TranslationTextVM getLatestTranslationText(@PathVariable Long exhibitId, @PathVariable Long languageId, @CurrentUser User user) {
-        TranslationTextVM translationText = translationService.getLatestTranslationText(exhibitId, languageId, user);
-        return translationText;
     }
 
     @GetMapping("/officialOverview/{exhibitId}/{languageId}")

@@ -10,6 +10,9 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * Class represent repository which is responsible for translations db operations
+ */
 @Repository
 public interface TranslationRepository extends JpaRepository<Translation, Long> {
 
@@ -51,13 +54,20 @@ public interface TranslationRepository extends JpaRepository<Translation, Long> 
     )
     void rollback(@Param("user_id") Long user_id, @Param("exhibit_id") Long exhibit_id, @Param("language_id") Long language_id, @Param("created_at") Date created_at);
 
+    /**
+     * Gets the latest translation of given author, exhibit and language
+     * @param user_id author id
+     * @param exhibit_id exhibit id
+     * @param language_id language id
+     * @return latest translation
+     */
     @Query(
-            value = "select top 1 " +
-                    "* from translation " +
-                    "where user_id = :user_id " +
+            value = "select * from translation " +
+                    "where author_id = :user_id " +
                     "and exhibit_id = :exhibit_id " +
                     "and language_id = :language_id " +
-                    "order by created_at desc",
+                    "order by created_at desc " +
+                    "limit 1",
             nativeQuery = true
     )
     Optional<Translation> getLatestTranslation(@Param("user_id") Long user_id, @Param("exhibit_id") Long exhibit_id, @Param("language_id") Long language_id);

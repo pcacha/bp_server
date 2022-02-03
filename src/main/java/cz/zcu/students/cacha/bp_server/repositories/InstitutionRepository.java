@@ -6,7 +6,15 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+/**
+ * Class represent repository which is responsible for institutions db operations
+ */
 @Repository
 public interface InstitutionRepository extends JpaRepository<Institution, Long> {
+    /**
+     * Gets institution by its name
+     * @param name institutin name
+     * @return found institution
+     */
     Optional<Institution> findByName(String name);
 }

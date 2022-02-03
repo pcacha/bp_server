@@ -8,8 +8,16 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * Class represent repository which is responsible for users db operations
+ */
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
+    /**
+     * Gets user by username
+     * @param userName username
+     * @return found user
+     */
     Optional<User> findByUsername(String userName);
 
     @Query(
@@ -20,6 +28,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
                     "where ur.user_id = u.id);",
             nativeQuery = true)
     Set<User> getNonAdminUsers();
-
-    // TODO
 }

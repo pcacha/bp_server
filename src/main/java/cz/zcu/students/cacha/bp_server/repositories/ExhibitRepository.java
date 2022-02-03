@@ -6,7 +6,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Set;
 
+/**
+ * Class represent repository which is responsible for exhibits db operations
+ */
 @Repository
 public interface ExhibitRepository extends JpaRepository<Exhibit, Long> {
-    Set<Exhibit> findByInstitutionId(Long institutionId);
 }
