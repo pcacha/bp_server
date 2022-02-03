@@ -75,10 +75,17 @@ public class TranslationController {
         return new GenericResponse("Translation saved");
     }
 
-    @GetMapping("/officialOverview/{exhibitId}/{languageId}")
-    public OfficialTranslationsVM getOfficialTranslations(@PathVariable Long exhibitId, @PathVariable Long languageId, @CurrentUser User user) {
-        OfficialTranslationsVM officialTranslations = translationService.getOfficialTranslations(exhibitId, languageId, user);
-        return officialTranslations;
+    /**
+     * Gets the translation overview for rating
+     * @param exhibitId exhibit id
+     * @param languageId language id
+     * @param user logged in user
+     * @return translation overview for rating
+     */
+    @GetMapping("/rate/{exhibitId}/{languageId}")
+    public RateTranslationsVM getRateOverview(@PathVariable Long exhibitId, @PathVariable Long languageId, @CurrentUser User user) {
+        RateTranslationsVM rateTranslationsVM = translationService.getRateOverview(exhibitId, languageId, user);
+        return rateTranslationsVM;
     }
 
     @PostMapping("/official/{translationId}")
@@ -93,6 +100,13 @@ public class TranslationController {
         return translation;
     }
 
+    /**
+     * Set like or dislike from logged in user to given translation
+     * @param booleanValVM like
+     * @param translationId translation id
+     * @param user logged in user
+     * @return message containing whether operation was processed
+     */
     @PutMapping("/like/{translationId}")
     public GenericResponse setLike(@Valid @RequestBody BooleanValVM booleanValVM, @PathVariable Long translationId, @CurrentUser User user) {
         translationService.setLike(booleanValVM, translationId, user);

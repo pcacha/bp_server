@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Data
 @NoArgsConstructor
-public class OfficialTranslationVM {
+public class RateTranslationVM {
 
     private Long translationId;
     private String authorUsername;
@@ -21,7 +21,7 @@ public class OfficialTranslationVM {
     private Integer likesCount;
     private Boolean liked;
 
-    public OfficialTranslationVM(Translation translation, User user) {
+    public RateTranslationVM(Translation translation, User user) {
         translationId = translation.getId();
         authorUsername = translation.getAuthor().getUsername();
         translatedText = translation.getText();

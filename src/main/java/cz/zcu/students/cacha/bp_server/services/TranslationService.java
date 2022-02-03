@@ -10,11 +10,11 @@ import cz.zcu.students.cacha.bp_server.exceptions.UnauthorizedException;
 import cz.zcu.students.cacha.bp_server.repositories.ExhibitRepository;
 import cz.zcu.students.cacha.bp_server.repositories.LanguageRepository;
 import cz.zcu.students.cacha.bp_server.repositories.TranslationRepository;
+import cz.zcu.students.cacha.bp_server.repositories.UserRepository;
 import cz.zcu.students.cacha.bp_server.view_models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -33,6 +33,9 @@ public class TranslationService {
 
     @Autowired
     private LanguageRepository languageRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public Set<TranslationSequenceVM> getSequences(User user) {
         Set<Translation> translations =  translationRepository.getSequences(user.getId());
@@ -114,7 +117,7 @@ public class TranslationService {
     /**
      * Checks if language with given id exists and returns it
      * @param languageId language id
-     * @return found langugae
+     * @return found language
      */
     private Language verifyLanguageExists(Long languageId) {
         Optional<Language> languageOptional = languageRepository.findById(languageId);
@@ -123,6 +126,20 @@ public class TranslationService {
             throw new NotFoundException("Language not found");
         }
         return languageOptional.get();
+    }
+
+    /**
+     * Checks if translation with given id exists and returns it
+     * @param translationId translation id
+     * @return found translation
+     */
+    private Translation verifyTranslationExists(Long translationId) {
+        Optional<Translation> translationOptional = translationRepository.findById(translationId);
+        // if translation is empty throw exception
+        if(translationOptional.isEmpty()) {
+            throw new NotFoundException("Translation not found");
+        }
+        return translationOptional.get();
     }
 
     /**
@@ -145,34 +162,29 @@ public class TranslationService {
         translationRepository.save(newTranslation);
     }
 
-    public OfficialTranslationsVM getOfficialTranslations(Long exhibitId, Long languageId, User user) {
-        Optional<Exhibit> exhibitOptional = exhibitRepository.findById(exhibitId);
-        if(exhibitOptional.isEmpty()) {
-            throw new NotFoundException("Exhibit not found");
-        }
-        Exhibit exhibit = exhibitOptional.get();
+    /**
+     * Gets the translation overview for rating
+     * @param exhibitId exhibit id
+     * @param languageId language id
+     * @param user user
+     * @return translation overview for rating
+     */
+    public RateTranslationsVM getRateOverview(Long exhibitId, Long languageId, User user) {
+        // check that parameters exists
+        Exhibit exhibit = verifyExhibitExists(exhibitId);
+        Language language = verifyLanguageExists(languageId);
 
-        if(!user.isInstitutionOwner()) {
-            throw new CannotPerformActionException("User does not own institution");
-        }
-
-        if(!exhibit.getInstitution().getId().equals(user.getInstitution().getId())) {
-            throw new CannotPerformActionException("User does not manage this exhibit");
-        }
-
-        Optional<Language> languageOptional = languageRepository.findById(languageId);
-        if(languageOptional.isEmpty()) {
-            throw new NotFoundException("Language not found");
-        }
-
+        // get latest translations of all users
         Set<Translation> latestTranslations = translationRepository.getLatestTranslations(exhibitId, languageId);
+        // get official translation
         Optional<Translation> officialOptional = translationRepository.getOfficialTranslation(exhibitId, languageId);
 
+        // if official translation exists and is not in the latest translations - add it there
         if(officialOptional.isPresent() && !latestTranslations.contains(officialOptional.get())) {
             latestTranslations.add(officialOptional.get());
         }
 
-        return new OfficialTranslationsVM(latestTranslations, exhibit, user);
+        return new RateTranslationsVM(latestTranslations, exhibit, user, language);
     }
 
     public void makeTranslationOfficial(Long translationId, User user) {
@@ -224,25 +236,37 @@ public class TranslationService {
         return new TranslationVM(officialOptional.get());
     }
 
+    /**
+     * Set like or dislike from given user to given translation
+     * @param booleanValVM like value
+     * @param translationId translation id
+     * @param user liker
+     */
     public void setLike(BooleanValVM booleanValVM, Long translationId, User user) {
-        Optional<Translation> translationOptional = translationRepository.findById(translationId);
-        if(translationOptional.isEmpty()) {
-            throw new NotFoundException("Translation not found");
-        }
-        Translation translation = translationOptional.get();
+        // check if translation exists
+        Translation translation = verifyTranslationExists(translationId);
 
+        // check if user already like translation
         boolean userLikes = translation.getLikers().stream().anyMatch(u -> u.getId().equals(user.getId()));
+
+        // if value matches the value in db it is ok
         boolean value = booleanValVM.getValue();
         if((userLikes && value) || (!userLikes && !value)) {
             return;
         }
 
         if(value) {
+            // add user to likers collection
             translation.getLikers().add(user);
+            user.getLikedTranslations().add(translation);
         }
         else {
+            // remove user from likers collection
             translation.getLikers().remove(user);
+            user.getLikedTranslations().remove(translation);
         }
+        // save translation
+        userRepository.save(user);
         translationRepository.save(translation);
     }
 }

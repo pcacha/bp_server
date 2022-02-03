@@ -46,6 +46,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/users/**").authenticated()
                 .antMatchers(HttpMethod.GET, "/institutions/myInstitution").authenticated()
                 .antMatchers(HttpMethod.POST, "/institutions/myInstitution").authenticated()
+                .antMatchers("/translations/rate/{exhibitId}/{languageId}", "/translations/like/{translationId}").hasAnyAuthority(RolesConstants.ROLE_TRANSLATOR, RolesConstants.ROLE_INSTITUTION_OWNER)
                 .antMatchers("/exhibits/translate/{institutionId}", "/translations/**").hasAuthority(RolesConstants.ROLE_TRANSLATOR)
                 .antMatchers("/institutions/**", "/exhibits/**").hasAuthority(RolesConstants.ROLE_INSTITUTION_OWNER)
                 .anyRequest().authenticated();

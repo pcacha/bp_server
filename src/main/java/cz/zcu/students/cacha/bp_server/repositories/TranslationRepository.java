@@ -72,22 +72,35 @@ public interface TranslationRepository extends JpaRepository<Translation, Long> 
     )
     Optional<Translation> getLatestTranslation(@Param("user_id") Long user_id, @Param("exhibit_id") Long exhibit_id, @Param("language_id") Long language_id);
 
+    /**
+     * Gets the latest translations for given exhibit and language from all authors
+     * @param exhibit_id exhibit id
+     * @param language_id language id
+     * @return the latest translations for given exhibit and language from all authors
+     */
     @Query(
-            value = "select distinct on (author_id) " +
-                    "* from translation " +
+            value = "select * from translation " +
+                    "where id in ( " +
+                    "select max(id) from translation " +
                     "where exhibit_id = :exhibit_id " +
                     "and language_id = :language_id " +
-                    "order by created_at desc",
+                    "group by author_id)",
             nativeQuery = true
     )
     Set<Translation> getLatestTranslations(@Param("exhibit_id") Long exhibit_id, @Param("language_id") Long language_id);
 
+    /**
+     * Gets the official translation for given exhibit and language
+     * @param exhibit_id exhibit id
+     * @param language_id language id
+     * @return the official translation for given exhibit and language
+     */
     @Query(
-            value = "select top 1 " +
-                    "* from translation " +
+            value = "select * from translation " +
                     "where exhibit_id = :exhibit_id " +
                     "and language_id = :language_id " +
-                    "and is_official = 1",
+                    "and is_official = 1 " +
+                    "limit 1",
             nativeQuery = true
     )
     Optional<Translation> getOfficialTranslation(@Param("exhibit_id") Long exhibit_id, @Param("language_id") Long language_id);
