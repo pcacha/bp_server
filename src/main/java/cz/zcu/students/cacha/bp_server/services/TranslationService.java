@@ -47,7 +47,14 @@ public class TranslationService {
         return translations.stream().map(TranslationSequenceVM::new).collect(Collectors.toList());
     }
 
+    /**
+     * Deletes all user's translations for given pair exhibit-language
+     * @param exhibitId selected exhibit
+     * @param languageId selected language
+     * @param user translator
+     */
     public void deleteSequence(Long exhibitId, Long languageId, User user) {
+        // delete translations
         translationRepository.deleteSequence(user.getId(), exhibitId, languageId);
     }
 

@@ -35,6 +35,13 @@ public class TranslationController {
         return sequences;
     }
 
+    /**
+     * Deletes all user's translations for given pair exhibit-language
+     * @param exhibitId selected exhibit
+     * @param languageId selected language
+     * @param user logged in user
+     * @return message containing whether operation was processed
+     */
     @DeleteMapping("/sequences/{exhibitId}/{languageId}")
     public GenericResponse deleteSequence(@PathVariable Long exhibitId, @PathVariable Long languageId, @CurrentUser User user) {
         translationService.deleteSequence(exhibitId, languageId, user);

@@ -2,10 +2,12 @@ package cz.zcu.students.cacha.bp_server.repositories;
 
 import cz.zcu.students.cacha.bp_server.domain.Translation;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -33,18 +35,26 @@ public interface TranslationRepository extends JpaRepository<Translation, Long> 
     )
     List<Translation> getSequences(@Param("user_id") Long user_id);
 
+    /**
+     * Deletes all translation for given user-exhibit-language
+     * @param user_id user's id
+     * @param exhibit_id exhibit id
+     * @param language_id language id
+     */
     @Query(
             value = "delete from translation " +
-                    "where user_id = :user_id " +
+                    "where author_id = :user_id " +
                     "and exhibit_id = :exhibit_id " +
                     "and language_id = :language_id",
             nativeQuery = true
     )
+    @Modifying
+    @Transactional
     void deleteSequence(@Param("user_id") Long user_id, @Param("exhibit_id") Long exhibit_id, @Param("language_id") Long language_id);
 
     @Query(
             value = "select * from translation " +
-                    "where user_id = :user_id " +
+                    "where author_id = :user_id " +
                     "and exhibit_id = :exhibit_id " +
                     "and language_id = :language_id " +
                     "order by created_at desc",
@@ -54,7 +64,7 @@ public interface TranslationRepository extends JpaRepository<Translation, Long> 
 
     @Query(
             value = "delete from translation " +
-                    "where user_id = :user_id " +
+                    "where author_id = :user_id " +
                     "and exhibit_id = :exhibit_id " +
                     "and language_id = :language_id " +
                     "and created_at > :created_at",
