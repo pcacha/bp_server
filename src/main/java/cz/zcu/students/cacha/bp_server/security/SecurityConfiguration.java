@@ -51,6 +51,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/translations/official/{translationId}").hasAnyAuthority(RolesConstants.ROLE_INSTITUTION_OWNER)
                 .antMatchers("/exhibits/translate/{institutionId}", "/translations/**").hasAuthority(RolesConstants.ROLE_TRANSLATOR)
                 .antMatchers("/institutions/**", "/exhibits/**").hasAuthority(RolesConstants.ROLE_INSTITUTION_OWNER)
+                .antMatchers("/admin/**").hasAuthority(RolesConstants.ROLE_ADMIN)
                 .anyRequest().authenticated();
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

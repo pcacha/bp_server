@@ -277,31 +277,49 @@ public class InstitutionService {
         institutionRepository.delete(institution);
     }
 
-    public Set<InstitutionVM> getInstitutionsOrdered(CoordinatesVM coordinates) {
+    /**
+     * Gets all institutions ordered relative to given coordinates
+     * @param coordinates coordinates
+     * @return ordered institutions
+     */
+    public List<InstitutionVM> getInstitutionsOrdered(CoordinatesVM coordinates) {
+        // convert coordinates to double values
+        double latitude = Double.parseDouble(coordinates.getLatitude());
+        double longitude = Double.parseDouble(coordinates.getLongitude());
+
+        // find all institutions
         List<Institution> institutionsList = institutionRepository.findAll();
 
-        institutionsList.forEach(i -> i.setDistance(distance(i.getLatitude(), coordinates.getLatitude(), i.getLongitude(), coordinates.getLongitude(), 0, 0)));
+        // calculate distance of all institutions to given coordinates
+        institutionsList.forEach(i -> i.setDistance(distance(i.getLatitude(), latitude, i.getLongitude(), longitude)));
+        // sort institutions by calculated distance
         institutionsList.sort(Comparator.comparingDouble(Institution::getDistance));
 
-        return institutionsList.stream().map(InstitutionVM::new).collect(Collectors.toSet());
+        return institutionsList.stream().map(InstitutionVM::new).collect(Collectors.toList());
     }
 
-    private double distance(double lat1, double lat2, double lon1, double lon2, double el1, double el2) {
+    /**
+     * Calculate distance between two pints on earth
+     * @param lat1 latitude of first point
+     * @param lat2 latitude of second point
+     * @param lon1 longitude of first point
+     * @param lon2 longitude of second point
+     * @return distance between two points on earth
+     */
+    private double distance(double lat1, double lat2, double lon1, double lon2) {
+        // earth radius
+        final int R = 6371;
 
-        final int R = 6371; // Radius of the earth
-
+        // get latitude and longitude distinctions
         double latDistance = Math.toRadians(lat2 - lat1);
         double lonDistance = Math.toRadians(lon2 - lon1);
+        // calculate distance between points
         double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
                 + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
                 * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        double distance = R * c * 1000; // convert to meters
-
-        double height = el1 - el2;
-
-        distance = Math.pow(distance, 2) + Math.pow(height, 2);
-
-        return Math.sqrt(distance);
+        // convert to meters
+        double distance = R * c * 1000;
+        return distance;
     }
 }

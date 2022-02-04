@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -33,9 +34,14 @@ public class InstitutionController {
         return institutions;
     }
 
+    /**
+     * Gets all institutions ordered relative to given coordinates
+     * @param coordinates coordinates
+     * @return ordered institutions
+     */
     @GetMapping("/ordered")
-    public Set<InstitutionVM> getInstitutions(@Valid @RequestBody CoordinatesVM coordinates) {
-        Set<InstitutionVM> institutions = institutionService.getInstitutionsOrdered(coordinates);
+    public List<InstitutionVM> getInstitutionsOrdered(@Valid @RequestBody CoordinatesVM coordinates) {
+        List<InstitutionVM> institutions = institutionService.getInstitutionsOrdered(coordinates);
         return institutions;
     }
 
