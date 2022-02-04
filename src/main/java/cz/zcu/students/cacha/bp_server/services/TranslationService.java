@@ -256,18 +256,25 @@ public class TranslationService {
         translationRepository.save(translation);
     }
 
+    /**
+     * Gets official translation for given exhibit and language
+     * @param exhibitId exhibit id
+     * @param languageCode language code
+     * @return official translation for given exhibit and language
+     */
     public TranslationVM getOfficialTranslation(Long exhibitId, String languageCode) {
-        Optional<Exhibit> exhibitOptional = exhibitRepository.findById(exhibitId);
-        if(exhibitOptional.isEmpty()) {
-            throw new NotFoundException("Exhibit not found");
-        }
+        // check that exhibit exists
+        verifyExhibitExists(exhibitId);
 
+        // check that language with given code exists
         Optional<Language> languageOptional = languageRepository.findByCode(languageCode);
         if(languageOptional.isEmpty()) {
             throw new NotFoundException("Language not found");
         }
 
+        // try to find official translation
         Optional<Translation> officialOptional = translationRepository.getOfficialTranslation(exhibitId, languageOptional.get().getId());
+        // if official translation not exists throw exception
         if(officialOptional.isEmpty()) {
             throw new NotFoundException("Official translation not found");
         }

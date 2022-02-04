@@ -127,6 +127,12 @@ public class TranslationController {
         return new GenericResponse("Official translation set");
     }
 
+    /**
+     * Gets official translation for given exhibit and language
+     * @param exhibitId exhibit id
+     * @param languageCode language code
+     * @return official translation for given exhibit and language
+     */
     @GetMapping("/official/{exhibitId}/{languageCode}")
     public TranslationVM getOfficialTranslation(@PathVariable Long exhibitId, @PathVariable String languageCode) {
         TranslationVM translation = translationService.getOfficialTranslation(exhibitId, languageCode);
