@@ -48,12 +48,25 @@ public class TranslationController {
         return new GenericResponse("Sequence deleted");
     }
 
+    /**
+     * Gets translation sequence for given exhibit and language
+     * @param exhibitId exhibit id
+     * @param languageId language id
+     * @param user logged in user
+     * @return translation sequence for given exhibit and language
+     */
     @GetMapping("/sequence/{exhibitId}/{languageId}")
-    public Set<TranslationVM> getSequence(@PathVariable Long exhibitId, @PathVariable Long languageId, @CurrentUser User user) {
-        Set<TranslationVM> translations = translationService.getSequence(exhibitId, languageId, user);
+    public List<TranslationVM> getSequence(@PathVariable Long exhibitId, @PathVariable Long languageId, @CurrentUser User user) {
+        List<TranslationVM> translations = translationService.getSequence(exhibitId, languageId, user);
         return translations;
     }
 
+    /**
+     * Deletes every translation for given user-exhibit-language that was created after this translation
+     * @param translationId translation id
+     * @param user logged in user
+     * @return message containing whether operation was processed
+     */
     @DeleteMapping("/sequence/{translationId}")
     public GenericResponse rollback(@PathVariable Long translationId, @CurrentUser User user) {
         translationService.rollback(translationId, user);

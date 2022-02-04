@@ -36,22 +36,27 @@ public interface TranslationRepository extends JpaRepository<Translation, Long> 
     List<Translation> getSequences(@Param("user_id") Long user_id);
 
     /**
-     * Deletes all translation for given user-exhibit-language
+     * Gets all translation for given user-exhibit-language
      * @param user_id user's id
      * @param exhibit_id exhibit id
      * @param language_id language id
      */
     @Query(
-            value = "delete from translation " +
+            value = "select * from translation " +
                     "where author_id = :user_id " +
                     "and exhibit_id = :exhibit_id " +
                     "and language_id = :language_id",
             nativeQuery = true
     )
-    @Modifying
-    @Transactional
-    void deleteSequence(@Param("user_id") Long user_id, @Param("exhibit_id") Long exhibit_id, @Param("language_id") Long language_id);
+    Set<Translation> getSequenceToDelete(@Param("user_id") Long user_id, @Param("exhibit_id") Long exhibit_id, @Param("language_id") Long language_id);
 
+    /**
+     * Gets translation sequence for given author-exhibit-language
+     * @param user_id author id
+     * @param exhibit_id exhibit id
+     * @param language_id language id
+     * @return translation sequence for given exhibit and language
+     */
     @Query(
             value = "select * from translation " +
                     "where author_id = :user_id " +
@@ -60,17 +65,24 @@ public interface TranslationRepository extends JpaRepository<Translation, Long> 
                     "order by created_at desc",
             nativeQuery = true
     )
-    Set<Translation> getSequence(@Param("user_id") Long user_id, @Param("exhibit_id") Long exhibit_id, @Param("language_id") Long language_id);
+    List<Translation> getSequence(@Param("user_id") Long user_id, @Param("exhibit_id") Long exhibit_id, @Param("language_id") Long language_id);
 
+    /**
+     * Gets all translation for given author-exhibit-language that are more recent than crated_at parameter
+     * @param user_id user id
+     * @param exhibit_id exhibit id
+     * @param language_id language id
+     * @param created_at most latest translation crated at value
+     */
     @Query(
-            value = "delete from translation " +
+            value = "select * from translation " +
                     "where author_id = :user_id " +
                     "and exhibit_id = :exhibit_id " +
                     "and language_id = :language_id " +
                     "and created_at > :created_at",
             nativeQuery = true
     )
-    void rollback(@Param("user_id") Long user_id, @Param("exhibit_id") Long exhibit_id, @Param("language_id") Long language_id, @Param("created_at") Date created_at);
+    Set<Translation> getTranslationToRollback(@Param("user_id") Long user_id, @Param("exhibit_id") Long exhibit_id, @Param("language_id") Long language_id, @Param("created_at") Date created_at);
 
     /**
      * Gets the latest translation of given author, exhibit and language

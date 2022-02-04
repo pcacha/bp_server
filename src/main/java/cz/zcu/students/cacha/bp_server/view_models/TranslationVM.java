@@ -12,6 +12,7 @@ import java.util.Date;
 public class TranslationVM {
 
     private Long translationId;
+    private Long institutionId;
     private String authorUsername;
     private String translatedText;
     private Boolean isOfficial;
@@ -21,6 +22,7 @@ public class TranslationVM {
 
     public TranslationVM(Translation translation) {
         translationId = translation.getId();
+        institutionId = translation.getExhibit().getInstitution().getId();
         authorUsername = translation.getAuthor().getUsername();
         translatedText = translation.getText();
         isOfficial = translation.getIsOfficial();

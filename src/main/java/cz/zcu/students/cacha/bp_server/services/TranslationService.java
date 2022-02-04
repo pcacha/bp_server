@@ -54,32 +54,54 @@ public class TranslationService {
      * @param user translator
      */
     public void deleteSequence(Long exhibitId, Long languageId, User user) {
-        // delete translations
-        translationRepository.deleteSequence(user.getId(), exhibitId, languageId);
+        // get all translations from sequence
+        Set<Translation> getDeletedSequence = translationRepository.getSequenceToDelete(user.getId(), exhibitId, languageId);
+        // delete sequence
+        translationRepository.deleteAll(getDeletedSequence);
     }
 
-    public Set<TranslationVM> getSequence(Long exhibitId, Long languageId, User user) {
-        Set<Translation> translations = translationRepository.getSequence(user.getId(), exhibitId, languageId);
-        Set<TranslationVM> translationVMS = translations.stream().map(TranslationVM::new).collect(Collectors.toSet());
-        return translationVMS;
+    /**
+     * Gets translation sequence for given exhibit and language
+     * @param exhibitId exhibit id
+     * @param languageId language id
+     * @param user translations owner
+     * @return translation sequence for given exhibit and language
+     */
+    public List<TranslationVM> getSequence(Long exhibitId, Long languageId, User user) {
+        List<Translation> translations = translationRepository.getSequence(user.getId(), exhibitId, languageId);
+        return translations.stream().map(TranslationVM::new).collect(Collectors.toList());
     }
 
+    /**
+     * Deletes every translation for given user-exhibit-language that was created after this translation
+     * @param translationId translation id
+     * @param user translator
+     */
     public void rollback(Long translationId, User user) {
+        // verify that user translation exists and user owns it
         Translation translation = verifyTranslation(translationId, user);
 
+        // get rollback parameters
         Long exhibitId = translation.getExhibit().getId();
         Long languageId = translation.getLanguage().getId();
 
-        translationRepository.rollback(user.getId(), exhibitId, languageId, translation.getCreatedAt());
+        // get all translations to rollback
+        Set<Translation> getRollbackTranslations = translationRepository.getTranslationToRollback(user.getId(), exhibitId, languageId, translation.getCreatedAt());
+        // delete all translations to rollback
+        translationRepository.deleteAll(getRollbackTranslations);
     }
 
+    /**
+     * Checks if translation exits and user owns it
+     * @param translationId translation id
+     * @param user translator, owner of translation
+     * @return found translation
+     */
     private Translation verifyTranslation(Long translationId, User user) {
-        Optional<Translation> translationOptional = translationRepository.findById(translationId);
-        if(translationOptional.isEmpty()) {
-            throw new NotFoundException("Translation not found");
-        }
+        // check if translation exists
+        Translation translation = verifyTranslationExists(translationId);
 
-        Translation translation = translationOptional.get();
+        // check if user owns translation
         if(!translation.getAuthor().getId().equals(user.getId())) {
             throw new UnauthorizedException("Translation is not owned by current user");
         }
