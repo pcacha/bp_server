@@ -225,7 +225,8 @@ public class InstitutionService {
             emailService.sendSimpleMessage(emailVM.getEmail(), "Institution manager credentials",
                     "You have been granted managerial rights to a cultural institution registered in the system for community translations of information texts - "
                             + institution.getName() + ". The credentials are as follows:\n\nusername: " + username + "\n" + "password: " + password +
-                            "\n\nYou can change the credentials in profile settings after logging in to the system.");
+                            "\n\nYou can change the credentials in profile settings after logging in to the system.\n\nThis mail is automatically generated. Do not respond to it." +
+                            "\n\nRegards,\nCommunity Translation System");
         }
         catch (Exception e) {
             throw new CannotPerformActionException("Failed to send email with new account");
