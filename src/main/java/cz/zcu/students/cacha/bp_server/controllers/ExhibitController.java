@@ -5,7 +5,10 @@ import cz.zcu.students.cacha.bp_server.domain.User;
 import cz.zcu.students.cacha.bp_server.responses.GenericResponse;
 import cz.zcu.students.cacha.bp_server.services.ExhibitService;
 import cz.zcu.students.cacha.bp_server.shared.CurrentUser;
-import cz.zcu.students.cacha.bp_server.view_models.*;
+import cz.zcu.students.cacha.bp_server.view_models.ExhibitVM;
+import cz.zcu.students.cacha.bp_server.view_models.ExhibitsLanguagesVM;
+import cz.zcu.students.cacha.bp_server.view_models.ImageVM;
+import cz.zcu.students.cacha.bp_server.view_models.UpdateExhibitVM;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -55,6 +58,18 @@ public class ExhibitController {
     public ExhibitVM getExhibit(@PathVariable Long exhibitId, @CurrentUser User user) {
         ExhibitVM exhibit = exhibitService.getExhibit(exhibitId, user);
         return exhibit;
+    }
+
+    /**
+     * Gets base64 encoded QR code for given exhibit
+     * @param exhibitId exhibit id
+     * @param user logged in user
+     * @return base64 encoded QR code
+     */
+    @GetMapping("/{exhibitId}/qrcode")
+    public String getExhibitQRCode(@PathVariable Long exhibitId, @CurrentUser User user) {
+        String qrCodeBase64 = exhibitService.getExhibitQRCode(exhibitId, user);
+        return qrCodeBase64;
     }
 
     /**

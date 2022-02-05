@@ -1,5 +1,6 @@
 package cz.zcu.students.cacha.bp_server;
 
+import com.google.zxing.qrcode.QRCodeWriter;
 import cz.zcu.students.cacha.bp_server.domain.Language;
 import cz.zcu.students.cacha.bp_server.domain.Role;
 import cz.zcu.students.cacha.bp_server.repositories.LanguageRepository;
@@ -38,6 +39,11 @@ public class BpServerApplication {
     @Bean
     public Tika tika() {
         return new Tika();
+    }
+
+    @Bean
+    public QRCodeWriter getQRCodeWriter() {
+        return new QRCodeWriter();
     }
 
     @Bean

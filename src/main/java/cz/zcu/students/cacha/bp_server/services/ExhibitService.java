@@ -8,10 +8,17 @@ import cz.zcu.students.cacha.bp_server.exceptions.CannotSaveImageException;
 import cz.zcu.students.cacha.bp_server.exceptions.NotFoundException;
 import cz.zcu.students.cacha.bp_server.repositories.ExhibitRepository;
 import cz.zcu.students.cacha.bp_server.repositories.InstitutionRepository;
-import cz.zcu.students.cacha.bp_server.view_models.*;
+import cz.zcu.students.cacha.bp_server.view_models.ExhibitVM;
+import cz.zcu.students.cacha.bp_server.view_models.ExhibitsLanguagesVM;
+import cz.zcu.students.cacha.bp_server.view_models.ImageVM;
+import cz.zcu.students.cacha.bp_server.view_models.UpdateExhibitVM;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.util.Base64;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,6 +39,9 @@ public class ExhibitService {
 
     @Autowired
     private FileService fileService;
+
+    @Autowired
+    private QRCodeService qrCodeService;
 
     /**
      * Gets all exhibits of given institution
@@ -261,6 +271,30 @@ public class ExhibitService {
     public ExhibitVM getExhibit(Long exhibitId, User user) {
         Exhibit exhibit = verifyUserManagesExhibit(exhibitId, user);
         return new ExhibitVM(exhibit);
+    }
+
+    /**
+     * Gets base64 encoded QR code for given exhibit
+     * @param exhibitId exhibit id
+     * @param user institution manager
+     * @return base64 encoded QR code
+     */
+    public String getExhibitQRCode(Long exhibitId, User user) {
+        // check exhibit exists
+        Exhibit exhibit = verifyUserManagesExhibit(exhibitId, user);
+
+        try {
+            // get image of qr code
+            BufferedImage image = qrCodeService.generateQRCodeImage(exhibit.getId().toString());
+            // get byte array from image
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            ImageIO.write(image, "png", os);
+            // encode image to base64 and return it
+            return Base64.getEncoder().encodeToString(os.toByteArray());
+        }
+        catch (Exception e) {
+            throw new CannotPerformActionException("QR code generation failed");
+        }
     }
 
     /**
