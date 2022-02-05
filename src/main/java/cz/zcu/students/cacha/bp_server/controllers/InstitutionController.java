@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Class represents rest controller which is responsible for institution operations
@@ -29,8 +28,8 @@ public class InstitutionController {
      * @return all institutions
      */
     @GetMapping
-    public Set<InstitutionVM> getInstitutions() {
-        Set<InstitutionVM> institutions = institutionService.getInstitutions();
+    public List<InstitutionVM> getInstitutions() {
+        List<InstitutionVM> institutions = institutionService.getInstitutions();
         return institutions;
     }
 

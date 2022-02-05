@@ -7,6 +7,8 @@ import cz.zcu.students.cacha.bp_server.domain.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -14,12 +16,13 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class RateTranslationsVM {
 
-    private Set<RateTranslationVM> translations;
+    private List<RateTranslationVM> translations;
     private ExhibitVM exhibit;
     private String language;
 
     public RateTranslationsVM(Set<Translation> translations, Exhibit exhibit, User user, Language language) {
-        this.translations = translations.stream().map(t -> new RateTranslationVM(t, user)).collect(Collectors.toSet());
+        this.translations = translations.stream().map(t -> new RateTranslationVM(t, user)).sorted(Comparator.comparing(RateTranslationVM::getCreatedAt).reversed())
+                .collect(Collectors.toList());
         this.exhibit = new ExhibitVM(exhibit);
         this.language = language.getName();
     }

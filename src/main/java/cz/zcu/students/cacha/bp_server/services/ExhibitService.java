@@ -18,9 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.util.Base64;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static cz.zcu.students.cacha.bp_server.assets_store_config.WebConfiguration.DEFAULT_EXHIBIT_IMAGE;
@@ -48,15 +46,16 @@ public class ExhibitService {
      * @param institutionId institution id
      * @return all exhibits of given institution
      */
-    public Set<ExhibitVM> getExhibitsOfInstitution(Long institutionId) {
+    public List<ExhibitVM> getExhibitsOfInstitution(Long institutionId) {
         // check if institution with this id exists
         Optional<Institution> institutionOptional = institutionRepository.findById(institutionId);
         if(institutionOptional.isEmpty()) {
             throw new NotFoundException("Institution not found");
         }
 
-        // get all exhibits and return them
-        Set<ExhibitVM> exhibits = institutionOptional.get().getExhibits().stream().map(ExhibitVM::new).collect(Collectors.toSet());
+        // get all exhibits and return them sorted by name
+        List<ExhibitVM> exhibits = institutionOptional.get().getExhibits().stream().map(ExhibitVM::new).sorted(Comparator.comparing(ExhibitVM::getName))
+                .collect(Collectors.toList());
         return exhibits;
     }
 
@@ -248,9 +247,9 @@ public class ExhibitService {
      * @param user owner of an institution
      * @return all exhibits of user's institution
      */
-    public Set<ExhibitVM> getAllExhibitsOfUsersInstitution(User user) {
-        // return all exhibits mapped to view model
-        return user.getInstitution().getExhibits().stream().map(ExhibitVM::new).collect(Collectors.toSet());
+    public List<ExhibitVM> getAllExhibitsOfUsersInstitution(User user) {
+        // return all exhibits mapped to view model and sorted by name
+        return user.getInstitution().getExhibits().stream().map(ExhibitVM::new).sorted(Comparator.comparing(ExhibitVM::getName)).collect(Collectors.toList());
     }
 
     /**

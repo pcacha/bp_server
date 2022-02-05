@@ -56,8 +56,10 @@ public class InstitutionService {
      * Gets all institutions
      * @return all institutions
      */
-    public Set<InstitutionVM> getInstitutions() {
-        Set<InstitutionVM> institutions = institutionRepository.findAll().stream().map(InstitutionVM::new).collect(Collectors.toSet());
+    public List<InstitutionVM> getInstitutions() {
+        // get all institutions ordered by name
+        List<InstitutionVM> institutions = institutionRepository.findAll().stream().map(InstitutionVM::new).sorted(Comparator.comparing(InstitutionVM::getName))
+                .collect(Collectors.toList());
         return institutions;
     }
 

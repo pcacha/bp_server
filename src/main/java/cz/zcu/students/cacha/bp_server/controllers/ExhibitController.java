@@ -14,7 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Class represents rest controller which is responsible for exhibits operations
@@ -32,8 +32,8 @@ public class ExhibitController {
      * @return all exhibits of given institution
      */
     @GetMapping("/all/{institutionId}")
-    public Set<ExhibitVM> getAllExhibitsOfInstitution(@PathVariable Long institutionId) {
-        Set<ExhibitVM> exhibits = exhibitService.getExhibitsOfInstitution(institutionId);
+    public List<ExhibitVM> getAllExhibitsOfInstitution(@PathVariable Long institutionId) {
+        List<ExhibitVM> exhibits = exhibitService.getExhibitsOfInstitution(institutionId);
         return exhibits;
     }
 
@@ -43,8 +43,8 @@ public class ExhibitController {
      * @return all exhibits of logged in user's institution
      */
     @GetMapping("/all")
-    public Set<ExhibitVM> getAllExhibitsOfUsersInstitution(@CurrentUser User user) {
-        Set<ExhibitVM> exhibits = exhibitService.getAllExhibitsOfUsersInstitution(user);
+    public List<ExhibitVM> getAllExhibitsOfUsersInstitution(@CurrentUser User user) {
+        List<ExhibitVM> exhibits = exhibitService.getAllExhibitsOfUsersInstitution(user);
         return exhibits;
     }
 
