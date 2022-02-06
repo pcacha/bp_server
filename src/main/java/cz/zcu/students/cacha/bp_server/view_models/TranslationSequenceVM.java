@@ -9,19 +9,47 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+/**
+ * view model for translation sequence
+ */
 @Data
 @NoArgsConstructor
 public class TranslationSequenceVM {
 
+    /**
+     * exhibit id
+     */
     private Long exhibitId;
+    /**
+     * language id
+     */
     private Long languageId;
+    /**
+     * institution name
+     */
     private String institutionName;
+    /**
+     * exhibit name
+     */
     private String exhibitName;
+    /**
+     * language name
+     */
     private String language;
+    /**
+     * name of image of exhibit
+     */
     private String exhibitImage;
+    /**
+     * the date of last activity in sequence
+     */
     @JsonFormat(pattern = "MM/dd/yyyy")
     private Date latestTranslationCreatedAt;
 
+    /**
+     * Creates new instance based on given translation
+     * @param translation translation
+     */
     public TranslationSequenceVM(Translation translation) {
         Exhibit ex = translation.getExhibit();
         Language lang = translation.getLanguage();

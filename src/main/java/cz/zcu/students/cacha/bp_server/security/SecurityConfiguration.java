@@ -17,6 +17,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * Class that configurates system security
+ */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, jsr250Enabled = true, prePostEnabled = true)
@@ -34,8 +37,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
+    /**
+     * Configurates spring security and set detail restrictions for system endpoints
+     * @param http security
+     * @throws Exception Exception
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        // restrict system endpoints by setting who can access them
         http.cors().and().csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
@@ -54,14 +63,25 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin/**").hasAuthority(RolesConstants.ROLE_ADMIN)
                 .anyRequest().authenticated();
 
+        // add jwt filter to filter chain
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
+    /**
+     * Sets user service and password encoder
+     * @param auth auth builder
+     * @throws Exception exception
+     */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(authUserService).passwordEncoder(bCryptPasswordEncoder);
     }
 
+    /**
+     * Creates bean of AuthenticationManager
+     * @return AuthenticationManager
+     * @throws Exception exception
+     */
     @Override
     @Bean(BeanIds.AUTHENTICATION_MANAGER)
     protected AuthenticationManager authenticationManager() throws Exception {

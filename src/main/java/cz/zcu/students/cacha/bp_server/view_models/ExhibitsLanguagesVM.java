@@ -10,12 +10,26 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * view model containing exhibits and allowed languages
+ */
 @Data
 @NoArgsConstructor
 public class ExhibitsLanguagesVM {
+    /**
+     * allowed languages
+     */
     private List<LanguageVM> languages;
+    /**
+     * exhibits
+     */
     private List<ExhibitVM> exhibits;
 
+    /**
+     * Creates new instance with given languages and exhibits
+     * @param languages allowed languages
+     * @param exhibits exhibits
+     */
     public ExhibitsLanguagesVM(Set<Language> languages, Set<Exhibit> exhibits) {
         // map to VM and sort languages by name
         this.languages = languages.stream().map(LanguageVM::new).sorted(Comparator.comparing(LanguageVM::getName)).collect(Collectors.toList());

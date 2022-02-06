@@ -10,12 +10,10 @@ import cz.zcu.students.cacha.bp_server.exceptions.UnauthorizedException;
 import cz.zcu.students.cacha.bp_server.repositories.ExhibitRepository;
 import cz.zcu.students.cacha.bp_server.repositories.LanguageRepository;
 import cz.zcu.students.cacha.bp_server.repositories.TranslationRepository;
-import cz.zcu.students.cacha.bp_server.repositories.UserRepository;
 import cz.zcu.students.cacha.bp_server.view_models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
