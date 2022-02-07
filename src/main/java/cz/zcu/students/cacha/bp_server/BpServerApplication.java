@@ -3,8 +3,10 @@ package cz.zcu.students.cacha.bp_server;
 import com.google.zxing.qrcode.QRCodeWriter;
 import cz.zcu.students.cacha.bp_server.domain.Language;
 import cz.zcu.students.cacha.bp_server.domain.Role;
+import cz.zcu.students.cacha.bp_server.domain.User;
 import cz.zcu.students.cacha.bp_server.repositories.LanguageRepository;
 import cz.zcu.students.cacha.bp_server.repositories.RoleRepository;
+import cz.zcu.students.cacha.bp_server.repositories.UserRepository;
 import cz.zcu.students.cacha.bp_server.security.JwtAuthenticationFilter;
 import org.apache.tika.Tika;
 import org.springframework.boot.CommandLineRunner;
@@ -76,7 +78,7 @@ public class BpServerApplication {
      * @return runner
      */
     @Bean
-    CommandLineRunner run(RoleRepository roleRepository, LanguageRepository languageRepository) {
+    CommandLineRunner run(RoleRepository roleRepository, LanguageRepository languageRepository, UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         return args -> {
             // if there are no roles in db insert them
             if(roleRepository.count() == 0) {
@@ -110,6 +112,15 @@ public class BpServerApplication {
                     }
                 }
             }
+
+            // add admin
+            User admin = new User();
+            admin.setUsername("admin");
+            admin.setEmail("admin@cts.com");
+            admin.setPassword(bCryptPasswordEncoder.encode("P4ssword"));
+            admin.getRoles().add(roleRepository.findByName(ROLE_TRANSLATOR).get());
+            admin.getRoles().add(roleRepository.findByName(ROLE_ADMIN).get());
+            userRepository.save(admin);
         };
     }
 }
