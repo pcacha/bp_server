@@ -31,6 +31,9 @@ public class UserServiceTest {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @Autowired
+    private TestUtils testUtils;
+
     /**
      * called before each test
      * provides cleanup of db
@@ -55,7 +58,7 @@ public class UserServiceTest {
      * @return saved user
      */
     public User saveValidUser() {
-        User user = TestUtils.createValidUser();
+        User user = testUtils.createValidUser();
         userService.save(user);
         return user;
     }
@@ -70,7 +73,6 @@ public class UserServiceTest {
         // check exception was not thrown
         assertDoesNotThrow(() -> userService.login(usernamePasswordVM));
     }
-
 
     /**
      * Tests unsuccessful login
@@ -92,7 +94,7 @@ public class UserServiceTest {
     public UsernamePasswordVM getLoginVM() {
         // create usernamePasswordVM and fill data
         UsernamePasswordVM usernamePasswordVM = new UsernamePasswordVM();
-        User user = TestUtils.createValidUser();
+        User user = testUtils.createValidUser();
         usernamePasswordVM.setUsername(user.getUsername());
         usernamePasswordVM.setPassword(user.getPassword());
         return usernamePasswordVM;
