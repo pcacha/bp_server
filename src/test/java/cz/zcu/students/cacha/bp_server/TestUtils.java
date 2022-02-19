@@ -7,6 +7,12 @@ import cz.zcu.students.cacha.bp_server.domain.User;
 import cz.zcu.students.cacha.bp_server.repositories.LanguageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Base64;
+
+import static cz.zcu.students.cacha.bp_server.assets_store_config.WebConfiguration.DEFAULT_IMAGE;
+
 /**
  * Utility class for supporting tests
  */
@@ -61,6 +67,59 @@ public class TestUtils {
         Institution institution = new Institution();
         // set valid properties
         institution.setName("test name");
+        institution.setLatitudeString("100");
+        institution.setLongitudeString("100");
+        // add encoded image
+        institution.setEncodedImage(getEncodedImage());
         return institution;
+    }
+
+    /**
+     * Deletes content of folder
+     * @param path path to folder
+     */
+    public void deleteFolderContent(String path) {
+        // get folder and its files
+        File folder = new File(path);
+        File[] files = folder.listFiles();
+        if(files!=null) {
+            // delete all files
+            for(File f: files) {
+                f.delete();
+            }
+        }
+    }
+
+    /**
+     * Gets the folder content count
+     * @param path path to folder
+     * @return count of files
+     */
+    public int getFolderContentCount(String path) {
+        // get folder and its files
+        File folder = new File(path);
+        File[] files = folder.listFiles();
+        // return count
+        if(files!=null) {
+            return files.length;
+        }
+        return 0;
+    }
+
+    /**
+     * Gets encoded image
+     * @return encoded image
+     */
+    public String getEncodedImage() {
+        try {
+            // return image
+            return Base64.getEncoder().encodeToString(new byte[getClass().getClassLoader().getResourceAsStream("static/" + DEFAULT_IMAGE).available()]);
+        }
+        catch (IOException e) {
+            // print stack trace
+            System.out.println("Cannot load default image");
+            e.printStackTrace();
+        }
+        return null;
     }
 }

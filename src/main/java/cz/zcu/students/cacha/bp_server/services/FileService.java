@@ -3,6 +3,7 @@ package cz.zcu.students.cacha.bp_server.services;
 import org.apache.commons.io.FileUtils;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -23,6 +24,22 @@ public class FileService {
 
     @Autowired
     Tika tika;
+
+    /**
+     * folder of institutions images
+     */
+    @Value("${cts.paths.institutions_images_folder}")
+    private String INSTITUTIONS_IMAGES_FOLDER;
+    /**
+     * folder of exhibits images
+     */
+    @Value("${cts.paths.exhibits_images_folder}")
+    private String EXHIBITS_IMAGES_FOLDER;
+    /**
+     * folder of info label images
+     */
+    @Value("${cts.paths.info_labels_images_folder}")
+    private String INFO_LABELS_IMAGES_FOLDER;
 
     /**
      * Separator that can occur at the beginning of base64 string

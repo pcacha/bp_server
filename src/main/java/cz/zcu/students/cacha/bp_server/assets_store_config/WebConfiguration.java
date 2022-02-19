@@ -1,6 +1,7 @@
 package cz.zcu.students.cacha.bp_server.assets_store_config;
 
 import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,15 +21,18 @@ public class WebConfiguration implements WebMvcConfigurer {
     /**
      * folder of institutions images
      */
-    public static final String INSTITUTIONS_IMAGES_FOLDER = "institutions_images";
+    @Value("${cts.paths.institutions_images_folder}")
+    private String INSTITUTIONS_IMAGES_FOLDER;
     /**
      * folder of exhibits images
      */
-    public static final String EXHIBITS_IMAGES_FOLDER = "exhibits_images";
+    @Value("${cts.paths.exhibits_images_folder}")
+    private String EXHIBITS_IMAGES_FOLDER;
     /**
      * folder of info label images
      */
-    public static final String INFO_LABELS_IMAGES_FOLDER = "info_labels_images";
+    @Value("${cts.paths.info_labels_images_folder}")
+    private String INFO_LABELS_IMAGES_FOLDER;
 
     /**
      * default institution image name

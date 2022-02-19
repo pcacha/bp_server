@@ -32,6 +32,5 @@ public class QRCodeServiceTest {
             // check that buffered image was generated
             assertNotNull(bufferedImage);
         });
-
     }
 }
