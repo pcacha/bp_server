@@ -4,7 +4,7 @@ import cz.zcu.students.cacha.bp_server.domain.User;
 import cz.zcu.students.cacha.bp_server.repositories.UserRepository;
 import cz.zcu.students.cacha.bp_server.services.UserService;
 import cz.zcu.students.cacha.bp_server.view_models.UsernamePasswordVM;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,10 +35,10 @@ public class UserServiceTest {
     private TestUtils testUtils;
 
     /**
-     * called before each test
+     * called after each test
      * provides cleanup of db
      */
-    @BeforeEach
+    @AfterEach
     public void cleanup() {
         userRepository.deleteAll();
     }
