@@ -6,6 +6,7 @@ import cz.zcu.students.cacha.bp_server.domain.Translation;
 import cz.zcu.students.cacha.bp_server.domain.User;
 import cz.zcu.students.cacha.bp_server.repositories.LanguageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +18,22 @@ import static cz.zcu.students.cacha.bp_server.assets_store_config.WebConfigurati
  * Utility class for supporting tests
  */
 public class TestUtils {
+
+    /**
+     * folder of institutions images
+     */
+    @Value("${cts.paths.institutions_images_folder}")
+    private String INSTITUTIONS_IMAGES_FOLDER;
+    /**
+     * folder of exhibits images
+     */
+    @Value("${cts.paths.exhibits_images_folder}")
+    private String EXHIBITS_IMAGES_FOLDER;
+    /**
+     * folder of info label images
+     */
+    @Value("${cts.paths.info_labels_images_folder}")
+    private String INFO_LABELS_IMAGES_FOLDER;
 
     @Autowired
     private LanguageRepository languageRepository;
@@ -121,5 +138,15 @@ public class TestUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * clears all stored images
+     */
+    public void clearImages() {
+        // delete all images from img folders
+        deleteFolderContent(INSTITUTIONS_IMAGES_FOLDER);
+        deleteFolderContent(EXHIBITS_IMAGES_FOLDER);
+        deleteFolderContent(INFO_LABELS_IMAGES_FOLDER);
     }
 }
