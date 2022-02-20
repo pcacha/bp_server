@@ -7,7 +7,7 @@ import cz.zcu.students.cacha.bp_server.repositories.LanguageRepository;
 import cz.zcu.students.cacha.bp_server.repositories.UserRepository;
 import cz.zcu.students.cacha.bp_server.services.InstitutionService;
 import cz.zcu.students.cacha.bp_server.view_models.*;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,17 +47,17 @@ public class InstitutionServiceTest {
     private LanguageRepository languageRepository;
 
     /**
-     * called before each test
-     * provides cleanup of db
+     * called after each test
+     * provides cleanup of db and images
      */
-    @BeforeEach
+    @AfterEach
     public void cleanup() {
         // delete data from db
         userRepository.deleteAll();
         institutionRepository.deleteAll();
 
         // delete all images from img folders
-        testUtils.deleteFolderContent(INSTITUTIONS_IMAGES_FOLDER);
+        testUtils.clearImages();
     }
 
     /**
