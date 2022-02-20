@@ -9,15 +9,18 @@ import cz.zcu.students.cacha.bp_server.repositories.RoleRepository;
 import cz.zcu.students.cacha.bp_server.repositories.UserRepository;
 import cz.zcu.students.cacha.bp_server.security.JwtAuthenticationFilter;
 import org.apache.tika.Tika;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 import static cz.zcu.students.cacha.bp_server.shared.RolesConstants.*;
 
@@ -26,6 +29,9 @@ import static cz.zcu.students.cacha.bp_server.shared.RolesConstants.*;
  */
 @SpringBootApplication
 public class BpServerApplication {
+
+    @Autowired
+    private Environment environment;
 
     /**
      * Starts the program
@@ -113,15 +119,17 @@ public class BpServerApplication {
                 }
             }
 
-            // add admin
-            if(userRepository.count() == 0) {
-                User admin = new User();
-                admin.setUsername("admin");
-                admin.setEmail("admin@cts.com");
-                admin.setPassword(bCryptPasswordEncoder.encode("P4ssword"));
-                admin.getRoles().add(roleRepository.findByName(ROLE_TRANSLATOR).get());
-                admin.getRoles().add(roleRepository.findByName(ROLE_ADMIN).get());
-                userRepository.save(admin);
+            // add admin when it is not test mode
+            if(Arrays.stream(environment.getActiveProfiles()).noneMatch(profile -> profile.equalsIgnoreCase("test"))) {
+                if(userRepository.count() == 0) {
+                    User admin = new User();
+                    admin.setUsername("admin");
+                    admin.setEmail("admin@cts.com");
+                    admin.setPassword(bCryptPasswordEncoder.encode("P4ssword"));
+                    admin.getRoles().add(roleRepository.findByName(ROLE_TRANSLATOR).get());
+                    admin.getRoles().add(roleRepository.findByName(ROLE_ADMIN).get());
+                    userRepository.save(admin);
+                }
             }
         };
     }
