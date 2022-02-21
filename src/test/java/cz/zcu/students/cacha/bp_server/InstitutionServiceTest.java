@@ -81,6 +81,8 @@ public class InstitutionServiceTest {
      */
     @Test
     public void testSaveInstitution() {
+        // delete images
+        testUtils.deleteFolderContent(INSTITUTIONS_IMAGES_FOLDER);
         // prepare institution
         User user = testUtils.createValidUser();
         Institution institution = testUtils.creteValidInstitution();

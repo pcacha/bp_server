@@ -178,7 +178,7 @@ public class TranslationServiceTest {
         // prepare exhibit and user in the system
         User user = testUtils.createValidUser();
         userRepository.save(user);
-        Exhibit exhibit = testUtils.creteValidExhibit();
+        Exhibit exhibit = testUtils.createValidExhibit();
         institutionRepository.save(exhibit.getInstitution());
         exhibitRepository.save(exhibit);
 
@@ -195,7 +195,7 @@ public class TranslationServiceTest {
         // prepare exhibit and user in the system
         User user = testUtils.createValidUser();
         userRepository.save(user);
-        Exhibit exhibit = testUtils.creteValidExhibit();
+        Exhibit exhibit = testUtils.createValidExhibit();
         institutionRepository.save(exhibit.getInstitution());
         exhibitRepository.save(exhibit);
 

@@ -59,7 +59,7 @@ public class TestUtils {
         Translation translation = new Translation();
         // set valid properties
         translation.setText("translated text");
-        translation.setExhibit(creteValidExhibit());
+        translation.setExhibit(createValidExhibit());
         translation.setLanguage(languageRepository.findByCode("cs").get());
         return translation;
     }
@@ -68,10 +68,11 @@ public class TestUtils {
      * Creates valid exhibit
      * @return valid exhibit
      */
-    public Exhibit creteValidExhibit() {
+    public Exhibit createValidExhibit() {
         Exhibit exhibit = new Exhibit();
         // set valid properties
         exhibit.setName("test name");
+        exhibit.setEncodedInfoLabel(getEncodedImage());
         exhibit.setInstitution(creteValidInstitution());
         return exhibit;
     }
