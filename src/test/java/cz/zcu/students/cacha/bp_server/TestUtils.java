@@ -46,7 +46,7 @@ public class TestUtils {
         User user = new User();
         // set valid properties
         user.setUsername("test-user");
-        user.setEmail("test-user@email.com");
+        user.setEmail("test-user@testemail.testcom");
         user.setPassword("P4ssword");
         return user;
     }
@@ -73,7 +73,7 @@ public class TestUtils {
         // set valid properties
         exhibit.setName("test name");
         exhibit.setEncodedInfoLabel(getEncodedImage());
-        exhibit.setInstitution(creteValidInstitution());
+        exhibit.setInstitution(createValidInstitution());
         return exhibit;
     }
 
@@ -81,7 +81,7 @@ public class TestUtils {
      * Creates valid institution
      * @return valid institution
      */
-    public Institution creteValidInstitution() {
+    public Institution createValidInstitution() {
         Institution institution = new Institution();
         // set valid properties
         institution.setName("test name");

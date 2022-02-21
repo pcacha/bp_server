@@ -66,7 +66,7 @@ public class InstitutionServiceTest {
     @Test
     public void testGetInstitutions() {
         // prepare institution
-        Institution institution = testUtils.creteValidInstitution();
+        Institution institution = testUtils.createValidInstitution();
         institutionRepository.save(institution);
 
         // call tested method
@@ -85,7 +85,7 @@ public class InstitutionServiceTest {
         testUtils.deleteFolderContent(INSTITUTIONS_IMAGES_FOLDER);
         // prepare institution
         User user = testUtils.createValidUser();
-        Institution institution = testUtils.creteValidInstitution();
+        Institution institution = testUtils.createValidInstitution();
 
         // call tested method
         institutionService.saveInstitution(institution, user);
@@ -101,7 +101,7 @@ public class InstitutionServiceTest {
     public void testGetAllowedLanguages() {
         // prepare institution
         User user = testUtils.createValidUser();
-        Institution institution = testUtils.creteValidInstitution();
+        Institution institution = testUtils.createValidInstitution();
 
         // save institution
         institutionService.saveInstitution(institution, user);
@@ -123,7 +123,7 @@ public class InstitutionServiceTest {
     public void testAddLanguage() {
         // prepare institution
         User user = testUtils.createValidUser();
-        Institution institution = testUtils.creteValidInstitution();
+        Institution institution = testUtils.createValidInstitution();
 
         // save institution
         institutionService.saveInstitution(institution, user);
@@ -139,7 +139,7 @@ public class InstitutionServiceTest {
     public void testUpdateImage() {
         // prepare institution
         User user = testUtils.createValidUser();
-        Institution institution = testUtils.creteValidInstitution();
+        Institution institution = testUtils.createValidInstitution();
 
         // save institution
         institutionService.saveInstitution(institution, user);
@@ -161,7 +161,7 @@ public class InstitutionServiceTest {
     public void testUpdateInstitution() {
         // prepare institution
         User user = testUtils.createValidUser();
-        Institution institution = testUtils.creteValidInstitution();
+        Institution institution = testUtils.createValidInstitution();
 
         // save institution
         institutionService.saveInstitution(institution, user);
@@ -191,7 +191,7 @@ public class InstitutionServiceTest {
     public void testGetMyInstitution() {
         // prepare institution
         User user = testUtils.createValidUser();
-        Institution institution = testUtils.creteValidInstitution();
+        Institution institution = testUtils.createValidInstitution();
 
         // save institution
         institutionService.saveInstitution(institution, user);
@@ -207,7 +207,7 @@ public class InstitutionServiceTest {
     public void testAddInstitutionManager() {
         // prepare institution
         User user = testUtils.createValidUser();
-        Institution institution = testUtils.creteValidInstitution();
+        Institution institution = testUtils.createValidInstitution();
 
         // save institution
         institutionService.saveInstitution(institution, user);
@@ -229,7 +229,7 @@ public class InstitutionServiceTest {
     public void testDeleteMyInstitution() {
         // prepare institution
         User user = testUtils.createValidUser();
-        Institution institution = testUtils.creteValidInstitution();
+        Institution institution = testUtils.createValidInstitution();
 
         // save institution
         institutionService.saveInstitution(institution, user);
@@ -247,7 +247,7 @@ public class InstitutionServiceTest {
     public void testDeleteInstitution() {
         // prepare institution
         User user = testUtils.createValidUser();
-        Institution institution = testUtils.creteValidInstitution();
+        Institution institution = testUtils.createValidInstitution();
 
         // save institution
         institutionService.saveInstitution(institution, user);
@@ -266,8 +266,8 @@ public class InstitutionServiceTest {
         // prepare institutions
         User user1 = testUtils.createValidUser();
         User user2 = testUtils.createValidUser();
-        Institution institution1 = testUtils.creteValidInstitution();
-        Institution institution2 = testUtils.creteValidInstitution();
+        Institution institution1 = testUtils.createValidInstitution();
+        Institution institution2 = testUtils.createValidInstitution();
 
         // set institution's locations
         // Prague
