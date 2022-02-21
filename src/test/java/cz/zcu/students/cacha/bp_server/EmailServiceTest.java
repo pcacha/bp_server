@@ -18,6 +18,9 @@ public class EmailServiceTest {
     @Autowired
     private EmailService emailService;
 
+    /**
+     * Tests method for sending emails
+     */
     @Test
     public void testSendSimpleMailMessage() {
         // check sending mail does not throw an exception
