@@ -1,5 +1,6 @@
-package cz.zcu.students.cacha.bp_server;
+package cz.zcu.students.cacha.bp_server.unit_tests;
 
+import cz.zcu.students.cacha.bp_server.common.TestUtils;
 import cz.zcu.students.cacha.bp_server.domain.Institution;
 import cz.zcu.students.cacha.bp_server.domain.User;
 import cz.zcu.students.cacha.bp_server.repositories.InstitutionRepository;

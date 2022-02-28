@@ -1,4 +1,4 @@
-package cz.zcu.students.cacha.bp_server;
+package cz.zcu.students.cacha.bp_server.unit_tests;
 
 import cz.zcu.students.cacha.bp_server.services.EmailService;
 import org.junit.jupiter.api.Test;

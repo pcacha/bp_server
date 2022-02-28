@@ -1,4 +1,4 @@
-package cz.zcu.students.cacha.bp_server;
+package cz.zcu.students.cacha.bp_server.common;
 
 import cz.zcu.students.cacha.bp_server.domain.Exhibit;
 import cz.zcu.students.cacha.bp_server.domain.Institution;
