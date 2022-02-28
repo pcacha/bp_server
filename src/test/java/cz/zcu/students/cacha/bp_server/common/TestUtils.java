@@ -5,12 +5,17 @@ import cz.zcu.students.cacha.bp_server.domain.Institution;
 import cz.zcu.students.cacha.bp_server.domain.Translation;
 import cz.zcu.students.cacha.bp_server.domain.User;
 import cz.zcu.students.cacha.bp_server.repositories.LanguageRepository;
+import cz.zcu.students.cacha.bp_server.responses.JWTLoginSuccessResponse;
+import cz.zcu.students.cacha.bp_server.view_models.UsernamePasswordVM;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.ResponseEntity;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.Collections;
 
 import static cz.zcu.students.cacha.bp_server.assets_store_config.WebConfiguration.DEFAULT_IMAGE;
 
@@ -149,5 +154,28 @@ public class TestUtils {
         deleteFolderContent(INSTITUTIONS_IMAGES_FOLDER);
         deleteFolderContent(EXHIBITS_IMAGES_FOLDER);
         deleteFolderContent(INFO_LABELS_IMAGES_FOLDER);
+    }
+
+    /**
+     * Set authentication header to requests
+     * @param user user
+     * @param password password
+     */
+    public void authenticate(User user, String password, TestRestTemplate testRestTemplate) {
+        // crete login VM
+        UsernamePasswordVM usernamePasswordVM = new UsernamePasswordVM();
+        usernamePasswordVM.setUsername(user.getUsername());
+        usernamePasswordVM.setPassword(password);
+
+        // login - get auth token
+        ResponseEntity<JWTLoginSuccessResponse> loginResponse = testRestTemplate.postForEntity("/users/login", usernamePasswordVM, JWTLoginSuccessResponse.class);
+
+        // set authorization header
+        testRestTemplate.getRestTemplate().setInterceptors(
+                Collections.singletonList((request, body, execution) -> {
+                    request.getHeaders()
+                            .add("Authorization", loginResponse.getBody().getToken());
+                    return execution.execute(request, body);
+                }));
     }
 }

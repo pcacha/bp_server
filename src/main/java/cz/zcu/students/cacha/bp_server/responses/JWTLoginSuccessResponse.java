@@ -1,11 +1,13 @@
 package cz.zcu.students.cacha.bp_server.responses;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Response returned on successful login
  */
 @Data
+@NoArgsConstructor
 public class JWTLoginSuccessResponse {
     /**
      * login token
