@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
@@ -28,8 +29,8 @@ public class SeleniumManager {
         System.setProperty("webdriver.chrome.driver", new File("chromedriver.exe").getAbsolutePath());
         driver =  new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-        // redirect to singup page
-        driver.get("http://localhost:3000/signup");
+        // redirect to signup page
+        driver.get("http://localhost:8080");
     }
 
     /**
@@ -55,7 +56,35 @@ public class SeleniumManager {
      */
     public void clickBtnWithText(String text) {
         // find elements
-        List<WebElement> found = driver.findElements(By.xpath("//*[contains(text(), '" + text + "')]"));
+        List<WebElement> found = driver.findElements(By.xpath("//button[contains(text(), '" + text + "')]"));
+        // click on all elements with given text
+        for(WebElement we : found) {
+            we.click();
+        }
+    }
+
+    /**
+     * clicks on element with given class
+     * @param text class name
+     */
+    public void clickElementWithClass(String text) {
+        // find elements
+        List<WebElement> found = driver.findElements(By.cssSelector(text));
+        // click on all elements with given text
+        for(WebElement we : found) {
+            if(we.isDisplayed()) {
+                we.click();
+            }
+        }
+    }
+
+    /**
+     * clicks on anchor with given text
+     * @param text anchor text
+     */
+    public void clickAnchorWithText(String text) {
+        // find elements
+        List<WebElement> found = driver.findElements(By.xpath("//a[contains(text(), '" + text + "')]"));
         // click on all elements with given text
         for(WebElement we : found) {
             we.click();
@@ -67,16 +96,7 @@ public class SeleniumManager {
      */
     public void waitUntilH1Appears() {
         WebDriverWait w = new WebDriverWait(driver, 5);
-        w.until(ExpectedConditions.presenceOfElementLocated (By.cssSelector("h1")));
-    }
-
-    /**
-     * redirects to given url
-     * @param url url
-     */
-    public void getURLAndWait(String url) {
-        driver.get(url);
-        (new WebDriverWait(driver, 5)).until(ExpectedConditions.urlToBe(url));
+        w.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("h1")));
     }
 
     /**
@@ -92,6 +112,30 @@ public class SeleniumManager {
      */
     public void waitUntilTranslationPage() {
         WebDriverWait w = new WebDriverWait(driver, 5);
+        w.until(ExpectedConditions.presenceOfElementLocated (By.xpath("//h2[contains(text(), 'New Translation')]")));
+    }
+
+    /**
+     * waits utnil page with exhibits is visible
+     */
+    public void waitUntilExhibitPage() {
+        WebDriverWait w = new WebDriverWait(driver, 5);
         w.until(ExpectedConditions.presenceOfElementLocated (By.xpath("//h2[contains(text(), 'Exhibits')]")));
+    }
+
+    /**
+     * Selects first value in select
+     */
+    public void selectFirstInSelect() {
+        Select dropdown = new Select(driver.findElement(By.tagName("select")));
+        dropdown.selectByIndex(1);
+    }
+
+    /**
+     * waits until page with institutions is visible
+     */
+    public void waitUntilInstitutionPage() {
+        WebDriverWait w = new WebDriverWait(driver, 5);
+        w.until(ExpectedConditions.presenceOfElementLocated (By.xpath("//h2[contains(text(), 'Institutions')]")));
     }
 }

@@ -136,7 +136,7 @@ public class TestUtils {
     public String getEncodedImage() {
         try {
             // return image
-            return Base64.getEncoder().encodeToString(new byte[getClass().getClassLoader().getResourceAsStream("static/" + DEFAULT_IMAGE).available()]);
+            return Base64.getEncoder().encodeToString(new byte[getClass().getClassLoader().getResourceAsStream(DEFAULT_IMAGE).available()]);
         }
         catch (IOException e) {
             // print stack trace

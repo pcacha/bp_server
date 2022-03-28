@@ -54,19 +54,6 @@ public class SeleniumTest {
     private UserRepository userRepository;
 
     /**
-     * institution id
-     */
-    private Long institutionId;
-    /**
-     * exhibit id
-     */
-    private Long exhibitId;
-    /**
-     * language id
-     */
-    private Long languageId;
-
-    /**
      * called after each test
      * provides cleanup of db and images
      */
@@ -105,10 +92,6 @@ public class SeleniumTest {
         exhibit.setRoom(mockExhibit.getRoom());
         exhibit.setShowcase(mockExhibit.getShowcase());
         exhibitService.saveExhibit(exhibit, user);
-        // set ids
-        institutionId = institutionRepository.findByName(institution.getName()).get().getId();
-        exhibitId = exhibitRepository.findAll().get(0).getId();
-        languageId = languageRepository.findByCode("cs").get().getId();
     }
 
     /**
@@ -119,6 +102,8 @@ public class SeleniumTest {
         prepareEnvironment();
         SeleniumManager seleniumManager = new SeleniumManager();
         // sing up
+        seleniumManager.clickElementWithClass(".navbar-toggler");
+        seleniumManager.clickAnchorWithText("Signup");
         seleniumManager.fillInput("Enter name", "selenium-user");
         seleniumManager.fillInput("Enter e-mail", "seleniumuser@email.com");
         seleniumManager.fillInput("Enter password", "P4ssword");
@@ -126,11 +111,16 @@ public class SeleniumTest {
         seleniumManager.clickBtnWithText("Sign up");
         seleniumManager.waitUntilH1Appears();
         // create translation
-        seleniumManager.getURLAndWait("http://localhost:3000/institutions/" + institutionId + "/translate/" + exhibitId + "/" + languageId);
+        seleniumManager.clickAnchorWithText("Translate");
+        seleniumManager.waitUntilInstitutionPage();
+        seleniumManager.clickBtnWithText("Exhibits");
+        seleniumManager.selectFirstInSelect();
+        seleniumManager.clickBtnWithText("Translate");
+        seleniumManager.waitUntilTranslationPage();
         seleniumManager.changeEditorText("test translation text");
         // send translation
         seleniumManager.clickBtnWithText("Create translation");
-        seleniumManager.waitUntilTranslationPage();
+        seleniumManager.waitUntilExhibitPage();
         seleniumManager.closeWindow();
         // check that new translation is in db
         assertEquals(1, translationRepository.count());
