@@ -123,9 +123,9 @@ public class BpServerApplication {
             if(Arrays.stream(environment.getActiveProfiles()).noneMatch(profile -> profile.equalsIgnoreCase("test"))) {
                 if(userRepository.count() == 0) {
                     User admin = new User();
-                    admin.setUsername("admin");
-                    admin.setEmail("admin@cts.com");
-                    admin.setPassword(bCryptPasswordEncoder.encode("P4ssword"));
+                    admin.setUsername(environment.getProperty("cts.admin.name"));
+                    admin.setEmail(environment.getProperty("cts.admin.email"));
+                    admin.setPassword(bCryptPasswordEncoder.encode(environment.getProperty("cts.admin.password")));
                     admin.getRoles().add(roleRepository.findByName(ROLE_TRANSLATOR).get());
                     admin.getRoles().add(roleRepository.findByName(ROLE_ADMIN).get());
                     userRepository.save(admin);
