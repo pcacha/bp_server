@@ -66,21 +66,21 @@ public interface TranslationRepository extends JpaRepository<Translation, Long> 
     List<Translation> getSequence(@Param("user_id") Long user_id, @Param("exhibit_id") Long exhibit_id, @Param("language_id") Long language_id);
 
     /**
-     * Gets all translation for given author-exhibit-language that are more recent than crated_at parameter
+     * Gets all translation for given author-exhibit-language that are more recent than translation with given id
      * @param user_id user id
      * @param exhibit_id exhibit id
      * @param language_id language id
-     * @param created_at most latest translation crated at value
+     * @param id most latest translation id
      */
     @Query(
             value = "select * from translation " +
                     "where author_id = :user_id " +
                     "and exhibit_id = :exhibit_id " +
                     "and language_id = :language_id " +
-                    "and created_at > :created_at",
+                    "and id > :id",
             nativeQuery = true
     )
-    Set<Translation> getTranslationToRollback(@Param("user_id") Long user_id, @Param("exhibit_id") Long exhibit_id, @Param("language_id") Long language_id, @Param("created_at") Date created_at);
+    Set<Translation> getTranslationToRollback(@Param("user_id") Long user_id, @Param("exhibit_id") Long exhibit_id, @Param("language_id") Long language_id, @Param("id") Long id);
 
     /**
      * Gets the latest translation of given author, exhibit and language

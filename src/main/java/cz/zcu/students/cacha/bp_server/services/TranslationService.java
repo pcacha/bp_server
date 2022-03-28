@@ -84,7 +84,7 @@ public class TranslationService {
         Long languageId = translation.getLanguage().getId();
 
         // get all translations to rollback
-        Set<Translation> getRollbackTranslations = translationRepository.getTranslationToRollback(user.getId(), exhibitId, languageId, translation.getCreatedAt());
+        Set<Translation> getRollbackTranslations = translationRepository.getTranslationToRollback(user.getId(), exhibitId, languageId, translation.getId());
         // delete all translations to rollback
         translationRepository.deleteAll(getRollbackTranslations);
     }
