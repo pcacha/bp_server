@@ -5,13 +5,11 @@ import cz.zcu.students.cacha.bp_server.domain.Exhibit;
 import cz.zcu.students.cacha.bp_server.domain.Institution;
 import cz.zcu.students.cacha.bp_server.domain.User;
 import cz.zcu.students.cacha.bp_server.integration_tests.MockExhibit;
-import cz.zcu.students.cacha.bp_server.repositories.ExhibitRepository;
-import cz.zcu.students.cacha.bp_server.repositories.InstitutionRepository;
-import cz.zcu.students.cacha.bp_server.repositories.LanguageRepository;
-import cz.zcu.students.cacha.bp_server.repositories.TranslationRepository;
+import cz.zcu.students.cacha.bp_server.repositories.*;
 import cz.zcu.students.cacha.bp_server.services.ExhibitService;
 import cz.zcu.students.cacha.bp_server.services.InstitutionService;
 import cz.zcu.students.cacha.bp_server.services.UserService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -52,6 +50,9 @@ public class SeleniumTest {
     @Autowired
     private TranslationRepository translationRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     /**
      * institution id
      */
@@ -64,6 +65,22 @@ public class SeleniumTest {
      * language id
      */
     private Long languageId;
+
+    /**
+     * called after each test
+     * provides cleanup of db and images
+     */
+    @AfterEach
+    public void cleanup() {
+        // delete all data from db
+        translationRepository.deleteAll();
+        userRepository.deleteAll();
+        exhibitRepository.deleteAll();
+        institutionRepository.deleteAll();
+
+        // delete all images from img folders
+        testUtils.clearImages();
+    }
 
     /**
      * method for preparing data to create default environment
