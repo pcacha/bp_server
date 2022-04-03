@@ -112,7 +112,7 @@ public class InstitutionControllerIntegrationTest {
         User user = testUtils.createValidUser();
         String password = user.getPassword();
         userService.save(user);
-        MockInstitution institution = new MockInstitution("test name", "test address", "49.750218", "13.378601");
+        MockInstitution institution = new MockInstitution("test name", "test address", "test description", "49.750218", "13.378601");
 
         // authenticate
         testUtils.authenticate(user, password, testRestTemplate);

@@ -18,6 +18,10 @@ public class MockInstitution {
      */
     private String address;
     /**
+     * description
+     */
+    private String description;
+    /**
      * string with latitude
      */
     private String latitudeString;
@@ -33,9 +37,10 @@ public class MockInstitution {
      * @param latitudeString latitude
      * @param longitudeString longitude
      */
-    public MockInstitution(String name, String address, String latitudeString, String longitudeString) {
+    public MockInstitution(String name, String address, String description, String latitudeString, String longitudeString) {
         this.name = name;
         this.address = address;
+        this.description = description;
         this.latitudeString = latitudeString;
         this.longitudeString = longitudeString;
     }
