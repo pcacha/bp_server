@@ -4,6 +4,7 @@ import cz.zcu.students.cacha.bp_server.validators.UniqueInstitutionNameExclUpdat
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -29,6 +30,13 @@ public class UpdateInstitutionVM {
     @NotNull(message = "Address can not be blank")
     @Size(min = 3, max = 100, message = "Address must be between 3 to 100 letters long")
     private String address;
+
+    /**
+     * description of institution
+     */
+    @NotNull(message = "Description can not be blank")
+    @Size(min = 15, max = 350, message = "Description must be between 15 to 350 letters long")
+    private String description;
 
     /**
      * string with latitude

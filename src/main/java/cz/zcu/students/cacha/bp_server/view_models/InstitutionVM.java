@@ -5,6 +5,9 @@ import cz.zcu.students.cacha.bp_server.domain.Institution;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
 /**
@@ -25,6 +28,10 @@ public class InstitutionVM {
      * institution address
      */
     private String address;
+    /**
+     * description of institution
+     */
+    private String description;
     /**
      * institution image name
      */
@@ -51,6 +58,7 @@ public class InstitutionVM {
         institutionId = institution.getId();
         name = institution.getName();
         address = institution.getAddress();
+        description = institution.getDescription();
         image = institution.getImage();
         latitude = institution.getLatitude();
         longitude = institution.getLongitude();

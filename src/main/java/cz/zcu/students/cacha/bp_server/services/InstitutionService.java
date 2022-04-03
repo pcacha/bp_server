@@ -172,6 +172,7 @@ public class InstitutionService {
         Institution userInstitution = user.getInstitution();
         userInstitution.setName(institution.getName());
         userInstitution.setAddress(institution.getAddress());
+        userInstitution.setDescription(institution.getDescription());
         userInstitution.setLatitude(Double.parseDouble(institution.getLatitudeString()));
         userInstitution.setLongitude(Double.parseDouble(institution.getLongitudeString()));
         // save institution

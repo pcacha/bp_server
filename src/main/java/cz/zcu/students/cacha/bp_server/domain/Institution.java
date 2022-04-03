@@ -52,6 +52,14 @@ public class Institution {
     private String address;
 
     /**
+     * description of institution
+     */
+    @NotNull(message = "Description can not be blank")
+    @Size(min = 15, max = 350, message = "Description must be between 15 to 350 letters long")
+    @Column(length = 350)
+    private String description;
+
+    /**
      * name of image of institution in fs
      */
     @Column(length = 100)
