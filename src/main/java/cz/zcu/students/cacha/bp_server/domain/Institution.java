@@ -122,6 +122,12 @@ public class Institution {
     private Set<Exhibit> exhibits;
 
     /**
+     * all owned buildings
+     */
+    @OneToMany(mappedBy = "institution", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    private Set<Building> buildings;
+
+    /**
      * registration date
      */
     @Temporal(TemporalType.TIMESTAMP)

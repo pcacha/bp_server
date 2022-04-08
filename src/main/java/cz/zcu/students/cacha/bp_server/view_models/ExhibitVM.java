@@ -36,15 +36,15 @@ public class ExhibitVM {
     /**
      * building
      */
-    private String building;
+    private BuildingVM building;
     /**
      * room
      */
-    private String room;
+    private RoomVM room;
     /**
      * showcase
      */
-    private String showcase;
+    private ShowcaseVM showcase;
     /**
      * exhibit registration date
      */
@@ -61,9 +61,15 @@ public class ExhibitVM {
         infoLabelText = exhibit.getInfoLabelText();
         infoLabel = exhibit.getInfoLabel();
         image = exhibit.getImage();
-        building = exhibit.getBuilding();
-        room = exhibit.getRoom();
-        showcase = exhibit.getShowcase();
+        if(exhibit.getBuilding() != null) {
+            building = new BuildingVM(exhibit.getBuilding());
+        }
+        if(exhibit.getRoom() != null) {
+            room = new RoomVM(exhibit.getRoom());
+        }
+        if(exhibit.getShowcase() != null) {
+            showcase = new ShowcaseVM(exhibit.getShowcase());
+        }
         createdAt = exhibit.getCreatedAt();
     }
 }

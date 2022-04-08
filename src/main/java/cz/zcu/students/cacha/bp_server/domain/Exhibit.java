@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.Objects;
@@ -72,28 +73,25 @@ public class Exhibit {
     private String encodedInfoLabel;
 
     /**
-     * building where is exhibit located
+     * id of building where is exhibit located
      */
-    @NotNull(message = "Building can not be blank")
-    @Size(max = 50, message = "Building must be maximally 50 letters long")
-    @Column(length = 50)
-    private String building;
+    @Transient
+    @Pattern(regexp="^\\d+$", message="Building id must be a positive integer")
+    private String buildingId;
 
     /**
-     * room where is exhibit located
+     * id of room where is exhibit located
      */
-    @NotNull(message = "Room can not be blank")
-    @Size(max = 50, message = "Room must be maximally 50 letters long")
-    @Column(length = 50)
-    private String room;
+    @Transient
+    @Pattern(regexp="^\\d+$", message="Room id must be a positive integer")
+    private String roomId;
 
     /**
-     * show-case where is exhibit located
+     * id of show-case where is exhibit located
      */
-    @NotNull(message = "Show-case can not be blank")
-    @Size(max = 50, message = "Show-case must be maximally 50 letters long")
-    @Column(length = 50)
-    private String showcase;
+    @Transient
+    @Pattern(regexp="^\\d+$", message="Show-case id must be a positive integer")
+    private String showcaseId;
 
     /**
      * all translations matching to exhibit
@@ -106,6 +104,24 @@ public class Exhibit {
      */
     @ManyToOne(fetch=FetchType.LAZY)
     private Institution institution;
+
+    /**
+     * building where is exhibit located
+     */
+    @ManyToOne(fetch=FetchType.LAZY)
+    private Building building;
+
+    /**
+     * room where is exhibit located
+     */
+    @ManyToOne(fetch=FetchType.LAZY)
+    private Room room;
+
+    /**
+     * show-case where is exhibit located
+     */
+    @ManyToOne(fetch=FetchType.LAZY)
+    private Showcase showcase;
 
     /**
      * register date of exhibit

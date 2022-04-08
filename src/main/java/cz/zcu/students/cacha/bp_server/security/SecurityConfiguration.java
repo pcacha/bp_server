@@ -50,7 +50,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .antMatchers("/users/register", "/users/login", "/institutions_images/**", "/exhibits_images/**", "/info_labels_images/**",
-                        "/", "/static/**").permitAll()
+                        "/", "/static/**", "/location/buildings/all/**", "/location/rooms/all/**", "/location/showcases/all/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/exhibits/{institutionId}").permitAll()
                 .antMatchers(HttpMethod.GET, "/institutions", "/institutions/ordered", "/exhibits/all/{institutionId}",
                         "/translations/official/{exhibitId}/{languageCode}").permitAll()
@@ -60,7 +60,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/translations/rate/{exhibitId}/{languageId}", "/translations/like/{translationId}").hasAnyAuthority(RolesConstants.ROLE_TRANSLATOR, RolesConstants.ROLE_INSTITUTION_OWNER)
                 .antMatchers("/translations/official/{translationId}").hasAnyAuthority(RolesConstants.ROLE_INSTITUTION_OWNER)
                 .antMatchers("/exhibits/translate/{institutionId}", "/translations/**").hasAuthority(RolesConstants.ROLE_TRANSLATOR)
-                .antMatchers("/institutions/**", "/exhibits/**").hasAuthority(RolesConstants.ROLE_INSTITUTION_OWNER)
+                .antMatchers("/institutions/**", "/exhibits/**", "/location/**").hasAuthority(RolesConstants.ROLE_INSTITUTION_OWNER)
                 .antMatchers("/admin/**").hasAuthority(RolesConstants.ROLE_ADMIN)
                 .anyRequest().authenticated();
 
