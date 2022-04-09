@@ -20,4 +20,12 @@ public interface ShowcaseRepository extends JpaRepository<Showcase, Long> {
      * @return found showcase
      */
     Optional<Showcase> findByNameAndRoom(String name, Room room);
+
+    /**
+     * Gets showcase by its id and room
+     * @param showcaseId showcase id
+     * @param room room
+     * @return showcase by its id and room
+     */
+    Optional<Showcase> findByIdAndRoom(Long showcaseId, Room room);
 }

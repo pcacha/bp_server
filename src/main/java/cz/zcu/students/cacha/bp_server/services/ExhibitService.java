@@ -1,13 +1,10 @@
 package cz.zcu.students.cacha.bp_server.services;
 
-import cz.zcu.students.cacha.bp_server.domain.Exhibit;
-import cz.zcu.students.cacha.bp_server.domain.Institution;
-import cz.zcu.students.cacha.bp_server.domain.User;
+import cz.zcu.students.cacha.bp_server.domain.*;
 import cz.zcu.students.cacha.bp_server.exceptions.CannotPerformActionException;
 import cz.zcu.students.cacha.bp_server.exceptions.CannotSaveImageException;
 import cz.zcu.students.cacha.bp_server.exceptions.NotFoundException;
-import cz.zcu.students.cacha.bp_server.repositories.ExhibitRepository;
-import cz.zcu.students.cacha.bp_server.repositories.InstitutionRepository;
+import cz.zcu.students.cacha.bp_server.repositories.*;
 import cz.zcu.students.cacha.bp_server.view_models.ExhibitVM;
 import cz.zcu.students.cacha.bp_server.view_models.ExhibitsLanguagesVM;
 import cz.zcu.students.cacha.bp_server.view_models.ImageVM;
@@ -18,6 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.text.Collator;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -41,6 +39,18 @@ public class ExhibitService {
     @Autowired
     private QRCodeService qrCodeService;
 
+    @Autowired
+    private Collator czechCollator;
+
+    @Autowired
+    private BuildingRepository buildingRepository;
+
+    @Autowired
+    private RoomRepository roomRepository;
+
+    @Autowired
+    private ShowcaseRepository showcaseRepository;
+
     /**
      * Gets all exhibits of given institution
      * @param institutionId institution id
@@ -54,7 +64,8 @@ public class ExhibitService {
         }
 
         // get all exhibits and return them sorted by name
-        List<ExhibitVM> exhibits = institutionOptional.get().getExhibits().stream().map(ExhibitVM::new).sorted(Comparator.comparing(ExhibitVM::getName))
+        List<ExhibitVM> exhibits = institutionOptional.get().getExhibits().stream().map(ExhibitVM::new)
+                .sorted(Comparator.comparing(ExhibitVM::getName, czechCollator))
                 .collect(Collectors.toList());
         return exhibits;
     }
@@ -103,7 +114,7 @@ public class ExhibitService {
 
         // check if user is manager of given exhibit
         if(!user.isInstitutionOwner() || !exhibit.getInstitution().getId().equals(user.getInstitution().getId())) {
-            throw new CannotPerformActionException("Logged in user does not have permission to delete this exhibit");
+            throw new CannotPerformActionException("Logged in user does not have permission to this exhibit");
         }
         return exhibit;
     }
@@ -139,6 +150,14 @@ public class ExhibitService {
      * @param institution institution owning the exhibit
      */
     private void saveExhibitToInstitution(Exhibit exhibit, Institution institution) {
+        // check location hierarchy is valid
+        if(!checkLocationHierarchy(exhibit)) {
+            throw new CannotPerformActionException("Exhibit location hierarchy is invalid - e.g. if a show-case is defined, the room and the building must also be");
+        }
+
+        // add location to exhibit defined by ids
+        setExhibitLocation(exhibit, institution);
+
         if(exhibit.getEncodedImage() != null) {
             // if exhibit image is also included
             String imageName;
@@ -164,6 +183,125 @@ public class ExhibitService {
         // set institution and save exhibit
         exhibit.setInstitution(institution);
         exhibitsRepository.save(exhibit);
+    }
+
+    /**
+     * Sets building, room and showcase to exhibit
+     * @param exhibit exhibit
+     * @param institution institution
+     */
+    private void setExhibitLocation(Exhibit exhibit, Institution institution) {
+        // set location for all filled levels
+        if(exhibit.getBuildingId() != null) {
+            // set building
+            Building building = checkBuildingFromInstitution(exhibit.getBuildingId(), institution);
+            exhibit.setBuilding(building);
+
+            if(exhibit.getRoomId() != null) {
+                // set room
+                Room room = checkRoomFromBuilding(exhibit.getRoomId(), building);
+                exhibit.setRoom(room);
+
+                if(exhibit.getShowcaseId() != null) {
+                    // set showcase
+                    Showcase showcase = checkShowcaseFromRoom(exhibit.getShowcaseId(), room);
+                    exhibit.setShowcase(showcase);
+                }
+            }
+        }
+    }
+
+    /**
+     * Checks whether showcase is in given room
+     * @param showcaseId showcase id
+     * @param room room
+     * @return whether showcase is in given room
+     */
+    private Showcase checkShowcaseFromRoom(String showcaseId, Room room) {
+        // try to convert string id to long id
+        Long showcaseIdLong;
+        try {
+            showcaseIdLong = Long.parseLong(showcaseId);
+        }
+        catch (Exception e) {
+            // if convert fails, throw exception
+            throw new NotFoundException("Show-case not found");
+        }
+
+        // try to find showcase from given room
+        Optional<Showcase> showcaseOptional = showcaseRepository.findByIdAndRoom(showcaseIdLong, room);
+        if(showcaseOptional.isEmpty()) {
+            throw new NotFoundException("Show-case not found");
+        }
+        return showcaseOptional.get();
+    }
+
+    /**
+     * Checks whether room is in given building
+     * @param roomId room id
+     * @param building building
+     * @return whether room is in given building
+     */
+    private Room checkRoomFromBuilding(String roomId, Building building) {
+        // try to convert string id to long id
+        Long roomIdLong;
+        try {
+            roomIdLong = Long.parseLong(roomId);
+        }
+        catch (Exception e) {
+            // if convert fails, throw exception
+            throw new NotFoundException("Room not found");
+        }
+
+        // try to find room from given building
+        Optional<Room> roomOptional = roomRepository.findByIdAndBuilding(roomIdLong, building);
+        if(roomOptional.isEmpty()) {
+            throw new NotFoundException("Room not found");
+        }
+        return roomOptional.get();
+    }
+
+    /**
+     * Checks whether building is in given institution
+     * @param buildingId building id
+     * @param institution institution
+     * @return whether building is in given institution
+     */
+    private Building checkBuildingFromInstitution(String buildingId, Institution institution) {
+        // try to convert string id to long id
+        Long buildingIdLong;
+        try {
+            buildingIdLong = Long.parseLong(buildingId);
+        }
+        catch (Exception e) {
+            // if convert fails, throw exception
+            throw new NotFoundException("Building not found");
+        }
+
+        // try to find building from given institution
+        Optional<Building> buildingOptional = buildingRepository.findByIdAndInstitution(buildingIdLong, institution);
+        if(buildingOptional.isEmpty()) {
+            throw new NotFoundException("Building not found");
+        }
+        return buildingOptional.get();
+    }
+
+    /**
+     * Checks location hierarchy of an exhibit is valid - all upper levels from the lowest filled are filled too
+     * @param exhibit checked exhibit
+     * @return if location hierarchy of an exhibit is valid
+     */
+    private boolean checkLocationHierarchy(Exhibit exhibit) {
+        // check for filled showcase
+        if((exhibit.getShowcaseId() != null) && (exhibit.getRoomId() == null || exhibit.getBuildingId() == null)) {
+            return false;
+        }
+
+        // check for filled room
+        if(exhibit.getRoomId() != null && exhibit.getBuildingId() == null) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -232,12 +370,27 @@ public class ExhibitService {
     public void updateExhibit(Long exhibitId, UpdateExhibitVM updateExhibitVM, User user) {
         // verify that user is manager of given exhibit
         Exhibit exhibit = verifyUserManagesExhibit(exhibitId, user);
-        // set updated information
+
+        // set updated text information
         exhibit.setName(updateExhibitVM.getName());
         exhibit.setInfoLabelText(updateExhibitVM.getInfoLabelText());
-        exhibit.setBuilding(updateExhibitVM.getBuilding());
-        exhibit.setRoom(updateExhibitVM.getRoom());
-        exhibit.setShowcase(updateExhibitVM.getShowcase());
+
+        // prepare default location properties and take location ids from updated exhibit
+        exhibit.setBuilding(null);
+        exhibit.setRoom(null);
+        exhibit.setShowcase(null);
+        exhibit.setBuildingId(updateExhibitVM.getBuildingId());
+        exhibit.setRoomId(updateExhibitVM.getRoomId());
+        exhibit.setShowcaseId(updateExhibitVM.getShowcaseId());
+
+        // check location hierarchy is valid
+        if(!checkLocationHierarchy(exhibit)) {
+            throw new CannotPerformActionException("Exhibit location hierarchy is invalid - e.g. if a show-case is defined, the room and the building must also be");
+        }
+
+        // add location to exhibit defined by ids
+        setExhibitLocation(exhibit, exhibit.getInstitution());
+
         // save exhibit
         exhibitsRepository.save(exhibit);
     }
@@ -249,7 +402,8 @@ public class ExhibitService {
      */
     public List<ExhibitVM> getAllExhibitsOfUsersInstitution(User user) {
         // return all exhibits mapped to view model and sorted by name
-        return user.getInstitution().getExhibits().stream().map(ExhibitVM::new).sorted(Comparator.comparing(ExhibitVM::getName)).collect(Collectors.toList());
+        return user.getInstitution().getExhibits().stream().map(ExhibitVM::new).sorted(Comparator.comparing(ExhibitVM::getName, czechCollator))
+                .collect(Collectors.toList());
     }
 
     /**

@@ -3,7 +3,9 @@ package cz.zcu.students.cacha.bp_server.view_models;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 /**
@@ -28,23 +30,20 @@ public class UpdateExhibitVM {
     private String infoLabelText;
 
     /**
-     * building where exhibit is located
+     * id of building where is exhibit located
      */
-    @NotNull(message = "Building can not be blank")
-    @Size(max = 50, message = "Building must be maximally 50 letters long")
-    private String building;
+    @Pattern(regexp="^\\d+$", message="Building id must be a positive integer")
+    private String buildingId;
 
     /**
-     * room where exhibit is located
+     * id of room where is exhibit located
      */
-    @NotNull(message = "Room can not be blank")
-    @Size(max = 50, message = "Room must be maximally 50 letters long")
-    private String room;
+    @Pattern(regexp="^\\d+$", message="Room id must be a positive integer")
+    private String roomId;
 
     /**
-     * show-case where exhibit is located
+     * id of show-case where is exhibit located
      */
-    @NotNull(message = "Show-case can not be blank")
-    @Size(max = 50, message = "Show-case must be maximally 50 letters long")
-    private String showcase;
+    @Pattern(regexp="^\\d+$", message="Show-case id must be a positive integer")
+    private String showcaseId;
 }

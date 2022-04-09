@@ -20,4 +20,12 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
      * @return found room
      */
     Optional<Room> findByNameAndBuilding(String name, Building building);
+
+    /**
+     * Gets room by its name and building
+     * @param roomId room id
+     * @param building building
+     * @return room by its name and building
+     */
+    Optional<Room> findByIdAndBuilding(Long roomId, Building building);
 }
