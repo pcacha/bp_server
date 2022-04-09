@@ -1,5 +1,6 @@
 package cz.zcu.students.cacha.bp_server.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -23,6 +24,7 @@ public class Showcase {
      */
     @Id
     @GeneratedValue
+    @JsonIgnore
     private Long id;
 
     /**
@@ -44,18 +46,21 @@ public class Showcase {
      * room where is show-case located
      */
     @ManyToOne(fetch=FetchType.LAZY)
+    @JsonIgnore
     private Room room;
 
     /**
      * all exhibits in show-case
      */
     @OneToMany(mappedBy = "showcase", fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Exhibit> exhibits;
 
     /**
      * registration date
      */
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonIgnore
     private Date createdAt;
 
     /**

@@ -1,5 +1,6 @@
 package cz.zcu.students.cacha.bp_server.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import cz.zcu.students.cacha.bp_server.validators.UniqueUsername;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,6 +33,7 @@ public class User implements UserDetails {
      */
     @Id
     @GeneratedValue
+    @JsonIgnore
     private Long id;
 
     /**
@@ -64,23 +66,27 @@ public class User implements UserDetails {
      * registration date
      */
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonIgnore
     private Date createdAt;
 
     /**
      * indicates whether user is banned
      */
+    @JsonIgnore
     private Boolean banned;
 
     /**
      * all translation written by user
      */
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Translation> translations;
 
     /**
      * institution that is managed by user
      */
     @ManyToOne(fetch=FetchType.LAZY)
+    @JsonIgnore
     private Institution institution;
 
     /**
@@ -92,6 +98,7 @@ public class User implements UserDetails {
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    @JsonIgnore
     private Set<Role> roles = new HashSet<>();
 
     /**
@@ -103,6 +110,7 @@ public class User implements UserDetails {
             name = "translations_likes",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "translation_id", referencedColumnName = "id"))
+    @JsonIgnore
     private Set<Translation> likedTranslations = new HashSet<>();
 
     /**

@@ -1,5 +1,6 @@
 package cz.zcu.students.cacha.bp_server.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Fetch;
@@ -25,6 +26,7 @@ public class Translation {
      */
     @Id
     @GeneratedValue
+    @JsonIgnore
     private Long id;
 
     /**
@@ -38,24 +40,28 @@ public class Translation {
     /**
      * indicates whether translation is set as official
      */
+    @JsonIgnore
     private Boolean isOfficial;
 
     /**
      * autor of translation
      */
     @ManyToOne(fetch=FetchType.LAZY)
+    @JsonIgnore
     private User author;
 
     /**
      * language of translation
      */
     @ManyToOne(fetch=FetchType.LAZY)
+    @JsonIgnore
     private Language language;
 
     /**
      * exhibit for which the translation was made for
      */
     @ManyToOne(fetch=FetchType.LAZY)
+    @JsonIgnore
     private Exhibit exhibit;
 
     /**
@@ -67,12 +73,14 @@ public class Translation {
             name = "translations_likes",
             joinColumns = @JoinColumn(name = "translation_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+    @JsonIgnore
     private Set<User> likers;
 
     /**
      * date when the translation was created
      */
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonIgnore
     private Date createdAt;
 
     /**

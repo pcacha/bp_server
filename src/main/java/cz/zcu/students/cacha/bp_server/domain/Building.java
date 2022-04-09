@@ -1,5 +1,6 @@
 package cz.zcu.students.cacha.bp_server.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -23,6 +24,7 @@ public class Building {
      */
     @Id
     @GeneratedValue
+    @JsonIgnore
     private Long id;
 
     /**
@@ -44,24 +46,28 @@ public class Building {
      * institution owning building
      */
     @ManyToOne(fetch=FetchType.LAZY)
+    @JsonIgnore
     private Institution institution;
 
     /**
      * all rooms of building
      */
     @OneToMany(mappedBy = "building", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    @JsonIgnore
     private Set<Room> rooms;
 
     /**
      * all exhibits in building
      */
     @OneToMany(mappedBy = "building", fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Exhibit> exhibits;
 
     /**
      * registration date
      */
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonIgnore
     private Date createdAt;
 
     /**

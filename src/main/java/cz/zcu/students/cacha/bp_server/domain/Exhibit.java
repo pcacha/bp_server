@@ -1,5 +1,6 @@
 package cz.zcu.students.cacha.bp_server.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import cz.zcu.students.cacha.bp_server.validators.PngJpgFile;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,7 @@ public class Exhibit {
      */
     @Id
     @GeneratedValue
+    @JsonIgnore
     private Long id;
 
     /**
@@ -41,6 +43,7 @@ public class Exhibit {
      * name of image of exhibit in fs
      */
     @Column(length = 100)
+    @JsonIgnore
     private String image = DEFAULT_EXHIBIT_IMAGE;
 
     /**
@@ -62,6 +65,7 @@ public class Exhibit {
      * name of image of info label in fs
      */
     @Column(length = 100)
+    @JsonIgnore
     private String infoLabel;
 
     /**
@@ -97,36 +101,42 @@ public class Exhibit {
      * all translations matching to exhibit
      */
     @OneToMany(mappedBy = "exhibit", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    @JsonIgnore
     private Set<Translation> translations;
 
     /**
      * institution owning exhibit
      */
     @ManyToOne(fetch=FetchType.LAZY)
+    @JsonIgnore
     private Institution institution;
 
     /**
      * building where is exhibit located
      */
     @ManyToOne(fetch=FetchType.LAZY)
+    @JsonIgnore
     private Building building;
 
     /**
      * room where is exhibit located
      */
     @ManyToOne(fetch=FetchType.LAZY)
+    @JsonIgnore
     private Room room;
 
     /**
      * show-case where is exhibit located
      */
     @ManyToOne(fetch=FetchType.LAZY)
+    @JsonIgnore
     private Showcase showcase;
 
     /**
      * register date of exhibit
      */
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonIgnore
     private Date createdAt;
 
     /**

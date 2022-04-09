@@ -1,5 +1,6 @@
 package cz.zcu.students.cacha.bp_server.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import cz.zcu.students.cacha.bp_server.validators.PngJpgFile;
 import cz.zcu.students.cacha.bp_server.validators.UniqueInstitutionName;
 import lombok.Data;
@@ -32,6 +33,7 @@ public class Institution {
      */
     @Id
     @GeneratedValue
+    @JsonIgnore
     private Long id;
 
     /**
@@ -63,6 +65,7 @@ public class Institution {
      * name of image of institution in fs
      */
     @Column(length = 100)
+    @JsonIgnore
     private String image = DEFAULT_INSTITUTION_IMAGE;
 
     /**
@@ -75,6 +78,7 @@ public class Institution {
     /**
      * geographical latitude
      */
+    @JsonIgnore
     private Double latitude;
 
     /**
@@ -88,6 +92,7 @@ public class Institution {
     /**
      * geographical longitude
      */
+    @JsonIgnore
     private Double longitude;
 
     /**
@@ -107,36 +112,42 @@ public class Institution {
             name = "institutions_languages",
             joinColumns = @JoinColumn(name = "institution_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "language_id", referencedColumnName = "id"))
+    @JsonIgnore
     private Set<Language> languages = new HashSet<>();
 
     /**
      * managers (owners) of institution
      */
     @OneToMany(mappedBy = "institution", fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<User> owners;
 
     /**
      * all owned exhibits
      */
     @OneToMany(mappedBy = "institution", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    @JsonIgnore
     private Set<Exhibit> exhibits;
 
     /**
      * all owned buildings
      */
     @OneToMany(mappedBy = "institution", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    @JsonIgnore
     private Set<Building> buildings;
 
     /**
      * registration date
      */
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonIgnore
     private Date createdAt;
 
     /**
      * distance for ordering institutions
      */
     @Transient
+    @JsonIgnore
     private Double distance;
 
     /**
