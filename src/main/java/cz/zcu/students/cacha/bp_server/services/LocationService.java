@@ -11,6 +11,7 @@ import cz.zcu.students.cacha.bp_server.view_models.ShowcaseVM;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.Collator;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -35,6 +36,9 @@ public class LocationService {
     @Autowired
     private ExhibitRepository exhibitRepository;
 
+    @Autowired
+    private Collator czechCollator;
+
     /**
      * Gets all buildings of user's institution
      * @param user owner of an institution
@@ -42,7 +46,8 @@ public class LocationService {
      */
     public List<BuildingVM> getAllBuildingsOfUsersInstitution(User user) {
         // return all buildings mapped to view model and sorted by name
-        return user.getInstitution().getBuildings().stream().map(BuildingVM::new).sorted(Comparator.comparing(BuildingVM::getName))
+        return user.getInstitution().getBuildings().stream().map(BuildingVM::new)
+                .sorted(Comparator.comparing(BuildingVM::getName, czechCollator))
                 .collect(Collectors.toList());
     }
 
@@ -59,7 +64,7 @@ public class LocationService {
         }
 
         // get all buildings and return them sorted by name
-        return institutionOptional.get().getBuildings().stream().map(BuildingVM::new).sorted(Comparator.comparing(BuildingVM::getName))
+        return institutionOptional.get().getBuildings().stream().map(BuildingVM::new).sorted(Comparator.comparing(BuildingVM::getName, czechCollator))
                 .collect(Collectors.toList());
     }
 
@@ -176,7 +181,7 @@ public class LocationService {
         }
 
         // get all rooms and return them sorted by name
-        return buildingOptional.get().getRooms().stream().map(RoomVM::new).sorted(Comparator.comparing(RoomVM::getName))
+        return buildingOptional.get().getRooms().stream().map(RoomVM::new).sorted(Comparator.comparing(RoomVM::getName, czechCollator))
                 .collect(Collectors.toList());
     }
 
@@ -294,7 +299,7 @@ public class LocationService {
         }
 
         // get all showcases and return them sorted by name
-        return roomOptional.get().getShowcases().stream().map(ShowcaseVM::new).sorted(Comparator.comparing(ShowcaseVM::getName))
+        return roomOptional.get().getShowcases().stream().map(ShowcaseVM::new).sorted(Comparator.comparing(ShowcaseVM::getName, czechCollator))
                 .collect(Collectors.toList());
     }
 

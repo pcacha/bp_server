@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.text.Collator;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -52,13 +53,17 @@ public class InstitutionService {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @Autowired
+    private Collator czechCollator;
+
     /**
      * Gets all institutions
      * @return all institutions
      */
     public List<InstitutionVM> getInstitutions() {
         // get all institutions ordered by name
-        List<InstitutionVM> institutions = institutionRepository.findAll().stream().map(InstitutionVM::new).sorted(Comparator.comparing(InstitutionVM::getName))
+        List<InstitutionVM> institutions = institutionRepository.findAll().stream().map(InstitutionVM::new)
+                .sorted(Comparator.comparing(InstitutionVM::getName, czechCollator))
                 .collect(Collectors.toList());
         return institutions;
     }

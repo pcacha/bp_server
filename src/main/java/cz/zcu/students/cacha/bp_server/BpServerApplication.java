@@ -20,7 +20,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.Collator;
 import java.util.Arrays;
+import java.util.Locale;
 
 import static cz.zcu.students.cacha.bp_server.shared.RolesConstants.*;
 
@@ -75,6 +77,15 @@ public class BpServerApplication {
     @Bean
     public QRCodeWriter getQRCodeWriter() {
         return new QRCodeWriter();
+    }
+
+    /**
+     * Gets czech sorting collator
+     * @return czech sorting collator
+     */
+    @Bean
+    public Collator czechCollator() {
+        return Collator.getInstance(new Locale("cs", "CZ"));
     }
 
     /**
