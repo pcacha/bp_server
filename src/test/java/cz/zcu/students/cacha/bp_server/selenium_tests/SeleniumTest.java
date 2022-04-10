@@ -88,13 +88,6 @@ public class SeleniumTest {
         exhibit.setName(mockExhibit.getName());
         exhibit.setInfoLabelText(mockExhibit.getInfoLabelText());
         exhibit.setEncodedInfoLabel(mockExhibit.getEncodedInfoLabel());
-        // Todo
-        /*
-        exhibit.setBuilding(mockExhibit.getBuilding());
-        exhibit.setRoom(mockExhibit.getRoom());
-        exhibit.setShowcase(mockExhibit.getShowcase());
-
-         */
         exhibitService.saveExhibit(exhibit, user);
     }
 
@@ -118,7 +111,7 @@ public class SeleniumTest {
         seleniumManager.clickAnchorWithText("Translate");
         seleniumManager.waitUntilInstitutionPage();
         seleniumManager.clickBtnWithText("Exhibits");
-        seleniumManager.selectFirstInSelect();
+        seleniumManager.selectLanguageInSelect();
         seleniumManager.clickBtnWithText("Translate");
         seleniumManager.waitUntilTranslationPage();
         seleniumManager.changeEditorText("test translation text");

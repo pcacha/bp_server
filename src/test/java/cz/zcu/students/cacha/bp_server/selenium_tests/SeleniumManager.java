@@ -1,6 +1,7 @@
 package cz.zcu.students.cacha.bp_server.selenium_tests;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -126,9 +127,9 @@ public class SeleniumManager {
     /**
      * Selects first value in select
      */
-    public void selectFirstInSelect() {
-        Select dropdown = new Select(driver.findElement(By.tagName("select")));
-        dropdown.selectByIndex(1);
+    public void selectLanguageInSelect() {
+        driver.findElement(By.tagName("input")).sendKeys("Czech");
+        driver.findElement(By.tagName("input")).sendKeys(Keys.RETURN);
     }
 
     /**
