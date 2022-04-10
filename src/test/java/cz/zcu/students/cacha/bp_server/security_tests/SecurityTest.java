@@ -202,4 +202,50 @@ public class SecurityTest {
         ResponseEntity<Object> response7 = testRestTemplate.exchange("/admin/users/1/updateBan", HttpMethod.PUT, null, Object.class);
         assertEquals(HttpStatus.UNAUTHORIZED, response7.getStatusCode());
     }
+
+    /**
+     * tests security of location controller endpoints
+     */
+    @Test
+    public void testLocationEndpointsSecurity() {
+        // test that all endpoints that should be secured returns unauthorized on accessing them
+        ResponseEntity<Object> response1 = testRestTemplate.getForEntity("/location/buildings", null, Object.class);
+        assertEquals(HttpStatus.UNAUTHORIZED, response1.getStatusCode());
+
+        ResponseEntity<Object> response2 = testRestTemplate.getForEntity("/location/buildings/1", null, Object.class);
+        assertEquals(HttpStatus.UNAUTHORIZED, response2.getStatusCode());
+
+        ResponseEntity<Object> response3 = testRestTemplate.postForEntity("/location/buildings", null, Object.class);
+        assertEquals(HttpStatus.UNAUTHORIZED, response3.getStatusCode());
+
+        ResponseEntity<Object> response4 = testRestTemplate.exchange("/location/buildings/1", HttpMethod.PUT, null, Object.class);
+        assertEquals(HttpStatus.UNAUTHORIZED, response4.getStatusCode());
+
+        ResponseEntity<Object> response5 = testRestTemplate.exchange("/location/buildings/1", HttpMethod.DELETE, null, Object.class);
+        assertEquals(HttpStatus.UNAUTHORIZED, response5.getStatusCode());
+
+        ResponseEntity<Object> response6 = testRestTemplate.getForEntity("/location/rooms/1", null, Object.class);
+        assertEquals(HttpStatus.UNAUTHORIZED, response6.getStatusCode());
+
+        ResponseEntity<Object> response7 = testRestTemplate.postForEntity("/location/rooms/1", null, Object.class);
+        assertEquals(HttpStatus.UNAUTHORIZED, response7.getStatusCode());
+
+        ResponseEntity<Object> response8 = testRestTemplate.exchange("/location/rooms/1", HttpMethod.PUT, null, Object.class);
+        assertEquals(HttpStatus.UNAUTHORIZED, response8.getStatusCode());
+
+        ResponseEntity<Object> response9 = testRestTemplate.exchange("/location/rooms/1", HttpMethod.DELETE, null, Object.class);
+        assertEquals(HttpStatus.UNAUTHORIZED, response9.getStatusCode());
+
+        ResponseEntity<Object> response10 = testRestTemplate.getForEntity("/location/showcases/1", null, Object.class);
+        assertEquals(HttpStatus.UNAUTHORIZED, response10.getStatusCode());
+
+        ResponseEntity<Object> response11 = testRestTemplate.postForEntity("/location/showcases/1", null, Object.class);
+        assertEquals(HttpStatus.UNAUTHORIZED, response11.getStatusCode());
+
+        ResponseEntity<Object> response12 = testRestTemplate.exchange("/location/showcases/1", HttpMethod.PUT, null, Object.class);
+        assertEquals(HttpStatus.UNAUTHORIZED, response12.getStatusCode());
+
+        ResponseEntity<Object> response13 = testRestTemplate.exchange("/location/showcases/1", HttpMethod.DELETE, null, Object.class);
+        assertEquals(HttpStatus.UNAUTHORIZED, response13.getStatusCode());
+    }
 }
