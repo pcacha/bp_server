@@ -1,14 +1,11 @@
 package cz.zcu.students.cacha.bp_server.services_tests;
 
 import cz.zcu.students.cacha.bp_server.common.TestUtils;
-import cz.zcu.students.cacha.bp_server.domain.Exhibit;
-import cz.zcu.students.cacha.bp_server.domain.User;
-import cz.zcu.students.cacha.bp_server.repositories.ExhibitRepository;
-import cz.zcu.students.cacha.bp_server.repositories.InstitutionRepository;
-import cz.zcu.students.cacha.bp_server.repositories.TranslationRepository;
-import cz.zcu.students.cacha.bp_server.repositories.UserRepository;
+import cz.zcu.students.cacha.bp_server.domain.*;
+import cz.zcu.students.cacha.bp_server.repositories.*;
 import cz.zcu.students.cacha.bp_server.services.ExhibitService;
 import cz.zcu.students.cacha.bp_server.services.InstitutionService;
+import cz.zcu.students.cacha.bp_server.services.LocationService;
 import cz.zcu.students.cacha.bp_server.view_models.ExhibitVM;
 import cz.zcu.students.cacha.bp_server.view_models.ExhibitsLanguagesVM;
 import cz.zcu.students.cacha.bp_server.view_models.ImageVM;
@@ -63,6 +60,18 @@ public class ExhibitServiceTest {
     @Autowired
     private TranslationRepository translationRepository;
 
+    @Autowired
+    private LocationService locationService;
+
+    @Autowired
+    private BuildingRepository buildingRepository;
+
+    @Autowired
+    private RoomRepository roomRepository;
+
+    @Autowired
+    private ShowcaseRepository showcaseRepository;
+
     /**
      * called after each test
      * provides cleanup of db and images
@@ -73,6 +82,9 @@ public class ExhibitServiceTest {
         translationRepository.deleteAll();
         userRepository.deleteAll();
         exhibitRepository.deleteAll();
+        showcaseRepository.deleteAll();
+        roomRepository.deleteAll();
+        buildingRepository.deleteAll();
         institutionRepository.deleteAll();
 
         // delete all images from img folders
@@ -166,6 +178,21 @@ public class ExhibitServiceTest {
         Exhibit exhibit = testUtils.createValidExhibit();
         // save institution and manager
         institutionService.saveInstitution(exhibit.getInstitution(), user);
+        // add building, room and showcase to db
+        Building building = new Building();
+        building.setName("testBuilding");
+        Room room = new Room();
+        room.setName("testRoom");
+        Showcase showcase = new Showcase();
+        showcase.setName("testShowcase");
+        locationService.saveBuilding(building, user);
+        locationService.saveRoom(room, building.getId(), user);
+        locationService.saveShowcase(showcase, room.getId(), user);
+        // add building, room and showcase to created exhibit
+        exhibit.setBuildingId(String.valueOf(building.getId()));
+        exhibit.setRoomId(String.valueOf(room.getId()));
+        exhibit.setShowcaseId(String.valueOf(showcase.getId()));
+
         // call tested method - saving to institution
         exhibitService.saveExhibit(exhibit, exhibit.getInstitution().getId());
 
@@ -244,9 +271,6 @@ public class ExhibitServiceTest {
         UpdateExhibitVM updateVM = new UpdateExhibitVM();
         updateVM.setName("testUpdate");
         updateVM.setInfoLabelText("testUpdate");
-        updateVM.setBuilding("testUpdate");
-        updateVM.setRoom("testUpdate");
-        updateVM.setShowcase("testUpdate");
 
         // call tested method
         exhibitService.updateExhibit(exhibit.getId(), updateVM, user);
@@ -254,9 +278,6 @@ public class ExhibitServiceTest {
         Exhibit updated = exhibitRepository.getById(exhibit.getId());
         assertEquals(updateVM.getName(), updated.getName());
         assertEquals(updateVM.getInfoLabelText(), updated.getInfoLabelText());
-        assertEquals(updateVM.getBuilding(), updated.getBuilding());
-        assertEquals(updateVM.getRoom(), updated.getRoom());
-        assertEquals(updateVM.getShowcase(), updated.getShowcase());
     }
 
     /**

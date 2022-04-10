@@ -238,7 +238,7 @@ public class ExhibitControllerIntegrationTest {
         Institution institution = testUtils.createValidInstitution();
         institutionService.saveInstitution(institution, user);
         // prepare exhibit
-        MockExhibit exhibit = new MockExhibit("name", "text", "1", "1", "1");
+        MockExhibit exhibit = new MockExhibit("name", "text");
 
         // authenticate
         testUtils.authenticate(user, password, testRestTemplate);
@@ -270,7 +270,7 @@ public class ExhibitControllerIntegrationTest {
         Institution institution = testUtils.createValidInstitution();
         institutionService.saveInstitution(institution, user);
         // prepare exhibit
-        MockExhibit exhibit = new MockExhibit("name", "text", "1", "1", "1");
+        MockExhibit exhibit = new MockExhibit("name", "text");
 
         // call tested endpoint
         ResponseEntity<Object> response = testRestTemplate.postForEntity("/exhibits/" + institution.getId(), exhibit, Object.class);
