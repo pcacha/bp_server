@@ -1,11 +1,9 @@
 package cz.zcu.students.cacha.bp_server.common;
 
-import cz.zcu.students.cacha.bp_server.domain.Exhibit;
-import cz.zcu.students.cacha.bp_server.domain.Institution;
-import cz.zcu.students.cacha.bp_server.domain.Translation;
-import cz.zcu.students.cacha.bp_server.domain.User;
+import cz.zcu.students.cacha.bp_server.domain.*;
 import cz.zcu.students.cacha.bp_server.repositories.LanguageRepository;
 import cz.zcu.students.cacha.bp_server.responses.JWTLoginSuccessResponse;
+import cz.zcu.students.cacha.bp_server.view_models.ShowcaseVM;
 import cz.zcu.students.cacha.bp_server.view_models.UsernamePasswordVM;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -95,6 +93,36 @@ public class TestUtils {
         // add encoded image
         institution.setEncodedImage(getEncodedImage());
         return institution;
+    }
+
+    /**
+     * Creates valid building
+     * @return valid building
+     */
+    public Building createValidBuilding() {
+        Building building = new Building();
+        building.setName("testBuilding");
+        return building;
+    }
+
+    /**
+     * creates valid room
+     * @return valid room
+     */
+    public Room createValidRoom() {
+        Room room = new Room();
+        room.setName("testRoom");
+        return room;
+    }
+
+    /**
+     * creates valid showcase
+     * @return valid showcase
+     */
+    public Showcase createValidShowcase() {
+        Showcase showcase = new Showcase();
+        showcase.setName("testShowcase");
+        return showcase;
     }
 
     /**
