@@ -74,6 +74,8 @@ public class LocationControllerIntegrationTest {
 
         // delete all images from img folders
         testUtils.clearImages();
+        // clear headers
+        testRestTemplate.getRestTemplate().getInterceptors().clear();
     }
 
     /**
