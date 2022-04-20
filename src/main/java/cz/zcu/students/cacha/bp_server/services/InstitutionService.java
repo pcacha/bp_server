@@ -240,8 +240,13 @@ public class InstitutionService {
             throw new CannotPerformActionException("Failed to send email with new account");
         }
 
-        // after sending mail save new manager to db
-        userRepository.save(newManager);
+        try {
+            // after sending mail save new manager to db
+            userRepository.save(newManager);
+        }
+        catch (Exception e) {
+            throw new CannotPerformActionException("Failed to save new user");
+        }
     }
 
     /**
