@@ -24,7 +24,7 @@ public class UserUpdateVM {
      * email
      */
     @NotNull(message = "E-mail can not be blank")
-    @Email(message = "Bad e-mail format")
+    @Email(regexp = ".+@.+\\..+", message = "Wrong e-mail format")
     @Size(min = 1, max = 50, message = "E-mail must be maximally 50 letters long")
     private String email;
 }

@@ -11,10 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -57,7 +54,7 @@ public class User implements UserDetails {
      * email address
      */
     @NotNull(message = "E-mail can not be blank")
-    @Email(message = "Bad e-mail format")
+    @Email(regexp = ".+@.+\\..+", message = "Wrong e-mail format")
     @Size(min = 1, max = 50, message = "E-mail must be maximally 50 letters long")
     @Column(length = 50)
     private String email;
