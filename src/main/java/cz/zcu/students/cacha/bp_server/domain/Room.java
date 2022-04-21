@@ -64,6 +64,13 @@ public class Room {
     private Set<Exhibit> exhibits;
 
     /**
+     * all images
+     */
+    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    @JsonIgnore
+    private Set<RoomImage> images;
+
+    /**
      * registration date
      */
     @Temporal(TemporalType.TIMESTAMP)

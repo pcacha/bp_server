@@ -64,6 +64,13 @@ public class Building {
     private Set<Exhibit> exhibits;
 
     /**
+     * all images
+     */
+    @OneToMany(mappedBy = "building", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    @JsonIgnore
+    private Set<BuildingImage> images;
+
+    /**
      * registration date
      */
     @Temporal(TemporalType.TIMESTAMP)

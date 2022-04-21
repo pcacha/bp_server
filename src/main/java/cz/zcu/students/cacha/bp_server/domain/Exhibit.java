@@ -105,6 +105,13 @@ public class Exhibit {
     private Set<Translation> translations;
 
     /**
+     * all images
+     */
+    @OneToMany(mappedBy = "exhibit", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    @JsonIgnore
+    private Set<ExhibitImage> images;
+
+    /**
      * institution owning exhibit
      */
     @ManyToOne(fetch=FetchType.LAZY)

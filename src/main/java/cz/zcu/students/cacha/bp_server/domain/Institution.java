@@ -137,6 +137,13 @@ public class Institution {
     private Set<Building> buildings;
 
     /**
+     * all images
+     */
+    @OneToMany(mappedBy = "institution", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    @JsonIgnore
+    private Set<InstitutionImage> images;
+
+    /**
      * registration date
      */
     @Temporal(TemporalType.TIMESTAMP)

@@ -57,6 +57,13 @@ public class Showcase {
     private Set<Exhibit> exhibits;
 
     /**
+     * all images
+     */
+    @OneToMany(mappedBy = "showcase", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    @JsonIgnore
+    private Set<ShowcaseImage> images;
+
+    /**
      * registration date
      */
     @Temporal(TemporalType.TIMESTAMP)
