@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PngJpgFile {
-    String message() default "Image must be of png or jpeg type";
+    String message() default "Image must be of png or jpeg type and must be less than 15MB";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

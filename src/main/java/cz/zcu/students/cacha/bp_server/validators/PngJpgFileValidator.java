@@ -39,6 +39,12 @@ public class PngJpgFileValidator implements ConstraintValidator<PngJpgFile, Stri
 
             // decode bytes
             byte[] decodeBytes = Base64.getDecoder().decode(value.getBytes(StandardCharsets.UTF_8));
+
+            // reject files Bigger than 15MB
+            if(decodeBytes.length > 15000000) {
+                return false;
+            }
+
             // detect type
             fileType = fileService.detectType(decodeBytes);
         } catch (Exception e) {
