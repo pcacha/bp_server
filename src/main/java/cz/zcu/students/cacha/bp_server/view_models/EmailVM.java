@@ -1,5 +1,6 @@
 package cz.zcu.students.cacha.bp_server.view_models;
 
+import cz.zcu.students.cacha.bp_server.validators.UniqueEmail;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -20,5 +21,6 @@ public class EmailVM {
     @NotNull(message = "E-mail can not be blank")
     @Email(regexp = ".+@.+\\..+", message = "Wrong e-mail format")
     @Size(min = 1, max = 50, message = "E-mail must be maximally 50 letters long")
+    @UniqueEmail
     private String email;
 }

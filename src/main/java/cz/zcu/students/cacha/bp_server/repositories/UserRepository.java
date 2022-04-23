@@ -1,6 +1,7 @@
 package cz.zcu.students.cacha.bp_server.repositories;
 
 import cz.zcu.students.cacha.bp_server.domain.User;
+import org.checkerframework.checker.nullness.Opt;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -19,6 +20,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @return found user
      */
     Optional<User> findByUsername(String userName);
+
+    /**
+     * Gets user by email
+     * @param email email
+     * @return found user
+     */
+    Optional<User> findByEmail(String email);
 
     /**
      * Gets all non admin users
