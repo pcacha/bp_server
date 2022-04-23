@@ -43,7 +43,7 @@ public class TranslationSequenceVM {
     /**
      * the date of last activity in sequence
      */
-    @JsonFormat(pattern = "MM/dd/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date latestTranslationCreatedAt;
 
     /**

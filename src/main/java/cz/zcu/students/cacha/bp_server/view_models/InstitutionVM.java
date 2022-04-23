@@ -47,7 +47,7 @@ public class InstitutionVM {
     /**
      * institution registration date
      */
-    @JsonFormat(pattern = "MM/dd/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date createdAt;
 
     /**

@@ -28,7 +28,7 @@ public class UserDetailVM {
     /**
      * user registration name
      */
-    @JsonFormat(pattern = "MM/dd/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date createdAt;
     /**
      * whether user is banned

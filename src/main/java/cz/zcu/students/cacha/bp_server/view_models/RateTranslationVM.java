@@ -34,7 +34,7 @@ public class RateTranslationVM {
     /**
      * translation created date
      */
-    @JsonFormat(pattern = "MM/dd/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date createdAt;
     /**
      * count of likes for translation

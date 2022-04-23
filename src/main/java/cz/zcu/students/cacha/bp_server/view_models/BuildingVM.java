@@ -32,7 +32,7 @@ public class BuildingVM {
     /**
      * building registration date
      */
-    @JsonFormat(pattern = "MM/dd/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date createdAt;
 
     /**

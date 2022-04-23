@@ -32,7 +32,7 @@ public class RoomVM {
     /**
      * room registration date
      */
-    @JsonFormat(pattern = "MM/dd/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date createdAt;
 
     /**
