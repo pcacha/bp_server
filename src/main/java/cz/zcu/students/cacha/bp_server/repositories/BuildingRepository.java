@@ -13,11 +13,12 @@ import java.util.Optional;
 @Repository
 public interface BuildingRepository extends JpaRepository<Building, Long> {
     /**
-     * Gets building by its name
+     * Gets building by its name and institution
      * @param name building name
+     * @param institution institution
      * @return found building
      */
-    Optional<Building> findByName(String name);
+    Optional<Building> findByNameAndInstitution(String name, Institution institution);
 
     /**
      * Gets building by its id and institution

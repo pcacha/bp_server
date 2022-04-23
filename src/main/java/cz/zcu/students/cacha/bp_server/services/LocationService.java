@@ -88,8 +88,8 @@ public class LocationService {
         Institution institution = user.getInstitution();
 
         // check name is unique
-        Optional<Building> foundBuildingOptional = buildingRepository.findByName(building.getName());
-        if(foundBuildingOptional.isPresent() && foundBuildingOptional.get().getInstitution().getId().equals(institution.getId())) {
+        Optional<Building> foundBuildingOptional = buildingRepository.findByNameAndInstitution(building.getName(), user.getInstitution());
+        if(foundBuildingOptional.isPresent()) {
             // if building name is already taken throw exception
             HashMap<String, String> errorsMap = new HashMap<>();
             errorsMap.put("name", "Name is already taken");
@@ -111,9 +111,8 @@ public class LocationService {
         Building building = verifyUserManagesBuilding(buildingId, user);
 
         // check updated name is unique
-        Optional<Building> foundBuildingOptional = buildingRepository.findByName(updatedBuilding.getName());
-        if(foundBuildingOptional.isPresent() && foundBuildingOptional.get().getInstitution().getId().equals(building.getInstitution().getId()) &&
-            !foundBuildingOptional.get().getId().equals(building.getId())) {
+        Optional<Building> foundBuildingOptional = buildingRepository.findByNameAndInstitution(updatedBuilding.getName(), user.getInstitution());
+        if(foundBuildingOptional.isPresent() && !foundBuildingOptional.get().getId().equals(building.getId())) {
             // if building name is already taken throw exception
             HashMap<String, String> errorsMap = new HashMap<>();
             errorsMap.put("name", "Name is already taken");
