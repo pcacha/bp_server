@@ -119,7 +119,7 @@ public class AdminService {
         // check if user exists
         User user = verifyUser(userId);
         // generate new password
-        String password = RandomStringUtils.randomAlphabetic(64);
+        String password = RandomStringUtils.randomAlphabetic(30);
 
         try {
             // send mail with new password

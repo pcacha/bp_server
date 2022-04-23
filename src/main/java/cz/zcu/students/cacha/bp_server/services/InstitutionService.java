@@ -213,7 +213,7 @@ public class InstitutionService {
         }
 
         // generate strong password
-        String password = RandomStringUtils.randomAlphabetic(64);
+        String password = RandomStringUtils.randomAlphabetic(30);
 
         // create a new user and set his properties accordingly
         User newManager = new User();
