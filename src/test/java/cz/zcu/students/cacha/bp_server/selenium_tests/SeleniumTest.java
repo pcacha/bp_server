@@ -111,8 +111,9 @@ public class SeleniumTest {
         seleniumManager.clickAnchorWithText("Translate");
         seleniumManager.waitUntilInstitutionPage();
         seleniumManager.clickBtnWithText("Exhibits");
+        seleniumManager.waitUntilExhibitPage();
         seleniumManager.selectLanguageInSelect();
-        seleniumManager.clickBtnWithText("Translate");
+        seleniumManager.clickTranslateBtn();
         seleniumManager.waitUntilTranslationPage();
         seleniumManager.changeEditorText("test translation text");
         // send translation

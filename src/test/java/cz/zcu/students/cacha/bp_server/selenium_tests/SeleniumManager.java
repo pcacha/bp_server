@@ -105,7 +105,7 @@ public class SeleniumManager {
      * @param text text to insert
      */
     public void changeEditorText(String text) {
-        driver.findElement(By.tagName("p")).sendKeys(text);
+        driver.findElement(By.xpath("//*[@id=\"root\"]/div/section/div/form/div/div[2]/div[2]/div/p")).sendKeys(text);
     }
 
     /**
@@ -121,7 +121,7 @@ public class SeleniumManager {
      */
     public void waitUntilExhibitPage() {
         WebDriverWait w = new WebDriverWait(driver, 5);
-        w.until(ExpectedConditions.presenceOfElementLocated (By.xpath("//h2[contains(text(), 'Exhibits')]")));
+        w.until(ExpectedConditions.presenceOfElementLocated (By.xpath("//button[contains(text(), 'Rate')]")));
     }
 
     /**
@@ -137,6 +137,21 @@ public class SeleniumManager {
      */
     public void waitUntilInstitutionPage() {
         WebDriverWait w = new WebDriverWait(driver, 5);
-        w.until(ExpectedConditions.presenceOfElementLocated (By.xpath("//h2[contains(text(), 'Institutions')]")));
+        w.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[contains(text(), 'Exhibits')]")));
+    }
+
+    /**
+     * clicks on translate button in exhibits page
+     */
+    public void clickTranslateBtn() {
+        // find elements
+        List<WebElement> found = driver.findElements(By.xpath("//button[contains(text(), 'Translate')]"));
+        // click on all elements with given text
+        for(WebElement we : found) {
+            // skip breadcrumb button
+            if(!we.getText().contains("Institutions")) {
+                we.click();
+            }
+        }
     }
 }
