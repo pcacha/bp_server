@@ -14,6 +14,7 @@ import cz.zcu.students.cacha.bp_server.view_models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -224,6 +225,7 @@ public class TranslationService {
      * @param translationId translation id
      * @param user institution owner
      */
+    @Transactional
     public void setTranslationOfficial(BooleanValVM booleanValVM, Long translationId, User user) {
         // check if translation exists
         Translation translation = verifyTranslationExists(translationId);
