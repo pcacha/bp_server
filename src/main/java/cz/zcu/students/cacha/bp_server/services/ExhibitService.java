@@ -315,17 +315,17 @@ public class ExhibitService {
         // verify that user is manager of given exhibit
         Exhibit exhibit = verifyUserManagesExhibit(exhibitId, user);
 
-        // delete old image if exists
-        if(!exhibit.getImage().equals(DEFAULT_EXHIBIT_IMAGE)) {
-            fileService.deleteExhibitImage(exhibit.getImage());
-        }
-
         // save new image
         String imageName;
         try {
             imageName = fileService.saveExhibitImage(imageVM.getEncodedImage());
         } catch (Exception exception) {
             throw new CannotSaveImageException("Image could not be saved");
+        }
+
+        // delete old image if exists
+        if(!exhibit.getImage().equals(DEFAULT_EXHIBIT_IMAGE)) {
+            fileService.deleteExhibitImage(exhibit.getImage());
         }
 
         // set new name and save exhibit
@@ -344,8 +344,6 @@ public class ExhibitService {
     public String updateExhibitInfoLabel(Long exhibitId, ImageVM imageVM, User user) {
         // verify that user is manager of given exhibit
         Exhibit exhibit = verifyUserManagesExhibit(exhibitId, user);
-        // delete old info label
-        fileService.deleteInfoLabelImage(exhibit.getInfoLabel());
 
         // save new info label
         String infoLabelName;
@@ -354,6 +352,9 @@ public class ExhibitService {
         } catch (Exception exception) {
             throw new CannotSaveImageException("Info label could not be saved");
         }
+
+        // delete old info label
+        fileService.deleteInfoLabelImage(exhibit.getInfoLabel());
 
         // set new name and save exhibit
         exhibit.setInfoLabel(infoLabelName);
