@@ -16,6 +16,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.Collator;
 import java.util.*;
@@ -73,6 +74,7 @@ public class InstitutionService {
      * @param institution new institution
      * @param user institution manager
      */
+    @Transactional
     public void saveInstitution(Institution institution, User user) {
         // check if the user already have an institution
         if(user.isInstitutionOwner()) {
@@ -263,6 +265,7 @@ public class InstitutionService {
      * Deletes given institution
      * @param institution institution to delete
      */
+    @Transactional
     public void deleteInstitution(Institution institution) {
         // delete institution image if exits
         if(!institution.getImage().equals(DEFAULT_INSTITUTION_IMAGE)) {
