@@ -10,6 +10,7 @@ import cz.zcu.students.cacha.bp_server.view_models.RoomVM;
 import cz.zcu.students.cacha.bp_server.view_models.ShowcaseVM;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.Collator;
 import java.util.*;
@@ -130,6 +131,7 @@ public class LocationService {
      * @param buildingId building id
      * @param user institution manager
      */
+    @Transactional
     public void deleteBuilding(Long buildingId, User user) {
         Building building = verifyUserManagesBuilding(buildingId, user);
 
@@ -249,6 +251,7 @@ public class LocationService {
      * @param roomId room id
      * @param user institution manager
      */
+    @Transactional
     public void deleteRoom(Long roomId, User user) {
         Room room = verifyUserManagesRoom(roomId, user);
 
@@ -367,6 +370,7 @@ public class LocationService {
      * @param showcaseId showcase id
      * @param user institution manager
      */
+    @Transactional
     public void deleteShowcase(Long showcaseId, User user) {
         Showcase showcase = verifyUserManagesShowcase(showcaseId, user);
 
