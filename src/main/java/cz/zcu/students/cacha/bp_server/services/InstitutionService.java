@@ -148,10 +148,6 @@ public class InstitutionService {
      */
     public String updateImage(ImageVM imageVM, User user) {
         Institution institution = user.getInstitution();
-        if(!institution.getImage().equals(DEFAULT_INSTITUTION_IMAGE)) {
-            // delete old image
-            fileService.deleteInstitutionImage(institution.getImage());
-        }
 
         String imageName;
         try {
@@ -159,6 +155,11 @@ public class InstitutionService {
             imageName = fileService.saveInstitutionImage(imageVM.getEncodedImage());
         } catch (Exception exception) {
             throw new CannotSaveImageException("Image could not be saved");
+        }
+
+        if(!institution.getImage().equals(DEFAULT_INSTITUTION_IMAGE)) {
+            // delete old image
+            fileService.deleteInstitutionImage(institution.getImage());
         }
 
         // set new image name and save institution
