@@ -19,7 +19,7 @@ public class EmailVM {
      * email
      */
     @NotNull(message = "E-mail can not be blank")
-    @Email(regexp = ".+@.+\\..+", message = "Wrong e-mail format")
+    @Email(regexp = ".+@.+\\..+", message = "Bad e-mail format")
     @Size(min = 1, max = 50, message = "E-mail must be maximally 50 letters long")
     @UniqueEmail
     private String email;
