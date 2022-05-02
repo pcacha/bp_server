@@ -1,0 +1,13 @@
+cz.zcu.students.cacha.bp_server
+cz.zcu.students.cacha.bp_server.assets_store_config
+cz.zcu.students.cacha.bp_server.controllers
+cz.zcu.students.cacha.bp_server.domain
+cz.zcu.students.cacha.bp_server.error
+cz.zcu.students.cacha.bp_server.exceptions
+cz.zcu.students.cacha.bp_server.repositories
+cz.zcu.students.cacha.bp_server.responses
+cz.zcu.students.cacha.bp_server.security
+cz.zcu.students.cacha.bp_server.services
+cz.zcu.students.cacha.bp_server.shared
+cz.zcu.students.cacha.bp_server.validators
+cz.zcu.students.cacha.bp_server.view_models
