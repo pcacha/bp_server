@@ -47,7 +47,7 @@ public class User implements UserDetails {
      * hashed password
      */
     @NotNull(message = "Password can not be blank")
-    @Size(min = 8, max = 50, message = "Password must be between 8 to 50 letters long")
+    @Size(min = 8, message = "Password must be at least 8 characters long")
     @Pattern(regexp="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$", message="Password must contain a lowercase and an uppercase letter and a number")
     private String password;
 
